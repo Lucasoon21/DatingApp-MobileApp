@@ -8,13 +8,10 @@ const LoginPanel = (props) => {
     return(
         <>
             <Text>Witaj!</Text>
-            <Image source={require('../Images/logo.png')} style={styles.logo}/>
+            {/* <Image source={require('../Images/logo.png')} style={styles.logo}/> */}
             <TextInput mode="outlined" label="E-mail" placeholder="Wpisz e-mail..."  style={styles.input} />
             <TextInput mode="outlined" label="Hasło" placeholder="Wpisz hasło..."  style={styles.input} secureTextEntry right={<TextInput.Icon name="eye" />}/>
             <Text style={styles.forgot_password}>Nie pamiętasz hasła?</Text>
-            <View style={styles.registerLink}>
-            <Text >Nie masz konta? </Text><Text style={styles.registerButton} onPress={()=> {props.activePanel(false)}}>Zarejestruj się</Text>
-            </View> 
             <Button mode="contained" style={styles.loginButton}>Zaloguj się</Button> 
 
         </> 
