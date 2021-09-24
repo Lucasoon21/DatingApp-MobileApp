@@ -8,10 +8,9 @@ const AuthPage = () => {
   const [loginPan, setLoginPanel] = useState(true)
 
   return (
-    <>
+    <View style={styles.container}>
       <Button onPress={() => { setLoginPanel(true) }} >Logowaniee</Button>
-      <Button onPress={() => { setLoginPanel(false) 
-      console.log(loginPan)}}>Rejestracja</Button>
+      <Button onPress={() => { setLoginPanel(false) }}>Rejestracja</Button>
       
       {
         loginPan ? (
@@ -20,7 +19,16 @@ const AuthPage = () => {
           <RegisterPanel />
         )
       }
-    </>
+    </View>
   );
 };
 export default AuthPage;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
