@@ -13,12 +13,12 @@ import { NativeRouter, Route, Link, useHistory } from "react-router-native";
 const RegisterPanel = (props) => {
 
     let schema = yup.object().shape({
-        email: yup.string().email('Nieprawidlowy email').required('email jest wymagany'),
+        /*email: yup.string().email('Nieprawidlowy email').required('email jest wymagany'),
         password: yup.string().trim().min(6, 'Haslo jest za krotkie').required('haslo jest wymagane'),
         confirmPassword: yup.string().equals([yup.ref('password'), null], 'Hasla sa rozne'),
         name: yup.string().min(2, 'imię jest za krótkie').max(50, 'Imię jest za długie!').required('imię jest wymagane')
         // dateBirth: yup.date().required('Data urodzenia jest wymagana').nullable(),
-
+        */
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
