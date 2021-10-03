@@ -3,16 +3,22 @@ import { StyleSheet, Text, View, Image, Linking, Platform, Animated, PanResponde
 import { Feather, Entypo, MaterialIcons } from '@expo/vector-icons';
 import { NativeRouter, Route, Link } from "react-router-native";
 import Menu from "../control/Menu";
-import CardUser from "../Main/CardUser"
+import CardUser from "../Swipe/CardUser"
 import { person as personArray } from "../control/data"
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { CARD, ACTION_OFFSET } from '../utils/constants';
+import { Fontisto } from '@expo/vector-icons';
+import DetailsProfileScreen from '../DetailsProfile/DetailsProfileScreen';
+
 
 //const SwipeScreen = (props) => {
 const SwipeScreen = (props) => {
+    const profile = () => props.navigation.navigate("ProfileDetails")
+
+
 
     const [person, setPerson] = useState(personArray);
 
@@ -96,26 +102,12 @@ const SwipeScreen = (props) => {
 
                 <View style={styles.actionButton}>
                     <TouchableOpacity style={styles.button} onPress={() => handleChoice(-1)}>
-                        {/*<InteractButton />
-                        <AntDesign name="like1" size={40} color="black" />
-                        <SimpleLineIcons name="like" size={40} color="black" />
-                        */}
                         <AntDesign name="like2" size={40} color="green" />
-
                     </TouchableOpacity>
-                    <View style={styles.button}>
-                        {/*<InteractButton />
-                        <Octicons name="person" size={40} color="black" />
-                        <MaterialIcons name="person-outline" size={40} color="black" />
-                        <Ionicons name="person-circle-outline" size={40} color="black" />
-                        <MaterialIcons name="person-outline" size={45} color="black" />
-                    */}
+                    <TouchableOpacity style={styles.button} onPress={profile}>
                         <Ionicons name="md-person-outline" size={40} color="black" />
-                    </View>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={() => handleChoice(1)}>
-                        {/*<InteractButton />
-                        <AntDesign name="dislike1" size={40} color="black" />
-                        */}
                         <AntDesign name="dislike2" size={40} color="red" />
                     </TouchableOpacity>
                 </View>
@@ -169,3 +161,17 @@ const styles = StyleSheet.create({
     },
 
 });
+
+                        {/*<InteractButton />
+                        <Octicons name="person" size={40} color="black" />
+                        <MaterialIcons name="person-outline" size={40} color="black" />
+                        <Ionicons name="person-circle-outline" size={40} color="black" />
+                        <MaterialIcons name="person-outline" size={45} color="black" />
+                    */}
+                                            {/*<InteractButton />
+                        <AntDesign name="dislike1" size={40} color="black" />
+                        */}
+                                                {/*<InteractButton />
+                        <AntDesign name="like1" size={40} color="black" />
+                        <SimpleLineIcons name="like" size={40} color="black" />
+                        */}
