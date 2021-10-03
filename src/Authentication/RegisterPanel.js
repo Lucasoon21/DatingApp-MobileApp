@@ -43,7 +43,6 @@ const RegisterPanel = (props) => {
             <Formik
                 initialValues={{ email: "", password: "", confirmPassword: "", name: "" }}
                 onSubmit={async values => {
-                    alert("asdfdsf")
                     history.push("/Main")
                 }}
                 validateOnMount={true}
