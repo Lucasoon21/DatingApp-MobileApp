@@ -118,6 +118,7 @@ const DetailsProfileScreen = (props) => {
                                 <Text style={styles.infoHeader}>Papierosy</Text>
                                 <Text style={styles.info}>Nigdy</Text>
                             </View>
+                            <Text>Dodac kolor oczu</Text>
                         </View>
                     </View>
 
@@ -166,7 +167,7 @@ const DetailsProfileScreen = (props) => {
                             <RelationButton text="ONS" type={1} />
                         </View>
                     </View>
-
+                   
                 </View>
             </ScrollView>
             <Menu swipe={props.route.params.myProfile ? false : true} profile={props.route.params.myProfile ? true : false} />

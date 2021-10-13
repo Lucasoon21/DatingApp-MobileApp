@@ -5,7 +5,7 @@ import AuthPage from './src/Authentication/AuthenticationScreen';
 import { NativeRouter, Route, Link, Switch } from 'react-router-native';
 import SwipeScreen from './src/Swipe/SwipeScreen';
 import SettingsScreen from './src/Settings/SettingsScreen';
-import ChatScreen from './src/Chat/ChatScreen';
+import ChatNavigator from './src/Chat/ChatNavigator';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import SearchScreen from './src/Search/SearchScreen';
 import SwipeNavigator from './src/Swipe/SwipeNavigator';
@@ -18,7 +18,7 @@ import SwipeNavigator from './src/Swipe/SwipeNavigator';
                 <Route exact path="/" component={AuthPage} />
                 <Route exact path="/Main" component={SwipeNavigator} /> 
                 <Route exact path="/Settings" component={SettingsScreen} /> 
-                <Route exact path="/Chat" component={ChatScreen} />
+                <Route exact path="/Chat" component={ChatNavigator} />
                 <Route exact path="/Profile" component={ProfileScreen} /> 
                 <Route exact path="/Search" component={SearchScreen} />  
               </Switch>

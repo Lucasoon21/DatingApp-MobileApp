@@ -7,7 +7,7 @@ import EditInfoScreen from '../Profile/EditInfoScreen';
 import EditSearchingScreen from '../Profile/EditSearchingScreen';
 import EditPhotoScreen from '../Profile/EditPhotoScreen';
 import ProfileUserScreen from '../Profile/ProfileUserScreen';
-import  DetailsProfileScreen  from '../DetailsProfile/DetailsProfileScreen';
+import DetailsProfileScreen  from '../DetailsProfile/DetailsProfileScreen';
 
 import { NativeRouter, Route, Link } from "react-router-native";
 import { NavigationContainer } from '@react-navigation/native';
