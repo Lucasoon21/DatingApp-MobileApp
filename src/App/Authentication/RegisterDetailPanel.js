@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image, Linking, Platform, StatusBar } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -9,22 +9,19 @@ import 'intl/locale-data/jsonp/en';
 //import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu';
 import { Picker } from '@react-native-picker/picker';
 import { NativeRouter, Route, Link, useHistory } from "react-router-native";
+import AuthenticationService from '../../service/AuthenticationService';
 
-const RegisterPanel = (props) => {
+const RegisterDetailPanel = (props) => {
 
     let schema = yup.object().shape({
-        /*email: yup.string().email('Nieprawidlowy email').required('email jest wymagany'),
-        password: yup.string().trim().min(6, 'Haslo jest za krotkie').required('haslo jest wymagane'),
-        confirmPassword: yup.string().equals([yup.ref('password'), null], 'Hasla sa rozne'),
         name: yup.string().min(2, 'imię jest za krótkie').max(50, 'Imię jest za długie!').required('imię jest wymagane')
         // dateBirth: yup.date().required('Data urodzenia jest wymagana').nullable(),
-        */
+        
     });
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [date, setDate] = useState(new Date());
     const [open, setOpen] = useState(false);
+    const [name, setName] = useState("");
 
     const onDismissSingle = () => {
         setOpen(false);
@@ -35,72 +32,30 @@ const RegisterPanel = (props) => {
         setDate(params.date);
     };
 
-    const [pickerValue, setPickerValue] = useState('Kobieta')
+    const [genderValue, setgenderValue] = useState(0)
     const history = useHistory();
 
+    const register = async (values) => {
+        console.log("start detale")
+        //console.log("Dane: "+values.email+" "+values.password)
+        const response = await AuthenticationService.registerDetails("123@123.pl", values.name, genderValue, date)
+        console.log(response)
+        //console.log(genderValue)
+       // history.push("/Main")
+
+    }
+
     return (
-        <View>
+        <View style={styles.container}>
             <Formik
-                initialValues={{ email: "", password: "", confirmPassword: "", name: "" }}
-                onSubmit={async values => {
-                    history.push("/Main")
-                }}
+                initialValues={{  name: "" }}
+                //onSubmit={async values => {// history.push("/Main")}}
+                onSubmit={values => register(values)}
                 validateOnMount={true}
                 validationSchema={schema}
             >
                 {({ handleSubmit, handleChange, handleBlur, errors, values, touched }) => (
                     <>
-                        <TextInput
-                            mode="outlined"
-                            label="E-mail"
-                            placeholder="Wpisz e-mail..."
-                            style={styles.input}
-                            onChangeText={handleChange('email')}
-                            onBlur={handleBlur('email')}
-                            value={values.email}
-                            right={<TextInput.Icon name={!errors.email ? "check" : "close"} />}
-                        />
-                        {(errors.email && touched.email) &&
-                            <Text style={{ color: 'red', minHeight: 20, width: 300, }}>
-                                {errors.email}
-                            </Text>
-                        }
-
-                        <TextInput
-                            mode="outlined"
-                            label="Hasło"
-                            placeholder="Wpisz hasło..."
-                            style={styles.input}
-                            secureTextEntry={!showPassword}
-                            right={<TextInput.Icon name={showPassword ? "eye-off" : "eye"} onPress={() => setShowPassword(!showPassword)} />}
-                            onChangeText={handleChange('password')}
-                            onBlur={handleBlur('password')}
-                            value={values.password}
-                        />
-                        {(errors.password && touched.password) &&
-                            <Text style={{ color: 'red', minHeight: 20, width: 300, }}>
-                                {errors.password}
-                            </Text>
-                        }
-
-                        <TextInput
-                            mode="outlined"
-                            label="Potwierdz hasło"
-                            placeholder="Wpisz hasło..."
-                            style={styles.input}
-                            secureTextEntry={!showConfirmPassword}
-                            right={<TextInput.Icon name={showConfirmPassword ? "eye-off" : "eye"} onPress={() => setShowConfirmPassword(!showConfirmPassword)} />}
-                            onChangeText={handleChange('confirmPassword')}
-                            onBlur={handleBlur('confirmPassword')}
-                            value={values.confirmPassword}
-                        />
-
-                        {(errors.confirmPassword && touched.confirmPassword) &&
-                            <Text style={{ color: 'red', minHeight: 20, width: 300, }}>
-                                {errors.confirmPassword}
-                            </Text>
-                        }
-
                         <TextInput
                             mode="outlined"
                             label="Podaj swoje imię"
@@ -120,13 +75,13 @@ const RegisterPanel = (props) => {
                         <View style={styles.pickerView}>
                             <Picker
                                 style={styles.pickerStyle}
-                                selectedValue={pickerValue}
-                                onValueChange={(itemValue) => setPickerValue(itemValue)}
+                                selectedValue={genderValue}
+                                onValueChange={(itemValue) => setgenderValue(itemValue)}
                             >
 
-                                <Picker.Item label="Kobieta" value="Kobieta"></Picker.Item>
-                                <Picker.Item label="Mężczyzna" value="Mężczyzna"></Picker.Item>
-                                <Picker.Item label="Inna" value="Inna"></Picker.Item>
+                                <Picker.Item label="Kobieta" value="0"></Picker.Item>
+                                <Picker.Item label="Mężczyzna" value="1"></Picker.Item>
+                                <Picker.Item label="Inna" value="2"></Picker.Item>
 
                             </Picker>
                         </View>
@@ -170,10 +125,19 @@ const RegisterPanel = (props) => {
         </View>
     );
 };
-export default RegisterPanel;
+export default RegisterDetailPanel;
 
 
 const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+    
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: StatusBar.currentHeight,
+            backgroundColor: 'rgba(250,250,250,1)',
+            padding: 0,
+        },
     pickerView: {
         flex: 1,
         justifyContent: 'center',
@@ -203,19 +167,3 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     }
 });
-/*
-                     <Button onPress={showMode} title="Show date picker!" style={styles.loginButton} mode="contained" >
-                            {date ? "Wybierz date" : "elo"}
-                        </Button>
-                        {show && (
-                            <DateTimePicker
-                                locale={'pl'}
-                                testID="dateTimePicker"
-                                value={values.dateBirth}
-                                mode={"date"}
-                                is24Hour={true}
-                                display="default"
-                                onChange={onChange}
-                            />
-
-*/

@@ -9,7 +9,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { CARD, ACTION_OFFSET } from '../utils/constants';
+import { CARD, ACTION_OFFSET } from '../../utils/constants';
 import { Fontisto } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';

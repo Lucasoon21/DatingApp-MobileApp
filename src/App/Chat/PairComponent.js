@@ -18,7 +18,7 @@ const PairComponent = (props) => {
                 <TouchableOpacity onPress={goProfile}>
 
                     <View style={contact.left}>
-                        <Image source={require('../Images/person1.jpg')} style={contact.image} />
+                        <Image source={require('../../Images/person1.jpg')} style={contact.image} />
                         <View style={contact.textContainer} >
                             <Text style={contact.text} numberOfLines={1}>Łukasz, 22</Text>
                             <Text style={contact.text} numberOfLines={1}>22 km stąd</Text>

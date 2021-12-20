@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import Menu from "../control/Menu";
-import { CARD } from '../utils/constants';
+import { CARD } from '../../utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import HobbyButton from '../control/HobbyButton';
@@ -34,7 +34,7 @@ const DetailsProfileScreen = (props) => {
                     ) : null}
 
 
-                    <Image source={require('../Images/person1.jpg')} style={styles.image} />
+                    <Image source={require('../../Images/person1.jpg')} style={styles.image} />
 
                     <View style={styles.sectionInfo}>
                         {props.route.params.myProfile ? (

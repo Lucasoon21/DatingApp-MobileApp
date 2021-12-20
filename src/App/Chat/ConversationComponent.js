@@ -11,7 +11,7 @@ const ConversationComponent = (props) => {
 
     return (
         <View style={singleConversation.container}>
-            <Image source={require('../Images/person1.jpg')} style={singleConversation.image} />
+            <Image source={require('../../Images/person1.jpg')} style={singleConversation.image} />
 
             <View style={singleConversation.textContainer} >
                 <TouchableOpacity onPress={goChat}>

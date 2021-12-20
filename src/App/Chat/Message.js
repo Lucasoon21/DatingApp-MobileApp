@@ -14,7 +14,7 @@ const Message = (props) => {
         <View style={[message.messageContainer, props.sendToMe ? message.messageRecieverContainer : null]}>
             {!props.sendToMe ? (
                 <TouchableOpacity onPress={goProfile}>
-                    <Image source={require('../Images/person1.jpg')} style={message.avatar} />
+                    <Image source={require('../../Images/person1.jpg')} style={message.avatar} />
                 </TouchableOpacity>
             ) : null}
             <View style={message.singleMessage}>

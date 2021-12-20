@@ -25,7 +25,7 @@ const ChatScreen = (props) => {
 
                 <View style={chat.profileTop}>
                     <TouchableOpacity onPress={goProfile} style={chat.profileTopTouch}>
-                        <Image source={require('../Images/person1.jpg')} style={chat.avatarTop} />
+                        <Image source={require('../../Images/person1.jpg')} style={chat.avatarTop} />
                         <Text style={chat.nameProfile} numberOfLines={1}>Łukasz</Text>
                     </TouchableOpacity>
                 </View>

@@ -1,16 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import AuthPage from './src/Authentication/AuthenticationScreen';
+import AuthPage from "./src/App/Authentication/AuthenticationScreen"
 import { NativeRouter, Route, Link, Switch } from 'react-router-native';
-import SwipeScreen from './src/Swipe/SwipeScreen';
-import SettingsScreen from './src/Settings/SettingsScreen';
-import ChatNavigator from './src/Chat/ChatNavigator';
-import ProfileScreen from './src/Profile/ProfileScreen';
-import SearchScreen from './src/Search/SearchScreen';
-import SwipeNavigator from './src/Swipe/SwipeNavigator';
+import SwipeScreen from './src/App/Swipe/SwipeScreen';
+import SettingsScreen from './src/App/Settings/SettingsScreen';
+import ChatNavigator from './src/App/Chat/ChatNavigator';
+import ProfileScreen from './src/App/Profile/ProfileScreen';
+import SearchScreen from './src/App/Search/SearchScreen';
+import SwipeNavigator from './src/App/Swipe/SwipeNavigator';
+import RegisterDetailPanel from './src/App/Authentication/RegisterDetailPanel'
+import JwtManager from './src/Api/JwtManager';
 
  export default function App() {
+   useEffect(() => {
+     const token = JwtManager.getAccessToken();
+     if(token!==null) {
+       
+     }
+   })
+
    return (
        <NativeRouter>
             
@@ -20,7 +29,8 @@ import SwipeNavigator from './src/Swipe/SwipeNavigator';
                 <Route exact path="/Settings" component={SettingsScreen} /> 
                 <Route exact path="/Chat" component={ChatNavigator} />
                 <Route exact path="/Profile" component={ProfileScreen} /> 
-                <Route exact path="/Search" component={SearchScreen} />  
+                <Route exact path="/Search" component={SearchScreen} />
+                <Route exact path="/RegisterDetail" component={RegisterDetailPanel} />  
               </Switch>
            
        </NativeRouter>
