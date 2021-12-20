@@ -4,8 +4,8 @@ import { Feather, Entypo, MaterialIcons   } from '@expo/vector-icons';
 import { NativeRouter, Route, Link } from "react-router-native";
 import Menu from "../control/Menu";
 //import {styles} from '../utils/styles';
-import { ACTION_OFFSET } from '../utils/constants';
-import { CARD } from '../utils/constants';
+import { ACTION_OFFSET } from '../../utils/constants';
+import { CARD } from '../../utils/constants';
 
 function CardUser({name, source, age, isFirst, swipe, tiltSign, ...rest}) {
 

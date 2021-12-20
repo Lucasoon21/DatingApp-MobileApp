@@ -3,13 +3,13 @@ import { StyleSheet, Text, View, Image, Linking, Platform, Animated, PanResponde
 import { Feather, Entypo, MaterialIcons } from '@expo/vector-icons';
 import { NativeRouter, Route, Link } from "react-router-native";
 import Menu from "../control/Menu";
-import CardUser from "../Swipe/CardUser"
+import CardUser from "./CardUser"
 import { person as personArray } from "../control/data"
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { CARD, ACTION_OFFSET } from '../utils/constants';
+import { CARD, ACTION_OFFSET } from '../../utils/constants';
 import { Fontisto } from '@expo/vector-icons';
 import DetailsProfileScreen from '../DetailsProfile/DetailsProfileScreen';
 
