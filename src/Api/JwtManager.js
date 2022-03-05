@@ -1,4 +1,4 @@
-import { AsyncStorage } from "react-native"
+/*import { AsyncStorage } from "react-native"
 
 const JwtManager = () => {
     function _setAccessToken(jwt) {
@@ -30,4 +30,4 @@ const JwtManager = () => {
         clearRefreshToken: _clearRefreshToken,
     }
 }
-export default JwtManager()
+export default JwtManager()*/
