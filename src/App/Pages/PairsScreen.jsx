@@ -7,9 +7,9 @@ import MenuTop from '../Unused/MenuTop';
 import PairComponent from '../Components/PairComponent';
 
 const PairsScreen = (props) => {
-    const goPairs = () => props.navigation.navigate("Pairs")
-    const goConversation = () => props.navigation.navigate("Conversations")
-    const goChat = () => props.navigation.navigate("Chat")
+    const goPairs = () => props.navigation.navigate("PairsScreen")
+    const goConversation = () => props.navigation.navigate("ConversationScreen")
+    const goChat = () => props.navigation.navigate("ChatScreen")
     
     return (
         <View style={styles.container}>
@@ -38,7 +38,7 @@ const PairsScreen = (props) => {
             </ScrollView>
 
 
-
+            <Menu chat={true} />
         </View>
     );
 };

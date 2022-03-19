@@ -5,21 +5,23 @@ import axios from 'axios';
 import api from '../../Api/posts';
 import AuthenticationService from '../../service/AuthenticationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native'; // <-- import useNavigation hook
 
 const LoginPanel = (props) => {
 	const [testApi, setTestApi] = useState('aa');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
+	const navigation = useNavigation();
 
 	const login = async () => {
 		console.log('Dane: ' + email + ' ' + password);
 		let response = await AuthenticationService.login(email, password);
-		console.log("res",response);
+		console.log('res', response);
 		if (response == 200) {
-			history.push('/Main');
-			await AsyncStorage.setItem('access_token', response.data.access_token);
-			await AsyncStorage.setItem('refresh_token', response.data.refresh_token);
+			//await AsyncStorage.setItem('access_token', response.data.access_token);
+			//await AsyncStorage.setItem('refresh_token', response.data.refresh_token);
+			navigation.navigate('SwipeScreen');
 		} else {
 			setError('BŁĄD');
 			alert('Nieprawidłowe dane logowania');
@@ -30,14 +32,7 @@ const LoginPanel = (props) => {
 		<>
 			<Text>Witaj!</Text>
 			{/* <Image source={require('../Images/logo.png')} style={styles.logo}/> */}
-			<TextInput
-				mode='outlined'
-				label='E-mail'
-				placeholder='Wpisz e-mail...'
-				style={styles.input}
-				value={email}
-				onChangeText={(text) => setEmail(text)}
-			/>
+			<TextInput mode='outlined' label='E-mail' placeholder='Wpisz e-mail...' style={styles.input} value={email} onChangeText={(text) => setEmail(text)} />
 			<TextInput
 				mode='outlined'
 				label='Hasło'

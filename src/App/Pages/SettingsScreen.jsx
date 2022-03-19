@@ -8,6 +8,8 @@ import { Picker } from '@react-native-picker/picker';
 import HobbyButton from '../Controls/HobbyButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Checkbox } from 'react-native-paper';
+import * as SecureStore from 'expo-secure-store';
+import { useNavigation } from '@react-navigation/native'; // <-- import useNavigation hook
 
 const SettingsScreen = (props) => {
 	const deleteAccount = () => {
@@ -28,7 +30,7 @@ const SettingsScreen = (props) => {
 	const [toHeight, setToHeight] = useState(200);
 	const [fromWeight, setFromWeight] = useState(30);
 	const [toWeight, setToWeight] = useState(150);
-
+	const navigation = useNavigation();
 	const [checked, setChecked] = React.useState(false);
 
 	const [zodiac, setZodiac] = useState([
@@ -123,6 +125,14 @@ const SettingsScreen = (props) => {
 		newArr[index].status = status;
 		setCigarette(newArr);
 	};
+	const logout = async () => {
+		console.log('wyloguj');
+		await SecureStore.deleteItemAsync('access_token');
+		await SecureStore.deleteItemAsync('refresh_token');
+	//	const token = await SecureStore.getItemAsync('access_token');
+		//console.log('xdd token access wyloguj = ', token??"");
+		navigation.navigate('AuthScreen');
+	};
 	return (
 		<View style={styles.container}>
 			<ScrollView style={styles.scrollView}>
@@ -138,17 +148,14 @@ const SettingsScreen = (props) => {
 						<Button mode='contained' onPress={() => changePassword()} title='changePassword' style={styles.button}>
 							Zmień hasło
 						</Button>
+						<Button mode='contained' onPress={() => logout()} title='logout' style={styles.button}>
+							Wyloguj
+						</Button>
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Zakres wieku</Text>
-						<RangeSlider
-							min={18}
-							max={100}
-							fromValueOnChange={(value) => setFromAge(value)}
-							toValueOnChange={(value) => setToAge(value)}
-							initialFromValue={18}
-						/>
+						<RangeSlider min={18} max={100} fromValueOnChange={(value) => setFromAge(value)} toValueOnChange={(value) => setToAge(value)} initialFromValue={18} />
 						<Text style={styles.subText}>
 							Wiek od: {fromAge} do {toAge}
 						</Text>
@@ -203,13 +210,7 @@ const SettingsScreen = (props) => {
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Wzrost</Text>
-						<RangeSlider
-							min={100}
-							max={200}
-							fromValueOnChange={(value) => setFromHeight(value)}
-							toValueOnChange={(value) => setToHeight(value)}
-							initialFromValue={100}
-						/>
+						<RangeSlider min={100} max={200} fromValueOnChange={(value) => setFromHeight(value)} toValueOnChange={(value) => setToHeight(value)} initialFromValue={100} />
 						<Text style={styles.subText}>
 							Wzrost od: {fromHeight} do {toHeight}
 						</Text>
@@ -217,13 +218,7 @@ const SettingsScreen = (props) => {
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Waga</Text>
-						<RangeSlider
-							min={30}
-							max={150}
-							fromValueOnChange={(value) => setFromWeight(value)}
-							toValueOnChange={(value) => setToWeight(value)}
-							initialFromValue={50}
-						/>
+						<RangeSlider min={30} max={150} fromValueOnChange={(value) => setFromWeight(value)} toValueOnChange={(value) => setToWeight(value)} initialFromValue={50} />
 						<Text style={styles.subText}>
 							Wzrost od: {fromWeight} do {toWeight}
 						</Text>
@@ -232,84 +227,42 @@ const SettingsScreen = (props) => {
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Znak zodiacu</Text>
 						{zodiac.map((subItems, sIndex) => {
-							return (
-								<Checkbox.Item
-									key={sIndex}
-									label={subItems.label}
-									status={subItems.status ? 'checked' : 'unchecked'}
-									onPress={() => updatezodiac(sIndex, !subItems.status)}
-								/>
-							);
+							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updatezodiac(sIndex, !subItems.status)} />;
 						})}
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>wykształcenie</Text>
 						{education.map((subItems, sIndex) => {
-							return (
-								<Checkbox.Item
-									key={sIndex}
-									label={subItems.label}
-									status={subItems.status ? 'checked' : 'unchecked'}
-									onPress={() => updateEducation(sIndex, !subItems.status)}
-								/>
-							);
+							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updateEducation(sIndex, !subItems.status)} />;
 						})}
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Religia</Text>
 						{religion.map((subItems, sIndex) => {
-							return (
-								<Checkbox.Item
-									key={sIndex}
-									label={subItems.label}
-									status={subItems.status ? 'checked' : 'unchecked'}
-									onPress={() => updateReligion(sIndex, !subItems.status)}
-								/>
-							);
+							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updateReligion(sIndex, !subItems.status)} />;
 						})}
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Dzieci</Text>
 						{children.map((subItems, sIndex) => {
-							return (
-								<Checkbox.Item
-									key={sIndex}
-									label={subItems.label}
-									status={subItems.status ? 'checked' : 'unchecked'}
-									onPress={() => updateChildren(sIndex, !subItems.status)}
-								/>
-							);
+							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updateChildren(sIndex, !subItems.status)} />;
 						})}
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Alkohol</Text>
 						{alcohol.map((subItems, sIndex) => {
-							return (
-								<Checkbox.Item
-									key={sIndex}
-									label={subItems.label}
-									status={subItems.status ? 'checked' : 'unchecked'}
-									onPress={() => updateAlcohol(sIndex, !subItems.status)}
-								/>
-							);
+							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updateAlcohol(sIndex, !subItems.status)} />;
 						})}
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Papierosy</Text>
 						{cigarette.map((subItems, sIndex) => {
-							return (
-								<Checkbox.Item
-									key={sIndex}
-									label={subItems.label}
-									status={subItems.status ? 'checked' : 'unchecked'}
-									onPress={() => updateCigarette(sIndex, !subItems.status)}
-								/>
-							);
+							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updateCigarette(sIndex, !subItems.status)} />;
 						})}
 					</View>
 
