@@ -14,6 +14,7 @@ const EditPhotoScreen = (props) => {
                 <Ionicons name="arrow-back" size={40} color="rgba(250,250,250,1)" />
             </TouchableOpacity> */}
             <Text>Edycja  zdjęcia</Text>
+            <Menu settings={true} />
         </View>
     );
 };

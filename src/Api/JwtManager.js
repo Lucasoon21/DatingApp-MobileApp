@@ -31,3 +31,14 @@ const JwtManager = () => {
     }
 }
 export default JwtManager()*/
+
+const JwtManager = () => {
+
+    function _getAccessToken() {
+        return AsyncStorage.getItem("access_token")
+    }
+    return {
+        getAccessToken: _getAccessToken,
+    }
+}
+export default JwtManager()

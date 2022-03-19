@@ -3,14 +3,15 @@ import { StyleSheet, Text, View, Image, Linking, Platform, ScrollView, Touchable
 import { chat, message } from '../Styles/ChatStyle';
 import { Ionicons } from '@expo/vector-icons';
 import Message from '../Components/Message';
+import Menu from '../Controls/Menu';
 
 
 const ChatScreen = (props) => {
-  /*  const goBack = () => props.navigation.goBack();
-    const goProfile = () => props.navigation.navigate("ProfileUser")
-    const goConversation = () => props.navigation.navigate("Conversations")
+   const goBack = () => props.navigation.goBack();
+    const goProfile = () => props.navigation.navigate("DetailsProfileScreen")
+    const goConversation = () => props.navigation.navigate("ConversationScreen")
     const [messageField, setMessageField] = useState("");
-*/
+
     return (
         <View style={chat.container}>
             <View style={chat.buttonBack}>
@@ -44,7 +45,7 @@ const ChatScreen = (props) => {
                 <Ionicons name="send" size={40} color="rgba(255, 0, 0, 1)" style={chat.sendIcon} />
             </View>
 
-
+            <Menu chat={true} />
         </View>
     );
 };

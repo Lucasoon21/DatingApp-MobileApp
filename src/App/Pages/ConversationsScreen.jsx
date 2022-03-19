@@ -7,13 +7,13 @@ import MenuTop from '../Unused/MenuTop';
 import ConversationComponent from '../Components/ConversationComponent';
 
 const ConversationsScreen = (props) => {
-    // const goPairs = () => props.navigation.navigate("Pairs")
-    // const goConversation = () => props.navigation.navigate("Conversations")
-    // const goChat = () => props.navigation.navigate("Chat")
+     const goPairs = () => props.navigation.navigate("PairsScreen")
+     const goConversation = () => props.navigation.navigate("ConversationScreen")
+     const goChat = () => props.navigation.navigate("ChatScreen")
 
     return (
         <View style={styles.container}>
-
+ 
             {/* <View style={styles.menuTop}>
                 <TouchableOpacity
                     onPress={goPairs}
@@ -38,7 +38,7 @@ const ConversationsScreen = (props) => {
             </ScrollView>
 
 
-
+            <Menu swipe={true} />
         </View>
     );
 };

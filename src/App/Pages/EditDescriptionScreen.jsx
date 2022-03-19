@@ -62,7 +62,7 @@ const EditDescriptionScreen = (props) => {
 
                 </Button>
             </View>
-
+            <Menu profile={true} />
         </View>
     );
 };

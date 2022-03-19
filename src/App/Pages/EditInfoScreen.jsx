@@ -214,6 +214,7 @@ const EditInfoScreen = (props) => {
                     </View>
                 </View>
             </ScrollView>
+            <Menu settings={true} />
         </View>
     )
 

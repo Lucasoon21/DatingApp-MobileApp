@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import Menu from "../Controls/Menu";
-import DetailsProfileScreen from '../Pages/DetailsProfileScreen';
+
 import { styles } from '../Styles/ChatStyle';
 
 
 const MenuTop = (props) => {
-   // const goPairs = () => props.navigation.navigate("Pairs")
-    //const goConversation = () => props.navigation.navigate("Conversations")
-   // const goChat = () => props.navigation.navigate("Chat")
+   // const goPairs = () => props.navigation.navigate("PairsScreen")
+    //const goConversation = () => props.navigation.navigate("ConversationsScreen")
+   // const goChat = () => props.navigation.navigate("ChatScreen")
     
     return (
 

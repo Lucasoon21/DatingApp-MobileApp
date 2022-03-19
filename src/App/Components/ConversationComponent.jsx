@@ -7,7 +7,7 @@ import MenuTop from '../Unused/MenuTop';
 import PairComponent from './PairComponent';
 
 const ConversationComponent = (props) => {
-    //const goChat = () => props.navigation.navigate("Chat")
+    const goChat = () => props.navigation.navigate("ChatScreen")
 
     return (
         <View style={singleConversation.container}>

@@ -8,7 +8,7 @@ import PairComponent from './PairComponent';
 import { Ionicons } from '@expo/vector-icons';
 
 const Message = (props) => {
-    const goProfile = () => props.navigation.navigate("ProfileUser")
+    const goProfile = () => props.navigation.navigate("DetailsProfileScreen")
 
     return (
         <View style={[message.messageContainer, props.sendToMe ? message.messageRecieverContainer : null]}>

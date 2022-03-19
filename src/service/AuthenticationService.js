@@ -2,20 +2,28 @@ import httpService from './httpService';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiUrl } from '../../config';
+import * as SecureStore from 'expo-secure-store';
+
 const API_URL = apiUrl + '/auth';
 
 export async function login(email, password) {
-	console.log("xdd")
+	console.log("xdd -")
     try {
         const promise = await axios.post(API_URL + "/login", {
             email: email,
             password: password,
         })
       
+		console.log(promise.data)
         const {data: response, status: status} = promise
-        AsyncStorage.setItem('access_token', promise.data.access_token)
-        AsyncStorage.setItem('refresh_token',promise.data.refresh_token)
+		await SecureStore.setItemAsync('access_token', promise.data.access_token);
+		await SecureStore.setItemAsync('refresh_token', promise.data.refresh_token);
+		const token = await SecureStore.getItemAsync('access_token');
+		console.log("token jwt = ",token)
 
+       // AsyncStorage.setItem('access_token', promise.data.access_token)
+      //  AsyncStorage.setItem('refresh_token',promise.data.refresh_token)
+		//console.log("promise access = ",promise.data.access_token)
         return status
 
         //return {response, status}
@@ -44,7 +52,7 @@ export async function login(email, password) {
 	} catch (err) {
 		console.log('Login: ' + err);
 		return err;
-	}*/
+	}*/ 
 }
 
 export async function register(email, password) {

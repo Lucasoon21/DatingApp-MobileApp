@@ -10,11 +10,11 @@ import { Octicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { CARD, ACTION_OFFSET } from '../../utils/constants';
 import { Fontisto } from '@expo/vector-icons';
-import DetailsProfileScreen from '../Pages/DetailsProfileScreen';
+
 
 //const SwipeScreen = (props) => {
 const SwipeScreen = (props) => {
-	const profile = () => props.navigation.navigate('ProfileDetails');
+	const profile = () => props.navigation.navigate('DetailsProfileScreen');
 
 	const [person, setPerson] = useState(personArray);
 

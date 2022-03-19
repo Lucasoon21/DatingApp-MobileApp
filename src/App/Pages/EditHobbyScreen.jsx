@@ -32,6 +32,7 @@ const EditHobbyScreen = (props) => {
                     <HobbyButton text="Taniec" edit={true} />
                 </View>
             </View>
+            <Menu settings={true} />
         </View>
     );
 };

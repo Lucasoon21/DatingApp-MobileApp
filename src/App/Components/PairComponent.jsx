@@ -9,8 +9,8 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PairComponent = (props) => {
-    const goProfile = () => props.navigation.navigate("ProfileUser")
-    const goChat = () => props.navigation.navigate("Chat")
+    const goProfile = () => props.navigation.navigate("DetailsProfileScreen")
+    const goChat = () => props.navigation.navigate("ChatScreen")
 
     return (
         <>

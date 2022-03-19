@@ -11,11 +11,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 const DetailsProfileScreen = (props) => {
     // // const goBack = () => props.navigation.goBack();
-    // const goEditPhoto = () => props.navigation.navigate("EditPhoto")
-    // const goEditDescription = () => props.navigation.navigate("EditDescription")
-    // const goEditInfo = () => props.navigation.navigate("EditInfo")
-    // const goEditHobby = () => props.navigation.navigate("EditHobby")
-    // const goEditSearching = () => props.navigation.navigate("EditSearching")
+    // const goEditPhoto = () => props.navigation.navigate("EditPhotoScreen")
+     const goEditDescription = () => props.navigation.navigate("EditDescriptionScreen")
+     const goEditInfo = () => props.navigation.navigate("EditInfoScreen")
+    // const goEditHobby = () => props.navigation.navigate("EditHobbyScreen")
+    // const goEditSearching = () => props.navigation.navigate("EditSearchingScreen")
 
     return (
         <View style={styles.container}>
@@ -36,11 +36,11 @@ const DetailsProfileScreen = (props) => {
                     <Image source={require('../../Images/person1.jpg')} style={styles.image} />
 
                     <View style={styles.sectionInfo}>
-                        {/* {props.route.params.myProfile ? (
+                         {props.route.params.myProfile ? (
                             <TouchableOpacity onPress={goEditDescription} style={styles.buttonEditProfile}>
                                 <MaterialIcons name="edit" size={30} color="rgba(0,0,0,1)" />
                             </TouchableOpacity>
-                        ) : null} */}
+                        ) : null} 
                         <Text style={styles.name}>Michał, 22</Text>
                         <Text style={styles.localization}><Entypo name="location-pin" size={25} color="black" /> 88 km stąd</Text>
                         <Text style={styles.description}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor

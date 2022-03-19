@@ -28,6 +28,7 @@ const EditSearchingScreen = (props) => {
                     <RelationButton text="ONS" type={1} edit={true} />
                 </View>
             </View>
+            <Menu profile={true} />
         </View>
     );
 };
