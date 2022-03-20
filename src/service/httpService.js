@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { apiUrl } from '../../config';
+import * as SecureStore from 'expo-secure-store';
+
 
 const axiosInstance = axios.create({ baseURL: apiUrl, headers });
 
@@ -31,7 +33,10 @@ axiosInstance.interceptors. use(
 	},
 );
 */
-let headers = {};
+const token = SecureStore.getItemAsync('access_token');
+
+let headers = {headers: {"Authorization" : `Bearer ${token}`} };
+
 function setJwt(jwt) {
 	axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
 	headers.Authorization = 'Bearer ${jwt}';
