@@ -9,7 +9,8 @@ import HobbyButton from '../Controls/HobbyButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Checkbox } from 'react-native-paper';
 import * as SecureStore from 'expo-secure-store';
-import { useNavigation } from '@react-navigation/native'; // <-- import useNavigation hook
+import { useNavigation } from '@react-navigation/native';
+
 
 const SettingsScreen = (props) => {
 	const deleteAccount = () => {

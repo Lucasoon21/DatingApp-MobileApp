@@ -6,6 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 
 const API_URL = apiUrl + '/auth';
 
+
 export async function login(email, password) {
 	console.log("xdd -")
     try {
@@ -20,6 +21,7 @@ export async function login(email, password) {
 		await SecureStore.setItemAsync('refresh_token', promise.data.refresh_token);
 		const token = await SecureStore.getItemAsync('access_token');
 		console.log("token jwt = ",token)
+		httpService.setJwt(token)
 
        // AsyncStorage.setItem('access_token', promise.data.access_token)
       //  AsyncStorage.setItem('refresh_token',promise.data.refresh_token)
