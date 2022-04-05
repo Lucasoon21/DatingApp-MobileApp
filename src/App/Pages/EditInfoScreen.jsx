@@ -12,22 +12,20 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import DictionaryService from '../../service/DictionaryService';
+import ProfileService from '../../service/ProfileService';
 
 const weightArray = new Array(120).fill().map((value, index) => ({ id: index + 30 }));
 
 const heightArray = new Array(100).fill().map((value, index) => ({ id: index + 100 }));
 
 const EditInfoScreen = (props) => {
-	var today = new Date();
-	var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+//	var today = new Date();
+//	var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
-	console.log('======== START =======' + time);
+	//console.log('======== START =======' + time);
 	// const goBack = () => props.navigation.goBack();
 
-	const [work, setWork] = useState('');
-	const [characterWorkCount, setCharacterWorkCount] = useState(work.length);
-	const MAX_LENGTH_WORK = 50;
-
+	
 	const [cigarette, setCigarette] = useState('');
 	const [alcohol, setAlcohol] = useState('');
 	const [children, setChildren] = useState('');
@@ -36,18 +34,20 @@ const EditInfoScreen = (props) => {
 	const [orientation, setOrientation] = useState('');
 	const [weight, setWeight] = useState('');
 	const [height, setHeight] = useState('');
-    const [eyeColor, setEyeColor] = useState('');
+	const [eyeColor, setEyeColor] = useState('');
+	const [job, setJob] = useState('');
+	
+	const [characterWorkCount, setCharacterWorkCount] = useState(job.length);
+	const MAX_LENGTH_WORK = 50;
 
 	const [orientationDropdown, setOrientationDropdown] = useState([]);
 	const [zodiacDropdown, setZodiacDropdown] = useState([]);
 	const [educationDropdown, setEducationDropdown] = useState([]);
-	
 	const [eyeColorDropdown, setEyeColorDropdown] = useState([]);
-    const [religiousDropdown, setReligiousDropdown] = useState([]);
+	const [religiousDropdown, setReligiousDropdown] = useState([]);
 	const [childrenDropdown, setChildrenDropdown] = useState([]);
 	const [alcoholDropdown, setAlcoholDropdown] = useState([]);
 	const [cigarettesDropdown, setCigarettesDropdown] = useState([]);
-
 
 	const [weightDropdown, setWeightDropdown] = useState([]);
 	const [heightDropdown, setHeightDropdown] = useState([]);
@@ -55,7 +55,34 @@ const EditInfoScreen = (props) => {
 
 	useEffect(() => {
 		getDropdownList();
+		async function fetchDetailsProfile(){
+            let response = await ProfileService.getProfileDetails();
+            if(response.status === 200){
+                let data = response.data
+                console.log("ok",data.alcohol.id)
+               
+                setAlcohol(data.alcohol.id)
+                setCigarette(data.cigarettes.id)
+                setChildren(data.children.id)
+                setReligion(data.religious.id)
+                setEducation(data.education.id)
+                setOrientation(data.orientation.id)
+                setWeight(data.weight)
+                setHeight(data.height)
+                setEyeColor(data.eyeColor.id)
+                setJob(data.job)
+               
+                
+                
+                 
+            } else {
+                console.log("nie ok")
+            }
+            //console.log(response);
+        }
+        fetchDetailsProfile()
 	}, []);
+
 
 	const getDropdownList = async () => {
 		let Alcohol = await DictionaryService.getAlcoholDictionary();
@@ -85,67 +112,80 @@ const EditInfoScreen = (props) => {
 
 	const renderZodiacList = () => {
 		return zodiacDropdown.map((Zodiac) => {
-			return <Picker.Item label={Zodiac.name} value={Zodiac.name} key={Zodiac.id} />;
+			return <Picker.Item label={Zodiac.name} value={Zodiac.id} key={Zodiac.id} />;
 		});
 	};
 
 	const renderReligiousList = () => {
 		return religiousDropdown.map((Religious) => {
-			return <Picker.Item label={Religious.name} value={Religious.name} key={Religious.id} />;
+			return <Picker.Item label={Religious.name} value={Religious.id} key={Religious.id} />;
 		});
 	};
 
 	const renderRelationshipList = () => {
 		return relationshipDropdown.map((Relationship) => {
-			return <Picker.Item label={Relationship.name} value={Relationship.name} key={Relationship.id} />;
+			return <Picker.Item label={Relationship.name} value={Relationship.id} key={Relationship.id} />;
 		});
 	};
 
 	const renderOrientationList = () => {
 		return orientationDropdown.map((Orientation) => {
-			return <Picker.Item label={Orientation.name} value={Orientation.name} key={Orientation.id} />;
+			return <Picker.Item label={Orientation.name} value={Orientation.id} key={Orientation.id} />;
 		});
 	};
 
 	const renderHobbyList = () => {
 		return hobbyDropdown.map((Hobby) => {
-			return <Picker.Item label={Hobby.name} value={Hobby.name} key={Hobby.id} />;
+			return <Picker.Item label={Hobby.name} value={Hobby.id} key={Hobby.id} />;
 		});
 	};
 
 	const renderGenderList = () => {
 		return genderDropdown.map((Gender) => {
-			return <Picker.Item label={Gender.name} value={Gender.name} key={Gender.id} />;
+			return <Picker.Item label={Gender.name} value={Gender.id} key={Gender.id} />;
 		});
 	};
 
 	const renderEyeColorList = () => {
 		return eyeColorDropdown.map((EyeColor) => {
-			return <Picker.Item label={EyeColor.name} value={EyeColor.name} key={EyeColor.id} />;
+			return <Picker.Item label={EyeColor.name} value={EyeColor.id} key={EyeColor.id} />;
 		});
 	};
 
 	const renderEducationList = () => {
 		return educationDropdown.map((Education) => {
-			return <Picker.Item label={Education.name} value={Education.name} key={Education.id} />;
+			return <Picker.Item label={Education.name} value={Education.id} key={Education.id} />;
 		});
 	};
 
 	const renderCigarettesList = () => {
 		return cigarettesDropdown.map((Cigarettes) => {
-			return <Picker.Item label={Cigarettes.name} value={Cigarettes.name} key={Cigarettes.id} />;
+			return <Picker.Item label={Cigarettes.name} value={Cigarettes.id} key={Cigarettes.id} />;
 		});
 	};
 
 	const renderChildrenList = () => {
 		return childrenDropdown.map((Children) => {
-			return <Picker.Item label={Children.name} value={Children.name} key={Children.id} />;
+			return <Picker.Item label={Children.name} value={Children.id} key={Children.id} />;
 		});
 	};
 	const renderAlcoholList = () => {
 		return alcoholDropdown.map((alcohol) => {
-			return <Picker.Item label={alcohol.name} value={alcohol.name} key={alcohol.id} />;
+			return <Picker.Item label={alcohol.name} value={alcohol.id} key={alcohol.id} />;
 		});
+	};
+
+	const changeProfileDetails = async () => {
+		let response =  await ProfileService.changeProfileDetails(alcohol, job, height, weight, 
+			orientation, education, religion, children, cigarette, eyeColor);
+		console.log('response ', response);
+		console.log(alcohol+" - "+job+" - "+height+" - "+weight+" - "+orientation+" - "+
+		education+" - "+religion+" - "+children+" - "+cigarette+" - "+eyeColor)
+		if (response == 200) {
+			alert('Zmieniono szczegóły profilu');
+		} else {
+			alert('Nieudało się zmienić szczegółów opisu');
+		}
 	};
 
 	return (
@@ -161,7 +201,8 @@ const EditInfoScreen = (props) => {
 						<Entypo name='drink' size={24} color='black' />
 						<Text style={styles.infoHeader}>Alkohol</Text>
 
-						<Picker style={styles.pickerStyle} selectedValue={alcohol} onValueChange={(itemValue) => setAlcohol(itemValue)}>
+						<Picker style={styles.pickerStyle} selectedValue={alcohol} onValueChange={(itemValue) => {setAlcohol(itemValue)
+						console.log(itemValue)}}>
 							{renderAlcoholList()}
 						</Picker>
 					</View>
@@ -177,10 +218,10 @@ const EditInfoScreen = (props) => {
 
 						<TextInput
 							onChangeText={(text) => {
-								setWork(text);
+								setJob(text);
 								setCharacterWorkCount(text.length);
 							}}
-							value={work}
+							value={job}
 							style={[styles.textInput, styles.textInputWork]}
 							editable
 							maxLength={MAX_LENGTH_WORK}
@@ -192,11 +233,11 @@ const EditInfoScreen = (props) => {
 						<Text style={styles.infoHeader}>Wzrost</Text>
 
 						<Picker style={styles.pickerStyle} selectedValue={height} onValueChange={(itemValue) => setHeight(itemValue)}>
-							<Picker.Item label='Nie chcę podawać' value='Nie chcę podawać'></Picker.Item>
+							{/* <Picker.Item label='Nie chcę podawać' value='0'></Picker.Item> */}
 							{heightArray.map((item) => (
-								<Picker.Item label={item.id.toString() + ' cm'} value={item.id.toString() + ' cm'} key={item.id}></Picker.Item>
+								<Picker.Item label={item.id.toString() + ' cm'} value={item.id} key={item.id}></Picker.Item>
 							))}
-							<Picker.Item label='>= 200 cm' value='>= 200 cm'></Picker.Item>
+							{/* <Picker.Item label='>= 200 cm' value='999'></Picker.Item> */}
 						</Picker>
 					</View>
 
@@ -205,12 +246,12 @@ const EditInfoScreen = (props) => {
 						<Text style={styles.infoHeader}>Waga</Text>
 
 						<Picker style={styles.pickerStyle} selectedValue={weight} onValueChange={(itemValue) => setWeight(itemValue)}>
-							<Picker.Item label='Nie chcę podawać' value='Nie chcę podawać'></Picker.Item>
-							<Picker.Item label='< 30 kg' value='< 30 kg'></Picker.Item>
+							{/* <Picker.Item label='Nie chcę podawać' value='Nie chcę podawać'></Picker.Item>
+							<Picker.Item label='< 30 kg' value={0}></Picker.Item> */} 
 							{weightArray.map((item) => (
-								<Picker.Item label={item.id.toString() + ' kg'} value={item.id.toString() + ' kg'} key={item.id + 200}></Picker.Item>
-							))}
-							<Picker.Item label='>= 150 kg' value='>= 150 kg'></Picker.Item>
+								<Picker.Item label={item.id.toString() + ' kg'} value={item.id} key={item.id + 200}></Picker.Item>
+							))} 
+							{/* <Picker.Item label='>= 150 kg' value={0}></Picker.Item> */}
 						</Picker>
 					</View>
 
@@ -219,9 +260,7 @@ const EditInfoScreen = (props) => {
 						<Text style={styles.infoHeader}>Orientacja</Text>
 
 						<Picker style={styles.pickerStyle} selectedValue={orientation} onValueChange={(itemValue) => setOrientation(itemValue)}>
-
 							{renderOrientationList()}
-						
 						</Picker>
 					</View>
 
@@ -230,15 +269,7 @@ const EditInfoScreen = (props) => {
 						<Text style={styles.infoHeader}>Wykształcenie</Text>
 
 						<Picker style={styles.pickerStyle} selectedValue={education} onValueChange={(itemValue) => setEducation(itemValue)}>
-							{/* <Picker.Item label='Podstawowe' value='Podstawowe'></Picker.Item>
-							<Picker.Item label='Gimnazjalne' value='Gimnazjalne'></Picker.Item>
-							<Picker.Item label='Zasadnicze zawodowe' value='Zasadnicze zawodowe'></Picker.Item>
-							<Picker.Item label='Zasadnicze branżowe' value='Zasadnicze branżowe'></Picker.Item>
-							<Picker.Item label='Średnie' value='Średnie'></Picker.Item>
-							<Picker.Item label='Wyższe 1 stopnia' value='Wyższe 1 stopnia'></Picker.Item>
-							<Picker.Item label='Wyższe 2 stopnia' value='Wyższe 2 stopnia'></Picker.Item>
-							<Picker.Item label='Wyższe 3 stopnia' value='Wyższe 3 stopnia'></Picker.Item> */}
-                            {renderEducationList()}
+							{renderEducationList()}
 						</Picker>
 					</View>
 
@@ -247,7 +278,7 @@ const EditInfoScreen = (props) => {
 						<Text style={styles.infoHeader}>Religia</Text>
 
 						<Picker style={styles.pickerStyle} selectedValue={religion} onValueChange={(itemValue) => setReligion(itemValue)}>
-                            {renderReligiousList()}
+							{renderReligiousList()}
 						</Picker>
 					</View>
 
@@ -256,12 +287,7 @@ const EditInfoScreen = (props) => {
 						<Text style={styles.infoHeader}>Dzieci</Text>
 
 						<Picker style={styles.pickerStyle} selectedValue={children} onValueChange={(itemValue) => setChildren(itemValue)}>
-							{/* <Picker.Item label='Nigdy nie chcę mieć dzieci' value='Nigdy nie chcę mieć dzieci'></Picker.Item>
-							<Picker.Item label='Nie chcę mieć dzieci teraz ale w dalszej przyszłości' value='Nie chcę mieć dzieci teraz ale w dalszej przyszłości'></Picker.Item>
-							<Picker.Item label='Mam już dzieci i nie chcę więcej' value='Mam już dzieci i nie chcę więcej'></Picker.Item>
-							<Picker.Item label='Mam już dzieci oraz chcę więcej' value='Mam już dzieci oraz chcę więcej'></Picker.Item>
-							<Picker.Item label='Chcę mieć dzieci jak najszbciej' value='Chcę mieć dzieci jak najszbciej'></Picker.Item> */}
-                            {renderChildrenList()}
+							{renderChildrenList()}
 						</Picker>
 					</View>
 
@@ -269,23 +295,21 @@ const EditInfoScreen = (props) => {
 						<MaterialCommunityIcons name='cigar' size={24} color='black' />
 						<Text style={styles.infoHeader}>Papierosy</Text>
 						<Picker style={styles.pickerStyle} selectedValue={cigarette} onValueChange={(itemValue) => setCigarette(itemValue)}>
-							{/* <Picker.Item label='Nie palę' value='Nie palę'></Picker.Item>
-							<Picker.Item label='Palę okazjonalnie' value='Palę okazjonalnie'></Picker.Item>
-							<Picker.Item label='Palę rzadko' value='Palę rzadko'></Picker.Item>
-							<Picker.Item label='Palę dosyć często' value='Palę dosyć często'></Picker.Item>
-							<Picker.Item label='Palę nałogowo' value='Palę nałogowo'></Picker.Item> */} 
-                            {renderCigarettesList()}
+							{renderCigarettesList()}
 						</Picker>
 					</View>
 
-                    <View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
+					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
 						<MaterialCommunityIcons name='eye' size={24} color='black' />
 						<Text style={styles.infoHeader}>Kolor oczu</Text>
-						<Picker style={styles.pickerStyle} selectedValue={cigarette} onValueChange={(itemValue) => setCigarette(itemValue)}>
-
-                            {renderEyeColorList()}
+						<Picker style={styles.pickerStyle} selectedValue={eyeColor} onValueChange={(itemValue) => setEyeColor(itemValue)}>
+							{renderEyeColorList()}
 						</Picker>
 					</View>
+					<Button type='submit' title='submit' onPress={() => changeProfileDetails()} mode='contained'>
+						<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
+						<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
+					</Button>
 				</View>
 			</ScrollView>
 			<Menu profile={true} />

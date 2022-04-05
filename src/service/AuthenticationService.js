@@ -6,35 +6,35 @@ import * as SecureStore from 'expo-secure-store';
 
 const API_URL = apiUrl + '/auth';
 
-
 export async function login(email, password) {
-	console.log("xdd -")
-    try {
-        const promise = await axios.post(API_URL + "/login", {
-            email: email,
-            password: password,
-        })
-      
-		console.log(promise.data)
-        const {data: response, status: status} = promise
+	try {
+		const promise = await httpService.axiosInstance.post(API_URL + '/login', {
+			email: email,
+			password: password,
+		});
+
+		console.log(promise.data);
+		const { data: response, status: status } = promise;
 		await SecureStore.setItemAsync('access_token', promise.data.access_token);
 		await SecureStore.setItemAsync('refresh_token', promise.data.refresh_token);
+		await SecureStore.setItemAsync('profileId', promise.data.profile_id);
+		await SecureStore.setItemAsync('userId', promise.data.user_id);
 		const token = await SecureStore.getItemAsync('access_token');
-		console.log("token jwt = ",token)
-		httpService.setJwt(token)
-
-       // AsyncStorage.setItem('access_token', promise.data.access_token)
-      //  AsyncStorage.setItem('refresh_token',promise.data.refresh_token)
+		console.log('token jwt = ', token);
+		httpService.setJwt(token);
+		console.log("http service ",httpService.axiosInstance.defaults)
+		
+		// AsyncStorage.setItem('access_token', promise.data.access_token)
+		//  AsyncStorage.setItem('refresh_token',promise.data.refresh_token)
 		//console.log("promise access = ",promise.data.access_token)
-        return status
+		return status;
 
-        //return {response, status}
-
-    } catch (err) {
-        console.log("Login: " + err)
-        return err
-    }
-/*
+		//return {response, status}
+	} catch (err) {
+		console.log('Login: ' + err);
+		return err;
+	}
+	/*
 	try {
 		const response = await httpService.axiosInstance
 			.post(API_URL+'login', {
@@ -54,12 +54,12 @@ export async function login(email, password) {
 	} catch (err) {
 		console.log('Login: ' + err);
 		return err;
-	}*/ 
+	}*/
 }
 
 export async function register(email, password) {
 	try {
-		const response = await httpService.axiosInstance.post(API_URL+'/register', {
+		const response = await httpService.axiosInstance.post(API_URL + '/register', {
 			email: email,
 			password: password,
 		});
@@ -72,7 +72,7 @@ export async function register(email, password) {
 }
 export async function registerDetails(email, name, gender, dateBirth, orientation) {
 	try {
-		const response = await httpService.axiosInstance.post(API_URL+'/registerDetails', {
+		const response = await httpService.axiosInstance.post(API_URL + '/registerDetails', {
 			email: email,
 			name: name,
 			gender: gender,
@@ -91,5 +91,4 @@ export default {
 	register,
 	login,
 	registerDetails,
-
 };
