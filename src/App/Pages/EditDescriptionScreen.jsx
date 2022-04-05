@@ -5,13 +5,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
 import { Entypo } from '@expo/vector-icons';
 import { styles } from '../Styles/ProfileStyle';
+import ProfileService from '../../service/ProfileService';
 
 
 const EditDescriptionScreen = (props) => {
     //const goBack = () => props.navigation.goBack();
-    const [description, setDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
+    const [description, setDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor");
     const [characterCount, setCharacterCount] = useState(description.length);
     const MAX_LENGTH = 250;
+    
+    const changeDescription = async () => {
+        let response = await ProfileService.changeDescription(description)
+        console.log("response ",response)
+        if(response==200) {
+            alert('Zmieniono opis');
+        } else {
+            alert('Nieudało się zmienić opisu');
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -50,7 +61,7 @@ const EditDescriptionScreen = (props) => {
                 <Button
                     type="submit"
                     title="submit"
-                    onPress={() => { console.log(description) }}
+                    onPress={() => changeDescription()}
                     mode="contained"
                     style={styles.buttonSave}
                 >

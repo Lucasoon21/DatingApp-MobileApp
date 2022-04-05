@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import Menu from "../Controls/Menu";
 import { CARD } from '../../utils/constants';
@@ -8,14 +8,61 @@ import HobbyButton from '../Controls/HobbyButton';
 import RelationButton from '../Controls/RelationButton';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import ProfileService from '../../service/ProfileService';
 
 const DetailsProfileScreen = (props) => {
     // // const goBack = () => props.navigation.goBack();
     // const goEditPhoto = () => props.navigation.navigate("EditPhotoScreen")
      const goEditDescription = () => props.navigation.navigate("EditDescriptionScreen")
      const goEditInfo = () => props.navigation.navigate("EditInfoScreen")
+     
     // const goEditHobby = () => props.navigation.navigate("EditHobbyScreen")
     // const goEditSearching = () => props.navigation.navigate("EditSearchingScreen")
+    const [description, setDescription] = useState("");
+    const [cigarette, setCigarette] = useState('');
+	const [alcohol, setAlcohol] = useState('');
+	const [children, setChildren] = useState('');
+	const [religion, setReligion] = useState('');
+	const [education, setEducation] = useState('');
+	const [orientation, setOrientation] = useState('');
+	const [weight, setWeight] = useState('');
+	const [height, setHeight] = useState('');
+	const [eyeColor, setEyeColor] = useState('');
+	const [job, setJob] = useState('');
+    const [gender, setGender] = useState('');
+    const [name, setName] = useState('');
+    const [zodiac, setZodiac] = useState('');
+
+    useEffect(() => {
+        console.log("use Effect")
+        async function fetchDetailsProfile(){
+            let response = await ProfileService.getProfileDetails();
+            if(response.status === 200){
+                let data = response.data
+                console.log("ok",data.alcohol)
+                setDescription(data.description)
+                setAlcohol(data.alcohol.name)
+                setCigarette(data.cigarettes.name)
+                setChildren(data.children.name)
+                setReligion(data.religious.name)
+                setEducation(data.education.name)
+                setOrientation(data.orientation.name)
+                setWeight(data.weight)
+                setHeight(data.height)
+                setEyeColor(data.eyeColor.name)
+                setJob(data.job)
+                setGender(data.gender.name)
+                setName(data.name)
+                setZodiac(data.zodiac.name)
+                
+                 
+            } else {
+                console.log("nie ok")
+            }
+            //console.log(response);
+        }
+        fetchDetailsProfile()
+	}, []);
 
     return (
         <View style={styles.container}>
@@ -41,13 +88,9 @@ const DetailsProfileScreen = (props) => {
                                 <MaterialIcons name="edit" size={30} color="rgba(0,0,0,1)" />
                             </TouchableOpacity>
                         ) : null} 
-                        <Text style={styles.name}>Michał, 22</Text>
+                        <Text style={styles.name}>{name}, 22</Text>
                         <Text style={styles.localization}><Entypo name="location-pin" size={25} color="black" /> 88 km stąd</Text>
-                        <Text style={styles.description}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                            ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-                            anim id est laborum
+                        <Text style={styles.description}>{description}
                         </Text>
                     </View>
                     <View style={styles.sectionInfo}>
@@ -60,64 +103,67 @@ const DetailsProfileScreen = (props) => {
                         <View style={styles.personalInfo}>
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Imię</Text>
-                                <Text style={styles.info}>Łukasz</Text>
+                                <Text style={styles.info}>{name}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Zawód</Text>
-                                <Text style={styles.info}>Student</Text>
+                                <Text style={styles.info}>{job}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Wzrost</Text>
-                                <Text style={styles.info}>175 cm</Text>
+                                <Text style={styles.info}>{height}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Waga</Text>
-                                <Text style={styles.info}>nie podano</Text>
+                                <Text style={styles.info}>{weight}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Płeć</Text>
-                                <Text style={styles.info}>Mężczyzna</Text>
+                                <Text style={styles.info}>{gender}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Orientacja</Text>
-                                <Text style={styles.info}>Heteroseksualny/a</Text>
+                                <Text style={styles.info}>{orientation}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Znak zodiaku</Text>
-                                <Text style={styles.info}>Waga</Text>
+                                <Text style={styles.info}>{zodiac}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Wykszatałcenie</Text>
-                                <Text style={styles.info}>Magisterskie</Text>
+                                <Text style={styles.info}>{education}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Religia</Text>
-                                <Text style={styles.info}>Katolicyzm</Text>
+                                <Text style={styles.info}>{religion}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Dzieci</Text>
-                                <Text style={styles.info}>W przyszłości</Text>
+                                <Text style={styles.info}>{children}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Alkohol</Text>
-                                <Text style={styles.info}>Okazjonalnie</Text>
+                                <Text style={styles.info}>{alcohol}</Text>
                             </View>
 
                             <View style={styles.infoGroup}>
                                 <Text style={styles.infoHeader}>Papierosy</Text>
-                                <Text style={styles.info}>Nigdy</Text>
+                                <Text style={styles.info}>{cigarette}</Text>
                             </View>
-                            <Text>Dodac kolor oczu</Text>
+                            <View style={styles.infoGroup}>
+                                <Text style={styles.infoHeader}>Kolor oczu</Text>
+                                <Text style={styles.info}>{eyeColor}</Text>
+                            </View>
                         </View>
                     </View>
 

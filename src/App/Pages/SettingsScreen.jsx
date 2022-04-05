@@ -130,6 +130,8 @@ const SettingsScreen = (props) => {
 		console.log('wyloguj');
 		await SecureStore.deleteItemAsync('access_token');
 		await SecureStore.deleteItemAsync('refresh_token');
+		await SecureStore.deleteItemAsync('profileId');
+		await SecureStore.deleteItemAsync('userId');
 	//	const token = await SecureStore.getItemAsync('access_token');
 		//console.log('xdd token access wyloguj = ', token??"");
 		navigation.navigate('AuthScreen');
