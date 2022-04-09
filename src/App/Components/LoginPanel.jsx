@@ -15,7 +15,7 @@ const LoginPanel = (props) => {
 	const navigation = useNavigation();
 
 	const login = async () => {
-		console.log('Dane: ' + email + ' ' + password);
+		//console.log('Dane: ' + email + ' ' + password);
 		let response = await AuthenticationService.login(email, password);
 		console.log('res', response);
 		if (response == 200) {

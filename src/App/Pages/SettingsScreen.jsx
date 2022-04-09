@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import Menu from '../Controls/Menu';
 import { styles } from '../Styles/SettingsStyle';
@@ -126,8 +126,9 @@ const SettingsScreen = (props) => {
 		newArr[index].status = status;
 		setCigarette(newArr);
 	};
+
 	const logout = async () => {
-		console.log('wyloguj');
+		//console.log('wyloguj');
 		await SecureStore.deleteItemAsync('access_token');
 		await SecureStore.deleteItemAsync('refresh_token');
 		await SecureStore.deleteItemAsync('profileId');
@@ -136,6 +137,10 @@ const SettingsScreen = (props) => {
 		//console.log('xdd token access wyloguj = ', token??"");
 		navigation.navigate('AuthScreen');
 	};
+
+
+
+
 	return (
 		<View style={styles.container}>
 			<ScrollView style={styles.scrollView}>

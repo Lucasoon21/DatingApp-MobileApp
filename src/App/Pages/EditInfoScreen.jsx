@@ -59,7 +59,7 @@ const EditInfoScreen = (props) => {
             let response = await ProfileService.getProfileDetails();
             if(response.status === 200){
                 let data = response.data
-                console.log("ok",data.alcohol.id)
+               // console.log("ok",data.alcohol.id)
                
                 setAlcohol(data.alcohol.id)
                 setCigarette(data.cigarettes.id)
@@ -178,9 +178,9 @@ const EditInfoScreen = (props) => {
 	const changeProfileDetails = async () => {
 		let response =  await ProfileService.changeProfileDetails(alcohol, job, height, weight, 
 			orientation, education, religion, children, cigarette, eyeColor);
-		console.log('response ', response);
-		console.log(alcohol+" - "+job+" - "+height+" - "+weight+" - "+orientation+" - "+
-		education+" - "+religion+" - "+children+" - "+cigarette+" - "+eyeColor)
+		//console.log('response ', response);
+		//console.log(alcohol+" - "+job+" - "+height+" - "+weight+" - "+orientation+" - "+
+		//education+" - "+religion+" - "+children+" - "+cigarette+" - "+eyeColor)
 		if (response == 200) {
 			alert('Zmieniono szczegóły profilu');
 		} else {

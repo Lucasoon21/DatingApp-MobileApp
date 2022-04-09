@@ -28,7 +28,7 @@ const RegisterPanel = (props) => {
         //console.log(props)
         
         
-		console.log('Dane: ' + values.email + ' ' + values.password);
+		//console.log('Dane: ' + values.email + ' ' + values.password);
         const response = await AuthenticationService.register(values.email, values.password);
 		if (response.status == 200 || response.status == 202) {
             navigation.navigate('RegisterDetailsScreen',{email: values.email})
@@ -37,7 +37,7 @@ const RegisterPanel = (props) => {
 		} else {
 			console.log('Nieprawidłowe dane');
 		}
-		console.log(response.data);
+		//console.log(response.data);
 
 	};
 
