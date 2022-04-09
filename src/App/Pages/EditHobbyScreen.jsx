@@ -12,6 +12,7 @@ const EditHobbyScreen = (props) => {
 	 const goBack = () => props.navigation.goBack();
 
     const [hobby, setHobby] = useState([]);
+	
 	useEffect(() => {
 		async function fetchProfileHobby() {
 			let response = await ProfileService.getProfileHobby();
@@ -19,6 +20,7 @@ const EditHobbyScreen = (props) => {
 		}
 		fetchProfileHobby();
 	}, []);
+
     const changeProfileHobby = async () => {
         let response = await ProfileService.changeProfileHobby(hobby)
 		

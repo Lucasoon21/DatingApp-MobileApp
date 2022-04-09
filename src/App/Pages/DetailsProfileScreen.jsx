@@ -63,11 +63,15 @@ const DetailsProfileScreen = (props) => {
 		}
 		async function fetchProfileHobby() {
 			let response = await ProfileService.getProfileHobby();
-			setHobby(response.data);
+			if(response.status==200) {
+				setHobby(response.data);
+			}
 		}
 		async function fetchProfileRelationship() {
 			let response = await ProfileService.getProfileRelationship();
-			setRelationship(response.data);
+			if(response.status==200) {
+				setRelationship(response.data);
+			}
 		}
 		const willFocusSubscription = props.navigation.addListener('focus', () => {
 			setHobby([])
