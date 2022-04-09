@@ -36,10 +36,10 @@ const RegisterDetailsScreen = (props) => {
 
 
 	const register = async (values) => {
-		console.log('start detale');
+		//console.log('start detale');
 		//console.log("Dane: "+values.email+" "+values.password)
 		const response = await AuthenticationService.registerDetails(props.route.params.email, values.name, genderValue, date, orientationValue);
-        console.log(genderValue)
+        //console.log(genderValue)
         navigation.navigate('ChatScreen') //TODO 
         if (response.status == 200 || response.status == 202) {
             //props.navigation.navigate("RegisterDetails")

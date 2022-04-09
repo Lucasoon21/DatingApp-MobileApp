@@ -16,7 +16,7 @@ export async function changeDescription(description) {
 			profileId: profileId,
 			description: description,
 		});
-		console.log('response', response.status);
+		//console.log('response', response.status);
 		return response.status;
 	} catch (err) {
 		console.log('change description  ' + err.message);
@@ -26,10 +26,8 @@ export async function changeDescription(description) {
 
 export async function changeProfileDetails(alcohol, job, height, weight, 
 	orientation, education, religious, children, cigarettes, eyeColor) {
-	console.log("dsdsfdsa ")
 	let profileId = await SecureStore.getItemAsync('profileId');
 	let userId = await SecureStore.getItemAsync('userId');
-	console.log(profileId +" "+ userId)
 	try {
 		const response = await httpService.axiosInstance.put(API_URL + '/changeProfileDetails', {
 			profileId: profileId,
@@ -53,15 +51,40 @@ export async function changeProfileDetails(alcohol, job, height, weight,
 }
 
 export async function getProfileDetails() {
-	console.log("dsdsfdsa ")
 	let profileIdd = await SecureStore.getItemAsync('profileId');
 	let userId = await SecureStore.getItemAsync('userId');
-	console.log(profileIdd +" "+ userId)
 	try {
 		const response = await httpService.axiosInstance.put(API_URL + '/getProfileDetails', {
 			profileId: profileIdd,
 		});
-		console.log('response', response.data);
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change description  ' + err.message);
+		return err;
+	}
+}
+
+export async function getProfileHobby() {
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.get(API_URL + '/getProfileHobby?profile='+profileId);
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change description  ' + err.message);
+		return err;
+	}
+}
+
+export async function changeProfileHobby(hobbyList) {
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.put(API_URL + '/changeProfileHobby',{
+			profileId: profileId,
+			listHobby: hobbyList
+		});
+		//console.log('response', response.data);
 		return response;
 	} catch (err) {
 		console.log('change description  ' + err.message);
@@ -70,8 +93,46 @@ export async function getProfileDetails() {
 }
 
 
+
+
+export async function getProfileRelationship() {
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.get(API_URL + '/getProfileRelationship?profile='+profileId);
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change description  ' + err.message);
+		return err;
+	}
+}
+
+export async function changeProfileRelationship(listRelationship) {
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.put(API_URL + '/changeProfileRelationship',{
+			profileId: profileId,
+			listRelationship: listRelationship
+		});
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change description  ' + err.message);
+		//console.log(httpService.axiosInstance.defaults)
+		return err;
+	}
+}
+
+
+
+
+
 export default {
 	changeDescription,
 	changeProfileDetails,
-	getProfileDetails
+	getProfileDetails,
+	getProfileHobby,
+	changeProfileHobby,
+	getProfileRelationship,
+	changeProfileRelationship
 };

@@ -16,7 +16,7 @@ const EditDescriptionScreen = (props) => {
     
     const changeDescription = async () => {
         let response = await ProfileService.changeDescription(description)
-        console.log("response ",response)
+       // console.log("response ",response)
         if(response==200) {
             alert('Zmieniono opis');
         } else {

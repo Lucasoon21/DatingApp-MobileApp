@@ -7,7 +7,7 @@ import EditDescriptionScreen from './src/App/Pages/EditDescriptionScreen';
 import EditHobbyScreen from './src/App/Pages/EditHobbyScreen';
 import EditInfoScreen from './src/App/Pages/EditInfoScreen';
 import EditPhotoScreen from './src/App/Pages/EditPhotoScreen';
-import EditSearchingScreen from './src/App/Pages/EditSearchingScreen';
+import EditRelationshipScreen from './src/App/Pages/EditRelationshipScreen';
 import PairsScreen from './src/App/Pages/PairsScreen';
 import SearchScreen from './src/App/Pages/SearchScreen';
 import SettingsScreen from './src/App/Pages/SettingsScreen';
@@ -37,7 +37,7 @@ export class Routes extends Component {
 		this.setState({
 			userIsLogin: token ? true : false,
 		});
-		console.log('xdd token access = ', token ?? "");
+		//console.log('xdd token access = ', token ?? "");
 	}
 	async componentDidUpdate() {
 		const token = await SecureStore.getItemAsync('access_token');
@@ -69,7 +69,7 @@ export class Routes extends Component {
 								<Screen name='EditHobbyScreen' component={EditHobbyScreen}></Screen>
 								<Screen name='EditInfoScreen' component={EditInfoScreen}></Screen>
 								<Screen name='EditPhotoScreen' component={EditPhotoScreen}></Screen>
-								<Screen name='EditSearchingScreen' component={EditSearchingScreen}></Screen>
+								<Screen name='EditRelationshipScreen' component={EditRelationshipScreen}></Screen>
 								<Screen name='PairsScreen' component={PairsScreen}></Screen>
 								<Screen name='SearchScreen' component={SearchScreen}></Screen>
 								<Screen name='SettingsScreen' component={SettingsScreen}></Screen>
@@ -89,7 +89,7 @@ export class Routes extends Component {
 						<Screen  name="EditHobbyScreen" component={EditHobbyScreen}></Screen>
 						<Screen  name="EditInfoScreen" component={EditInfoScreen}></Screen>
 						<Screen  name="EditPhotoScreen" component={EditPhotoScreen}></Screen>
-						<Screen  name="EditSearchingScreen" component={EditSearchingScreen}></Screen>
+						<Screen  name="EditRelationshipScreen" component={EditRelationshipScreen}></Screen>
 						<Screen  name="PairsScreen" component={PairsScreen}></Screen>
 						<Screen  name="SearchScreen" component={SearchScreen}></Screen>
 						<Screen  name="SettingsScreen" component={SettingsScreen}></Screen>

@@ -13,22 +13,22 @@ export async function login(email, password) {
 			password: password,
 		});
 
-		console.log(promise.data);
+		//onsole.log(promise.data);
 		const { data: response, status: status } = promise;
 		await SecureStore.setItemAsync('access_token', promise.data.access_token);
 		await SecureStore.setItemAsync('refresh_token', promise.data.refresh_token);
 		await SecureStore.setItemAsync('profileId', promise.data.profile_id);
 		await SecureStore.setItemAsync('userId', promise.data.user_id);
 		const token = await SecureStore.getItemAsync('access_token');
-		console.log('token jwt = ', token);
+		//console.log('token jwt = ', token);
 		httpService.setJwt(token);
-		console.log("http service ",httpService.axiosInstance.defaults)
+		//console.log("http service ",httpService.axiosInstance.defaults)
 		
 		// AsyncStorage.setItem('access_token', promise.data.access_token)
 		//  AsyncStorage.setItem('refresh_token',promise.data.refresh_token)
 		//console.log("promise access = ",promise.data.access_token)
 		return status;
-
+ 
 		//return {response, status}
 	} catch (err) {
 		console.log('Login: ' + err);

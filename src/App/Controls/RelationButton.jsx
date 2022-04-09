@@ -3,11 +3,16 @@ import { StyleSheet, Text, View, SafeAreaView, SectionList, StatusBar, Touchable
 
 const RelationButton = (props) => {
     const [relationParam,setRelationParam] = useState(props.type);
+
+    const change = () => {
+      props.changeValue(props.index, (relationParam+1) % 3)
+      setRelationParam((relationParam+1) % 3)
+  }
+
     return (
-        <View style={[relationParam==0? styles.yes : (relationParam==1? styles.no : styles.neutral), styles.item]}>
+        <View style={[relationParam==0? styles.neutral : (relationParam==1? styles.yes : styles.no), styles.item]}>
             {props.edit ? (
-                <TouchableOpacity onPress={() => setRelationParam((relationParam+1) % 3)
-                }>
+                <TouchableOpacity onPress={() => change()}>
                     <Text style={[styles.title]}>{props.text}</Text>
                 </TouchableOpacity>
             ) : (<Text style={[styles.title]}>{props.text}</Text>)}

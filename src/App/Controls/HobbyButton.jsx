@@ -1,11 +1,23 @@
 import React, { Component, useState } from "react";
 import { StyleSheet, Text, View, SafeAreaView, SectionList, StatusBar, TouchableOpacity, Button } from "react-native";
 const HobbyButton = (props) => {
-    const [status, setStatus] = useState(true);
+    const [status, setStatus] = useState(props.status);
+
+    const change = () => {
+        props.changeValue(props.index, !status)
+        setStatus(!status)
+    }
+    
     return (
         <View style={[styles.item, status ? styles.item : styles.itemNo]}>
+            
             {props.edit ? (
-                <TouchableOpacity onPress={() => setStatus(!status)}>
+                <TouchableOpacity onPress={() => {
+                    //setStatus(!status)
+                    change()
+                   // props.changeValue(props.key, status)
+                }
+                }>
                     <Text style={[styles.title]}>{props.text}</Text>
                 </TouchableOpacity>
             ) : (<Text style={[styles.title]}>{props.text}</Text>)}
