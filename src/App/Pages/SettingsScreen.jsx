@@ -10,7 +10,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { Checkbox } from 'react-native-paper';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
-
+import PreferencesService from '../../service/PreferencesService';
+import { Entypo } from '@expo/vector-icons';
 
 const SettingsScreen = (props) => {
 	const deleteAccount = () => {
@@ -133,11 +134,79 @@ const SettingsScreen = (props) => {
 		await SecureStore.deleteItemAsync('refresh_token');
 		await SecureStore.deleteItemAsync('profileId');
 		await SecureStore.deleteItemAsync('userId');
-	//	const token = await SecureStore.getItemAsync('access_token');
+		//	const token = await SecureStore.getItemAsync('access_token');
 		//console.log('xdd token access wyloguj = ', token??"");
 		navigation.navigate('AuthScreen');
 	};
 
+	useEffect(() => {
+		async function fetchProfileHobby() {
+			let response = await PreferencesService.getHobbyPreferences();
+			if(response.status ==200) {
+				setHobby(response.data);
+			}
+			console.log(response.data)
+		}
+		async function fetchProfileAge() {
+			let response = await PreferencesService.getAgePreferences();
+			console.log(response.status ?? '---');
+			if (response.status == 200) {
+				setFromAge(response.data.ageFrom);
+				setToAge(response.data.ageTo);
+				//console.log(response.data);
+			}
+		}
+
+		async function fetchProfileHeight() {
+			let response = await PreferencesService.getHeightPreferences();
+			console.log(response.status ?? '---');
+			if (response.status == 200) {
+				setFromHeight(response.data.heightFrom);
+				setToHeight(response.data.heightTo);
+				//console.log(response.data);
+			}
+		}
+
+		async function fetchProfileWeight() {
+			let response = await PreferencesService.getWeightPreferences();
+			console.log(response.status ?? '---');
+			if (response.status == 200) {
+				setFromWeight(response.data.weightFrom);
+				setToWeight(response.data.weightTo);
+			//	console.log(response.data);
+			}
+		}
+		fetchProfileHeight();
+		fetchProfileAge();
+		fetchProfileHobby();
+		fetchProfileWeight();
+	}, []);
+
+	const changePreferences = async () => {
+		let responseAge = await PreferencesService.changeAgePreferences(fromAge, toAge);
+		console.log(responseAge.status)
+		let responseHobby = await PreferencesService.changePreferencesHobby(hobby)
+		console.log(responseHobby.status)
+		let responseHeight = await PreferencesService.changeHeightPreferences(fromHeight, toHeight);
+		console.log(responseHeight.status)
+		let responseWeight = await PreferencesService.changeWeightPreferences(fromWeight, toWeight);
+		console.log(responseWeight.status)
+
+	}
+
+	const changeValueHobby = (index, status) => {
+		console.log("index="+index)
+		console.log("status="+status)
+		let items = [...hobby]
+		let item = {...items[index]}
+		item.decision = status===true? 1:0
+		items[index]=item;
+		setHobby(items)
+	//	console.log(hobby)
+		//console.log("===========================================================")
+		//console.log(hobby)
+	}
+	const [hobby, setHobby] = useState([]);
 
 
 
@@ -159,11 +228,15 @@ const SettingsScreen = (props) => {
 						<Button mode='contained' onPress={() => logout()} title='logout' style={styles.button}>
 							Wyloguj
 						</Button>
+						<Button type='submit' title='submit' onPress={() => changePreferences()} mode='contained'>
+							<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
+						<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
+					</Button>
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Zakres wieku</Text>
-						<RangeSlider min={18} max={100} fromValueOnChange={(value) => setFromAge(value)} toValueOnChange={(value) => setToAge(value)} initialFromValue={18} />
+						<RangeSlider min={18} max={100} fromValueOnChange={(value) => setFromAge(value)} toValueOnChange={(value) => setToAge(value)} initialFromValue={fromAge} initialToValue={toAge} />
 						<Text style={styles.subText}>
 							Wiek od: {fromAge} do {toAge}
 						</Text>
@@ -198,27 +271,25 @@ const SettingsScreen = (props) => {
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Znajdź mi osoby które interesują się również...</Text>
 						<View style={styles.hobbyContainer}>
-							<HobbyButton text='Sport' edit={true} />
-							<HobbyButton text='Muzyka' edit={true} />
-							<HobbyButton text='Gotowanie' edit={true} />
-							<HobbyButton text='Taniec' edit={true} />
-							<HobbyButton text='Podróże' edit={true} />
-							<HobbyButton text='Sport' edit={true} />
-							<HobbyButton text='Muzyka' edit={true} />
-							<HobbyButton text='Gotowanie' edit={true} />
-							<HobbyButton text='Taniec' edit={true} />
-							<HobbyButton text='Podróże' edit={true} />
-							<HobbyButton text='Sport' edit={true} />
-							<HobbyButton text='Muzyka' edit={true} />
-							<HobbyButton text='Gotowanie' edit={true} />
-							<HobbyButton text='Taniec' edit={true} />
-							<HobbyButton text='Podróże' edit={true} />
+						{
+                        hobby.map((hobby,ind) => {
+							//console.log(hobby)
+                            return <HobbyButton text={hobby.name} edit={true} status={hobby.decision} index={ind} key={hobby.hobbyId} changeValue={changeValueHobby} />;
+                        })
+                    }
+							{/* <HobbyButton text='Sport' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
+							<HobbyButton text='Muzyka' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
+							<HobbyButton text='Gotowanie' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
+							<HobbyButton text='Taniec' edit={true} index={1} status={true} changeValue={changeValueHobby}/> 
+							<HobbyButton text='Podróże' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
+							<HobbyButton text='Sport' edit={true} index={1} status={true} changeValue={changeValueHobby}/> */}
+
 						</View>
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Wzrost</Text>
-						<RangeSlider min={100} max={200} fromValueOnChange={(value) => setFromHeight(value)} toValueOnChange={(value) => setToHeight(value)} initialFromValue={100} />
+						<RangeSlider min={100} max={200} fromValueOnChange={(value) => setFromHeight(value)} toValueOnChange={(value) => setToHeight(value)} initialFromValue={fromHeight} initialToValue={toHeight} />
 						<Text style={styles.subText}>
 							Wzrost od: {fromHeight} do {toHeight}
 						</Text>
@@ -226,9 +297,9 @@ const SettingsScreen = (props) => {
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Waga</Text>
-						<RangeSlider min={30} max={150} fromValueOnChange={(value) => setFromWeight(value)} toValueOnChange={(value) => setToWeight(value)} initialFromValue={50} />
+						<RangeSlider min={30} max={150} fromValueOnChange={(value) => setFromWeight(value)} toValueOnChange={(value) => setToWeight(value)}  initialFromValue={fromWeight} initialToValue={toWeight} />
 						<Text style={styles.subText}>
-							Wzrost od: {fromWeight} do {toWeight}
+							Waga od: {fromWeight} do {toWeight}
 						</Text>
 					</View>
 
