@@ -241,7 +241,7 @@ const SettingsScreen = (props) => {
 							Wiek od: {fromAge} do {toAge}
 						</Text>
 					</View>
-
+ 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Maksymalna odległość</Text>
 						<Slider
@@ -304,10 +304,10 @@ const SettingsScreen = (props) => {
 					</View>
 
 					<View style={styles.sectionContainer}>
-						<Text style={styles.headerText}>Znak zodiacu</Text>
+						<Text style={styles.headerText}>Znak zodiaku</Text>
 						{zodiac.map((subItems, sIndex) => {
 							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updatezodiac(sIndex, !subItems.status)} />;
-						})}
+						})}d
 					</View>
 
 					<View style={styles.sectionContainer}>

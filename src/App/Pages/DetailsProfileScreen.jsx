@@ -12,7 +12,7 @@ import ProfileService from '../../service/ProfileService';
 
 const DetailsProfileScreen = (props) => {
 	 const goBack = () => props.navigation.goBack();
-	// const goEditPhoto = () => props.navigation.navigate("EditPhotoScreen")
+	 const goEditPhoto = () => props.navigation.navigate("EditPhotoScreen")
 	const goEditDescription = () => props.navigation.navigate('EditDescriptionScreen');
 	const goEditInfo = () => props.navigation.navigate('EditInfoScreen');
 
@@ -94,11 +94,11 @@ const DetailsProfileScreen = (props) => {
                             <Ionicons name="arrow-back" size={40} color="rgba(250,250,250,1)" />
                         </TouchableOpacity>
                     )} 
-                  {/*  {props.route.params.myProfile ? (
+                   {props.route.params.myProfile ? (
                         <TouchableOpacity onPress={goEditPhoto} style={styles.buttonEdit}>
                             <MaterialIcons name="edit" size={40} color="rgba(250,250,250,1)" />
                         </TouchableOpacity>
-                    ) : null} */}
+                    ) : null} 
 
 					<Image source={require('../../Images/person1.jpg')} style={styles.image} />
 
