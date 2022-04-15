@@ -6,7 +6,6 @@ import { styles, contact } from '../Styles/ChatStyle';
 import MenuTop from '../Unused/MenuTop';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PairComponent = (props) => {
     const goProfile = () => props.navigation.navigate("DetailsProfileScreen")

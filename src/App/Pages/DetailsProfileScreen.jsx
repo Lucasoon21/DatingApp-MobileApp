@@ -9,15 +9,16 @@ import RelationButton from '../Controls/RelationButton';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import ProfileService from '../../service/ProfileService';
+import { Constants, Spacings, Carousel } from 'react-native-ui-lib';
 
 const DetailsProfileScreen = (props) => {
-	 const goBack = () => props.navigation.goBack();
-	 const goEditPhoto = () => props.navigation.navigate("EditPhotoScreen")
+	const goBack = () => props.navigation.goBack();
+	const goEditPhoto = () => props.navigation.navigate('EditPhotoScreen');
 	const goEditDescription = () => props.navigation.navigate('EditDescriptionScreen');
 	const goEditInfo = () => props.navigation.navigate('EditInfoScreen');
 
 	const goEditHobby = () => props.navigation.navigate('EditHobbyScreen');
-	 const goEditSearching = () => props.navigation.navigate("EditRelationshipScreen")
+	const goEditSearching = () => props.navigation.navigate('EditRelationshipScreen');
 	const [description, setDescription] = useState('');
 	const [cigarette, setCigarette] = useState('');
 	const [alcohol, setAlcohol] = useState('');
@@ -32,16 +33,18 @@ const DetailsProfileScreen = (props) => {
 	const [gender, setGender] = useState('');
 	const [name, setName] = useState('');
 	const [zodiac, setZodiac] = useState('');
+	const [age, setAge] = useState('');
 
 	const [hobby, setHobby] = useState([]);
 	const [relationship, setRelationship] = useState([]);
+	const [gallery, setGallery] = useState([]);
 
 	useEffect(() => {
 		async function fetchDetailsProfile() {
 			let response = await ProfileService.getProfileDetails();
 			if (response.status === 200) {
 				let data = response.data;
-			//	console.log('ok', data.alcohol);
+				//	console.log('ok', data.alcohol);
 				setDescription(data.description);
 				setAlcohol(data.alcohol.name);
 				setCigarette(data.cigarettes.name);
@@ -56,6 +59,7 @@ const DetailsProfileScreen = (props) => {
 				setGender(data.gender.name);
 				setName(data.name);
 				setZodiac(data.zodiac.name);
+				setAge(data.age);
 			} else {
 				console.log('nie ok');
 			}
@@ -63,44 +67,74 @@ const DetailsProfileScreen = (props) => {
 		}
 		async function fetchProfileHobby() {
 			let response = await ProfileService.getProfileHobby();
-			if(response.status==200) {
+			if (response.status == 200) {
 				setHobby(response.data);
 			}
 		}
 		async function fetchProfileRelationship() {
 			let response = await ProfileService.getProfileRelationship();
-			if(response.status==200) {
+			if (response.status == 200) {
 				setRelationship(response.data);
 			}
 		}
 		const willFocusSubscription = props.navigation.addListener('focus', () => {
-			setHobby([])
+			setHobby([]);
 			setRelationship([]);
 			fetchDetailsProfile();
 			fetchProfileHobby();
 			fetchProfileRelationship();
-		})
-		
-		return willFocusSubscription;
+			fetchImages();
+		});
 
+		return willFocusSubscription;
 	}, [props.navigation]);
+
+	async function fetchImages() {
+		let responseImage = await ProfileService.getProfileImage();
+		if (responseImage.status == 200) {
+			setGallery(responseImage.data);
+			//console.log('galeria', gallery);
+		}
+		//console.log(responseImage)
+	}
 
 	return (
 		<View style={styles.container}>
 			<ScrollView style={styles.scrollView}>
 				<View style={styles.scrollContainer}>
 					{props.route.params.myProfile ? null : (
-                        <TouchableOpacity onPress={goBack} style={styles.buttonBack}>
-                            <Ionicons name="arrow-back" size={40} color="rgba(250,250,250,1)" />
-                        </TouchableOpacity>
-                    )} 
-                   {props.route.params.myProfile ? (
-                        <TouchableOpacity onPress={goEditPhoto} style={styles.buttonEdit}>
-                            <MaterialIcons name="edit" size={40} color="rgba(250,250,250,1)" />
-                        </TouchableOpacity>
-                    ) : null} 
+						<TouchableOpacity onPress={goBack} style={styles.buttonBack}>
+							<Ionicons name='arrow-back' size={40} color='rgba(250,250,250,1)' />
+						</TouchableOpacity>
+					)}
+					{props.route.params.myProfile ? (
+						<TouchableOpacity onPress={goEditPhoto} style={styles.buttonEdit}>
+							<MaterialIcons name='edit' size={40} color='rgba(250,250,250,1)' />
+						</TouchableOpacity>
+					) : null}
 
-					<Image source={require('../../Images/person1.jpg')} style={styles.image} />
+					{gallery.length > 0 ? (
+						<Carousel
+							//onChangePage={() => console.log('page changed')}
+							containerStyle={{
+								width: '100%',
+							}}
+							loop
+							pageControlProps={{
+								size: 10,
+								containerStyle: styles.loopCarousel,
+							}} 
+							pageControlPosition={Carousel.pageControlPositions.OVER}
+							animated
+							//showCounter
+						>
+							{gallery.map((item, i) => {
+								return <Image source={{ uri: item.linkImgur }} style={styles.image} key={item.idImgur} />;
+							})} 
+						</Carousel>
+					) : (
+						<Image source={require('../../Images/default.jpg')} style={styles.image} />
+					)}
 
 					<View style={styles.sectionInfo}>
 						{props.route.params.myProfile ? (
@@ -108,7 +142,7 @@ const DetailsProfileScreen = (props) => {
 								<MaterialIcons name='edit' size={30} color='rgba(0,0,0,1)' />
 							</TouchableOpacity>
 						) : null}
-						<Text style={styles.name}>{name}, 22</Text>
+						<Text style={styles.name}>{name},{age}</Text>
 						<Text style={styles.localization}>
 							<Entypo name='location-pin' size={25} color='black' /> 88 km stąd
 						</Text>
@@ -196,25 +230,25 @@ const DetailsProfileScreen = (props) => {
 						) : null}
 						<Text style={styles.textHeader}>Zainteresowania</Text>
 						<View style={styles.hobbyContainer}>
-{                        hobby.map((hobby, index) => {
-                            return <HobbyButton text={hobby.name} edit={false} status={hobby.decision} key={index}/>;
-                        })}
+							{hobby.map((hobby, index) => {
+								return <HobbyButton text={hobby.name} edit={false} status={hobby.decision} key={index} />;
+							})}
 						</View>
 					</View>
 
 					<View style={styles.sectionInfo}>
 						{props.route.params.myProfile ? (
-                            <TouchableOpacity onPress={goEditSearching} style={styles.buttonEditProfile}>
-                                <MaterialIcons name="edit" size={30} color="rgba(0,0,0,1)" />
-                            </TouchableOpacity>
-                        ) : null} 
+							<TouchableOpacity onPress={goEditSearching} style={styles.buttonEditProfile}>
+								<MaterialIcons name='edit' size={30} color='rgba(0,0,0,1)' />
+							</TouchableOpacity>
+						) : null}
 						<Text style={styles.textHeader}>Szukam ...</Text>
 						<View style={styles.hobbyContainer}>
-						{relationship.map((relationship, ind) => {
-						//console.log(hobby)
-						return <RelationButton text={relationship.name} edit={false} type={relationship.decision} index={ind} key={relationship.relationshipId} />;
-					})}
- 
+							{relationship.map((relationship, ind) => {
+								//console.log(hobby)
+								return <RelationButton text={relationship.name} edit={false} type={relationship.decision} index={ind} key={relationship.relationshipId} />;
+							})}
+
 							{/* <RelationButton text='Związku' type={0} />
 						
 							<RelationButton text='FWB' type={1} />

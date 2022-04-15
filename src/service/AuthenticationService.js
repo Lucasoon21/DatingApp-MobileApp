@@ -63,7 +63,7 @@ export async function register(email, password) {
 			email: email,
 			password: password,
 		});
-		console.log(response.status);
+	//	console.log(response.status);
 		return response;
 	} catch (err) {
 		console.log('Rejestracja ' + err.message);
@@ -79,7 +79,7 @@ export async function registerDetails(email, name, gender, dateBirth, orientatio
 			dateBirth: dateBirth,
 			orientation: orientation,
 		});
-		console.log(response.status);
+		//console.log(response.status);
 		return response;
 	} catch (err) {
 		console.log('Rejestracja detale ' + err.message);

@@ -145,11 +145,11 @@ const SettingsScreen = (props) => {
 			if(response.status ==200) {
 				setHobby(response.data);
 			}
-			console.log(response.data)
+			//console.log(response.data)
 		}
 		async function fetchProfileAge() {
 			let response = await PreferencesService.getAgePreferences();
-			console.log(response.status ?? '---');
+		//	console.log(response.status ?? '---');
 			if (response.status == 200) {
 				setFromAge(response.data.ageFrom);
 				setToAge(response.data.ageTo);
@@ -159,7 +159,7 @@ const SettingsScreen = (props) => {
 
 		async function fetchProfileHeight() {
 			let response = await PreferencesService.getHeightPreferences();
-			console.log(response.status ?? '---');
+			//console.log(response.status ?? '---');
 			if (response.status == 200) {
 				setFromHeight(response.data.heightFrom);
 				setToHeight(response.data.heightTo);
@@ -169,7 +169,7 @@ const SettingsScreen = (props) => {
 
 		async function fetchProfileWeight() {
 			let response = await PreferencesService.getWeightPreferences();
-			console.log(response.status ?? '---');
+			//console.log(response.status ?? '---');
 			if (response.status == 200) {
 				setFromWeight(response.data.weightFrom);
 				setToWeight(response.data.weightTo);
@@ -184,19 +184,19 @@ const SettingsScreen = (props) => {
 
 	const changePreferences = async () => {
 		let responseAge = await PreferencesService.changeAgePreferences(fromAge, toAge);
-		console.log(responseAge.status)
+		//console.log(responseAge.status)
 		let responseHobby = await PreferencesService.changePreferencesHobby(hobby)
-		console.log(responseHobby.status)
+	//	console.log(responseHobby.status)
 		let responseHeight = await PreferencesService.changeHeightPreferences(fromHeight, toHeight);
-		console.log(responseHeight.status)
+	//	console.log(responseHeight.status)
 		let responseWeight = await PreferencesService.changeWeightPreferences(fromWeight, toWeight);
-		console.log(responseWeight.status)
+	//	console.log(responseWeight.status)
 
 	}
 
 	const changeValueHobby = (index, status) => {
-		console.log("index="+index)
-		console.log("status="+status)
+		//console.log("index="+index)
+		//console.log("status="+status)
 		let items = [...hobby]
 		let item = {...items[index]}
 		item.decision = status===true? 1:0
@@ -307,7 +307,7 @@ const SettingsScreen = (props) => {
 						<Text style={styles.headerText}>Znak zodiaku</Text>
 						{zodiac.map((subItems, sIndex) => {
 							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updatezodiac(sIndex, !subItems.status)} />;
-						})}d
+						})}
 					</View>
 
 					<View style={styles.sectionContainer}>

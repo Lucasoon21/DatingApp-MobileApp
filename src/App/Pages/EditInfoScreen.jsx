@@ -7,7 +7,7 @@ import { Picker } from '@react-native-picker/picker';
 import { render } from 'react-dom';
 import { Button } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+//import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -19,13 +19,12 @@ const weightArray = new Array(120).fill().map((value, index) => ({ id: index + 3
 const heightArray = new Array(100).fill().map((value, index) => ({ id: index + 100 }));
 
 const EditInfoScreen = (props) => {
-//	var today = new Date();
-//	var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+	//	var today = new Date();
+	//	var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
 	//console.log('======== START =======' + time);
 	// const goBack = () => props.navigation.goBack();
 
-	
 	const [cigarette, setCigarette] = useState('');
 	const [alcohol, setAlcohol] = useState('');
 	const [children, setChildren] = useState('');
@@ -36,7 +35,7 @@ const EditInfoScreen = (props) => {
 	const [height, setHeight] = useState('');
 	const [eyeColor, setEyeColor] = useState('');
 	const [job, setJob] = useState('');
-	
+
 	const [characterWorkCount, setCharacterWorkCount] = useState(job.length);
 	const MAX_LENGTH_WORK = 50;
 
@@ -55,34 +54,29 @@ const EditInfoScreen = (props) => {
 
 	useEffect(() => {
 		getDropdownList();
-		async function fetchDetailsProfile(){
-            let response = await ProfileService.getProfileDetails();
-            if(response.status === 200){
-                let data = response.data
-               // console.log("ok",data.alcohol.id)
-               
-                setAlcohol(data.alcohol.id)
-                setCigarette(data.cigarettes.id)
-                setChildren(data.children.id)
-                setReligion(data.religious.id)
-                setEducation(data.education.id)
-                setOrientation(data.orientation.id)
-                setWeight(data.weight)
-                setHeight(data.height)
-                setEyeColor(data.eyeColor.id)
-                setJob(data.job)
-               
-                
-                
-                 
-            } else {
-                console.log("nie ok")
-            }
-            //console.log(response);
-        }
-        fetchDetailsProfile()
-	}, []);
+		async function fetchDetailsProfile() {
+			let response = await ProfileService.getProfileDetails();
+			if (response.status === 200) {
+				let data = response.data;
+				// console.log("ok",data.alcohol.id)
 
+				setAlcohol(data.alcohol.id);
+				setCigarette(data.cigarettes.id);
+				setChildren(data.children.id);
+				setReligion(data.religious.id);
+				setEducation(data.education.id);
+				setOrientation(data.orientation.id);
+				setWeight(data.weight);
+				setHeight(data.height);
+				setEyeColor(data.eyeColor.id);
+				setJob(data.job);
+			} else {
+				console.log('nie ok');
+			}
+			//console.log(response);
+		}
+		fetchDetailsProfile();
+	}, []);
 
 	const getDropdownList = async () => {
 		let Alcohol = await DictionaryService.getAlcoholDictionary();
@@ -176,8 +170,7 @@ const EditInfoScreen = (props) => {
 	};
 
 	const changeProfileDetails = async () => {
-		let response =  await ProfileService.changeProfileDetails(alcohol, job, height, weight, 
-			orientation, education, religion, children, cigarette, eyeColor);
+		let response = await ProfileService.changeProfileDetails(alcohol, job, height, weight, orientation, education, religion, children, cigarette, eyeColor);
 		//console.log('response ', response);
 		//console.log(alcohol+" - "+job+" - "+height+" - "+weight+" - "+orientation+" - "+
 		//education+" - "+religion+" - "+children+" - "+cigarette+" - "+eyeColor)
@@ -201,8 +194,12 @@ const EditInfoScreen = (props) => {
 						<Entypo name='drink' size={24} color='black' />
 						<Text style={styles.infoHeader}>Alkohol</Text>
 
-						<Picker style={styles.pickerStyle} selectedValue={alcohol} onValueChange={(itemValue) => {setAlcohol(itemValue)
-						console.log(itemValue)}}>
+						<Picker
+							style={styles.pickerStyle}
+							selectedValue={alcohol}
+							onValueChange={(itemValue) => {
+								setAlcohol(itemValue);
+							}}>
 							{renderAlcoholList()}
 						</Picker>
 					</View>
@@ -229,7 +226,7 @@ const EditInfoScreen = (props) => {
 					</View>
 
 					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
-						<MaterialCommunityIcons name='human-male-height-variant' size={24} color='black' />
+						{/* <MaterialCommunityIcons name='human-male-height-variant' size={24} color='black' /> */}
 						<Text style={styles.infoHeader}>Wzrost</Text>
 
 						<Picker style={styles.pickerStyle} selectedValue={height} onValueChange={(itemValue) => setHeight(itemValue)}>
@@ -247,10 +244,10 @@ const EditInfoScreen = (props) => {
 
 						<Picker style={styles.pickerStyle} selectedValue={weight} onValueChange={(itemValue) => setWeight(itemValue)}>
 							{/* <Picker.Item label='Nie chcę podawać' value='Nie chcę podawać'></Picker.Item>
-							<Picker.Item label='< 30 kg' value={0}></Picker.Item> */} 
+							<Picker.Item label='< 30 kg' value={0}></Picker.Item> */}
 							{weightArray.map((item) => (
 								<Picker.Item label={item.id.toString() + ' kg'} value={item.id} key={item.id + 200}></Picker.Item>
-							))} 
+							))}
 							{/* <Picker.Item label='>= 150 kg' value={0}></Picker.Item> */}
 						</Picker>
 					</View>
@@ -292,7 +289,7 @@ const EditInfoScreen = (props) => {
 					</View>
 
 					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
-						<MaterialCommunityIcons name='cigar' size={24} color='black' />
+						{/* <MaterialCommunityIcons name='cigar' size={24} color='black' /> */}
 						<Text style={styles.infoHeader}>Papierosy</Text>
 						<Picker style={styles.pickerStyle} selectedValue={cigarette} onValueChange={(itemValue) => setCigarette(itemValue)}>
 							{renderCigarettesList()}
@@ -300,7 +297,7 @@ const EditInfoScreen = (props) => {
 					</View>
 
 					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
-						<MaterialCommunityIcons name='eye' size={24} color='black' />
+						{/* <MaterialCommunityIcons name='eye' size={24} color='black' /> */}
 						<Text style={styles.infoHeader}>Kolor oczu</Text>
 						<Picker style={styles.pickerStyle} selectedValue={eyeColor} onValueChange={(itemValue) => setEyeColor(itemValue)}>
 							{renderEyeColorList()}
