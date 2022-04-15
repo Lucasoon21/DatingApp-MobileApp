@@ -10,6 +10,8 @@ import * as ImagePicker from 'expo-image-picker';
 import ProfileService from '../../service/ProfileService';
 import * as ExpoFileSystem from 'expo-file-system';
 import axios from 'axios';
+import { Constants, Spacings, Carousel } from 'react-native-ui-lib';
+import 'react-native-gesture-handler';
 
 const EditPhotoScreen = (props) => {
 	const [galleryPermission, setGalleryPermission] = useState('');
@@ -30,7 +32,7 @@ const EditPhotoScreen = (props) => {
 		let responseImage = await ProfileService.getProfileImage();
 		if (responseImage.status == 200) {
 			setGallery(responseImage.data);
-			console.log('galeria', gallery);
+			//console.log('galeria', gallery);
 		}
 		//console.log(responseImage)
 	}
@@ -99,20 +101,20 @@ const EditPhotoScreen = (props) => {
 		setProgress(Math.round((event.loaded * 100) / event.total));
 	};
 	const deleteImage = async (deleteHash) => {
-		console.log('start delete');
+		//console.log('start delete');
 		let status = '';
 		const xhr = new XMLHttpRequest();
 		xhr.addEventListener('load', async () => {
-			console.log(xhr.response);
+		//	console.log(xhr.response);
 			let res = JSON.parse(xhr.responseText);
-			console.log(res);
+		//	console.log(res);
 			status = res.status;
 			//return res.status
 		});
 		xhr.open('DELETE', 'https://api.imgur.com/3/image/' + deleteHash);
 		xhr.setRequestHeader('Authorization', 'Client-ID 9df4cb7d5f31ba6');
 		xhr.send();
-		console.log('fdsfsd', status);
+	//	console.log('fdsfsd', status);
 		//console.log(xhr.response.data);
 		return status;
 	};
@@ -154,7 +156,6 @@ const EditPhotoScreen = (props) => {
 						</>
 					) : (
 						<>
-
 							<View style={styles.addImageContainer}>
 								<Button style={styles.addImageButton} labelStyle={{ color: 'white' }} contentStyle={{ height: '100%' }} onPress={() => loadImageToApp()}>
 									Załaduj obrazek
@@ -162,6 +163,8 @@ const EditPhotoScreen = (props) => {
 							</View>
 						</>
 					)}
+
+
 
 					{gallery.length > 0 ? (
 						gallery.map((image, ind) => {
@@ -176,7 +179,7 @@ const EditPhotoScreen = (props) => {
 						})
 					) : (
 						<View style={styles.imageContainer}>
-							<Image source={require('../../Images/person1.jpg')} style={styles.image} />
+							<Image source={require('../../Images/default.jpg')} style={styles.image} />
 							<Button style={styles.buttomImgRemove} labelStyle={{ color: 'white' }}>
 								X
 							</Button>

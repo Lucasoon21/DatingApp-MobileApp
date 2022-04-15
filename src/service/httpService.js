@@ -38,7 +38,7 @@ const token = SecureStore.getItemAsync('access_token');
 let headers = {headers: {"Authorization" : `Bearer ${token}`} };
 
 function setJwt(jwt) {
-	console.log("set jwt",jwt)
+	//console.log("set jwt",jwt)
 	axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
 	axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
 	headers.Authorization = 'Bearer ${jwt}';

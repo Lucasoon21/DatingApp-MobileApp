@@ -144,7 +144,7 @@ export async function getProfileImage() {
 	try {
 		//console.log(params)
 		const response = await httpService.axiosInstance.put(API_URL + '/getProfileImages?profile=' + profileId);
-		console.log(response.data);
+		//console.log(response.data);
 		return response;
 	} catch (err) {
 		console.log('image response  ' + err);
@@ -165,7 +165,7 @@ export async function deleteProfileImage(params) {
 			idImgur: params.idImgur,
 			linkImgur: params.linkImgur
 		} });
-		console.log(response.data);
+		//console.log(response.data);
 		return response;
 	} catch (err) {
 		console.log('image response  ' + err);
