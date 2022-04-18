@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import ProfileService from '../../service/ProfileService';
 import * as ExpoFileSystem from 'expo-file-system';
 import axios from 'axios';
-import { Constants, Spacings, Carousel } from 'react-native-ui-lib';
+import { Constants, Spacings, Carousel, RadioButton, RadioGroup, Badge } from 'react-native-ui-lib';
 import 'react-native-gesture-handler';
 
 const EditPhotoScreen = (props) => {
@@ -22,17 +22,28 @@ const EditPhotoScreen = (props) => {
 	const [progress, setProgress] = useState(0.0);
 	const [response, setResponse] = useState('tutaj response');
 	const [gallery, setGallery] = useState([]);
+	const [mainPhoto, setMainPhoto] = useState('');
 
 	useEffect(() => {
 		fetchImages();
 		//console.log(response);
 	}, []);
 
+	async function changeMainPhoto() {
+	//	console.log('main photo to = ', mainPhoto);
+		let response = await ProfileService.changeMainPhotoProfile(mainPhoto);
+		//console.log("main photo", mainPhoto);
+	}
+
 	async function fetchImages() {
 		let responseImage = await ProfileService.getProfileImage();
 		if (responseImage.status == 200) {
 			setGallery(responseImage.data);
-			//console.log('galeria', gallery);
+			let arrayTmp = responseImage.data;
+			let xd = arrayTmp.find((mainPh) => mainPh.isMainPhoto === true);
+			console.log('głowne zdjęcie z bazy ', xd.idImgur);
+			setMainPhoto(xd.idImgur);
+			//console.log('galeria', responseImage.data);
 		}
 		//console.log(responseImage)
 	}
@@ -53,15 +64,18 @@ const EditPhotoScreen = (props) => {
 			//console.log(responseImage);
 			if (!responseImage.cancelled) {
 				setPicture(responseImage.uri);
+				uploadImage(responseImage.uri);
 			}
 		}
 	};
 
-	const uploadImage = () => {
+	const uploadImage = (uriImage) => {
+	//	console.log(uriImage);
+	//	console.log('dodawani zdjęcia');
 		const xhr = new XMLHttpRequest();
 		const formData = new FormData();
 		formData.append('image', {
-			uri: picture,
+			uri: uriImage,
 			type: 'image/jpeg',
 			name: 'photo.jpg',
 		});
@@ -100,24 +114,26 @@ const EditPhotoScreen = (props) => {
 	const handleProgress = (event) => {
 		setProgress(Math.round((event.loaded * 100) / event.total));
 	};
+
 	const deleteImage = async (deleteHash) => {
 		//console.log('start delete');
 		let status = '';
 		const xhr = new XMLHttpRequest();
 		xhr.addEventListener('load', async () => {
-		//	console.log(xhr.response);
+			//	console.log(xhr.response);
 			let res = JSON.parse(xhr.responseText);
-		//	console.log(res);
+			//	console.log(res);
 			status = res.status;
 			//return res.status
 		});
 		xhr.open('DELETE', 'https://api.imgur.com/3/image/' + deleteHash);
 		xhr.setRequestHeader('Authorization', 'Client-ID 9df4cb7d5f31ba6');
 		xhr.send();
-	//	console.log('fdsfsd', status);
+		//	console.log('fdsfsd', status);
 		//console.log(xhr.response.data);
 		return status;
 	};
+
 	const deleteImageFromProfile = async (image) => {
 		let resp = await ProfileService.deleteProfileImage(image);
 		if (resp.status == 200) {
@@ -133,68 +149,97 @@ const EditPhotoScreen = (props) => {
 				<TouchableOpacity onPress={goBack} style={styles.buttonBack}>
 					<Ionicons name='arrow-back' size={40} color='rgba(250,250,250,1)' />
 				</TouchableOpacity>
-				<View style={styles.imagesGroup}>
-					<View style={{ width: '100%', height: 30 }}>
-						<ProgressBar progress={progress / 100.0 || 0} color={Colors.red800} visible={true} style={{ width: '100%', height: 10 }} />
-					</View>
-					{picture ? (
-						<>
-							<View style={styles.imageContainer}>
-								<Image source={{ uri: picture }} style={[styles.image, { width: '100%', height: '100%' }]} />
-							</View>
-
-							<View style={styles.addImageContainer}>
-								<Button style={styles.addImageButton} labelStyle={{ color: 'white' }} contentStyle={{ height: '100%' }} onPress={() => uploadImage()}>
-									Dodaj obrazek do api
-								</Button>
-							</View>
-							<View style={styles.addImageContainer}>
-								<Button style={styles.addImageButton} labelStyle={{ color: 'white' }} contentStyle={{ height: '100%' }} onPress={() => setPicture()}>
-									Usuń obrazek
-								</Button>
-							</View>
-						</>
-					) : (
-						<>
-							<View style={styles.addImageContainer}>
-								<Button style={styles.addImageButton} labelStyle={{ color: 'white' }} contentStyle={{ height: '100%' }} onPress={() => loadImageToApp()}>
-									Załaduj obrazek
-								</Button>
-							</View>
-						</>
-					)}
-
-
-
-					{gallery.length > 0 ? (
-						gallery.map((image, ind) => {
-							return (
-								<View style={styles.imageContainer} key={image.idImgur}>
-									<Image source={{ uri: image.linkImgur }} style={styles.image} />
-									<Button style={styles.buttomImgRemove} labelStyle={{ color: 'white' }} onPress={() => deleteImageFromProfile(image)}>
-										X
-									</Button>
-								</View>
-							);
-						})
-					) : (
-						<View style={styles.imageContainer}>
-							<Image source={require('../../Images/default.jpg')} style={styles.image} />
-							<Button style={styles.buttomImgRemove} labelStyle={{ color: 'white' }}>
-								X
+				<RadioGroup initialValue={mainPhoto} onValueChange={(value) => setMainPhoto(value)} style={{ height: '100%' }}>
+					<View style={styles.imagesGroup}>
+						<View style={{ width: '100%', height: 30 }}>
+							<ProgressBar progress={progress / 100.0 || 0} color={Colors.red800} visible={true} style={{ width: '100%', height: 10 }} />
+						</View>
+						<View style={styles.buttonsActionsContainer}>
+							<Button style={styles.buttonAction} labelStyle={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingVertical: 5 }} onPress={() => loadImageToApp()}>
+								Załaduj obrazek
+							</Button>
+							<Button style={styles.buttonAction} labelStyle={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingVertical: 5 }} onPress={() => changeMainPhoto()}>
+								Zmień profilowe
 							</Button>
 						</View>
-					)}
 
-					{/* <View>
+						{/* {picture ? (
+							<>
+								 <View style={styles.buttonsActionsContainer}>
+									<Button style={styles.buttonAction} labelStyle={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingVertical: 5}}  onPress={() => uploadImage()}>
+									Dodaj obrazek do api
+									</Button>
+									<Button style={styles.buttonAction}  labelStyle={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingVertical: 5}}  onPress={() => setPicture()}>
+										Usuń obrazek
+									</Button>
+								</View>
+
+
+								<View style={styles.imageContainer}>
+									<Image source={{ uri: picture }} style={[styles.image, { width: '100%', height: '100%' }]} />
+									<Button style={styles.buttonAction}  labelStyle={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingVertical: 5}}  onPress={() => setPicture()}>
+										Usuń obrazek
+									</Button>
+								</View> 
+								 <View style={styles.addImageContainer}>
+									<Button style={styles.addImageButton} labelStyle={{ color: 'white' }} contentStyle={{ height: '100%' }} onPress={() => uploadImage()}>
+										Dodaj obrazek do api
+									</Button>
+								</View>
+								<View style={styles.addImageContainer}>
+									<Button style={styles.addImageButton} labelStyle={{ color: 'white' }} contentStyle={{ height: '100%' }} onPress={() => setPicture()}>
+										Usuń obrazek
+									</Button>
+								</View> 
+							</>
+						) : (
+							<>
+								<View style={styles.buttonsActionsContainer}>
+									<Button style={styles.buttonAction} labelStyle={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingVertical: 5 }} onPress={() => loadImageToApp()}>
+										Załaduj obrazek
+									</Button>
+									<Button style={styles.buttonAction} labelStyle={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingVertical: 5 }} onPress={() => changeMainPhoto()}>
+										Zmień profilowe
+									</Button>
+								</View>
+							</>
+						)} */}
+
+						{gallery.length > 0 ? (
+							gallery.map((image, ind) => {
+								return (
+									<View style={styles.imageContainer} key={image.idImgur}>
+										<Image source={{ uri: image.linkImgur }} style={styles.image} />
+										<Badge label={'X'} size={30} onPress={() => deleteImageFromProfile(image)} />
+										<View style={styles.radioStyles}>
+											<RadioButton value={image.idImgur} size={20} borderRadius={0} label='Zdjęcie główne' />
+										</View>
+
+										{/* <Button style={styles.buttomImgRemove} labelStyle={{ color: 'white' }} onPress={() => deleteImageFromProfile(image)}>
+											X
+										</Button> */}
+									</View>
+								);
+							})
+						) : (
+							<View style={styles.imageContainer}>
+								<Image source={require('../../Images/default.jpg')} style={styles.image} />
+								<Button style={styles.buttomImgRemove} labelStyle={{ color: 'white' }}>
+									X
+								</Button>
+							</View>
+						)}
+
+						{/* <View>
 						<Text>{response}</Text>
 					</View>
 					<View>
 						<Text>{progress} %</Text>
 					</View> */}
-				</View>
+					</View>
+				</RadioGroup>
 			</ScrollView>
-			<Menu profile={true} />
+			<Menu profile={true}  {...props}/>
 		</View>
 	);
 };

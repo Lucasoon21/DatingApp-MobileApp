@@ -29,7 +29,7 @@ const RegisterDetailsScreen = (props) => {
 		setOpen(false);
 		setDate(params.date);
 	};
-
+ 
 	const [genderValue, setgenderValue] = useState(0);
 	const [orientationValue, setorientationValue] = useState(0);
     const navigation = useNavigation()

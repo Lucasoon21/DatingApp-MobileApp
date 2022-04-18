@@ -65,6 +65,7 @@ export class Routes extends Component {
 								<Screen name='ChatScreen' component={ChatScreen}></Screen>
 								<Screen name='ConversationScreen' component={ConversationsScreen}></Screen>
 								<Screen name='DetailsProfileScreen' component={DetailsProfileScreen} initialParams={{ myProfile: false }} />
+								<Screen name='DetailsForeignProfileScreenn' component={DetailsProfileScreen} initialParams={{ myProfile: false }} />
 								<Screen name='EditDescriptionScreen' component={EditDescriptionScreen}></Screen>
 								<Screen name='EditHobbyScreen' component={EditHobbyScreen}></Screen>
 								<Screen name='EditInfoScreen' component={EditInfoScreen}></Screen>
@@ -73,6 +74,11 @@ export class Routes extends Component {
 								<Screen name='PairsScreen' component={PairsScreen}></Screen>
 								<Screen name='SearchScreen' component={SearchScreen}></Screen>
 								<Screen name='SettingsScreen' component={SettingsScreen}></Screen>
+							
+									<Screen name='DetailsForeignProfileScreen' component={DetailsProfileScreen} initialParams={{ myProfile: false }}
+										screenOptions={{presentation: "transparentModal"}}
+									/>
+							
 							</>
 						)}
 					</Navigator>

@@ -17,7 +17,7 @@ const LoginPanel = (props) => {
 	const login = async () => {
 		//console.log('Dane: ' + email + ' ' + password);
 		let response = await AuthenticationService.login(email, password);
-		console.log('res', response);
+	//	console.log('res', response);
 		if (response == 200) {
 			//await AsyncStorage.setItem('access_token', response.data.access_token);
 			//await AsyncStorage.setItem('refresh_token', response.data.refresh_token);

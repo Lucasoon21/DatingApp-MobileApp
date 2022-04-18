@@ -142,18 +142,21 @@ const SettingsScreen = (props) => {
 	useEffect(() => {
 		async function fetchProfileHobby() {
 			let response = await PreferencesService.getHobbyPreferences();
-			if(response.status ==200) {
+			if (response.status == 200) {
 				setHobby(response.data);
 			}
 			//console.log(response.data)
 		}
+		const xdd = (from, to) => {
+			setFromAge(from);
+			setToAge(to);
+		};
 		async function fetchProfileAge() {
 			let response = await PreferencesService.getAgePreferences();
-		//	console.log(response.status ?? '---');
+			//	console.log(response.status ?? '---');
+
 			if (response.status == 200) {
-				setFromAge(response.data.ageFrom);
-				setToAge(response.data.ageTo);
-				//console.log(response.data);
+				xdd(response.data.ageFrom, response.data.ageTo);
 			}
 		}
 
@@ -173,7 +176,7 @@ const SettingsScreen = (props) => {
 			if (response.status == 200) {
 				setFromWeight(response.data.weightFrom);
 				setToWeight(response.data.weightTo);
-			//	console.log(response.data);
+				//	console.log(response.data);
 			}
 		}
 		fetchProfileHeight();
@@ -185,30 +188,27 @@ const SettingsScreen = (props) => {
 	const changePreferences = async () => {
 		let responseAge = await PreferencesService.changeAgePreferences(fromAge, toAge);
 		//console.log(responseAge.status)
-		let responseHobby = await PreferencesService.changePreferencesHobby(hobby)
-	//	console.log(responseHobby.status)
+		let responseHobby = await PreferencesService.changePreferencesHobby(hobby);
+		//	console.log(responseHobby.status)
 		let responseHeight = await PreferencesService.changeHeightPreferences(fromHeight, toHeight);
-	//	console.log(responseHeight.status)
+		//	console.log(responseHeight.status)
 		let responseWeight = await PreferencesService.changeWeightPreferences(fromWeight, toWeight);
-	//	console.log(responseWeight.status)
-
-	}
+		//	console.log(responseWeight.status)
+	};
 
 	const changeValueHobby = (index, status) => {
 		//console.log("index="+index)
 		//console.log("status="+status)
-		let items = [...hobby]
-		let item = {...items[index]}
-		item.decision = status===true? 1:0
-		items[index]=item;
-		setHobby(items)
-	//	console.log(hobby)
+		let items = [...hobby];
+		let item = { ...items[index] };
+		item.decision = status === true ? 1 : 0;
+		items[index] = item;
+		setHobby(items);
+		//	console.log(hobby)
 		//console.log("===========================================================")
 		//console.log(hobby)
-	}
+	};
 	const [hobby, setHobby] = useState([]);
-
-
 
 	return (
 		<View style={styles.container}>
@@ -230,8 +230,8 @@ const SettingsScreen = (props) => {
 						</Button>
 						<Button type='submit' title='submit' onPress={() => changePreferences()} mode='contained'>
 							<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
-						<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
-					</Button>
+							<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
+						</Button>
 					</View>
 
 					<View style={styles.sectionContainer}>
@@ -241,7 +241,7 @@ const SettingsScreen = (props) => {
 							Wiek od: {fromAge} do {toAge}
 						</Text>
 					</View>
- 
+
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Maksymalna odległość</Text>
 						<Slider
@@ -271,25 +271,29 @@ const SettingsScreen = (props) => {
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Znajdź mi osoby które interesują się również...</Text>
 						<View style={styles.hobbyContainer}>
-						{
-                        hobby.map((hobby,ind) => {
-							//console.log(hobby)
-                            return <HobbyButton text={hobby.name} edit={true} status={hobby.decision} index={ind} key={hobby.hobbyId} changeValue={changeValueHobby} />;
-                        })
-                    }
+							{hobby.map((hobby, ind) => {
+								//console.log(hobby)
+								return <HobbyButton text={hobby.name} edit={true} status={hobby.decision} index={ind} key={hobby.hobbyId} changeValue={changeValueHobby} />;
+							})}
 							{/* <HobbyButton text='Sport' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
 							<HobbyButton text='Muzyka' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
 							<HobbyButton text='Gotowanie' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
 							<HobbyButton text='Taniec' edit={true} index={1} status={true} changeValue={changeValueHobby}/> 
 							<HobbyButton text='Podróże' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
 							<HobbyButton text='Sport' edit={true} index={1} status={true} changeValue={changeValueHobby}/> */}
-
 						</View>
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Wzrost</Text>
-						<RangeSlider min={100} max={200} fromValueOnChange={(value) => setFromHeight(value)} toValueOnChange={(value) => setToHeight(value)} initialFromValue={fromHeight} initialToValue={toHeight} />
+						<RangeSlider
+							min={100}
+							max={200}
+							fromValueOnChange={(value) => setFromHeight(value)}
+							toValueOnChange={(value) => setToHeight(value)}
+							initialFromValue={fromHeight}
+							initialToValue={toHeight}
+						/>
 						<Text style={styles.subText}>
 							Wzrost od: {fromHeight} do {toHeight}
 						</Text>
@@ -297,7 +301,14 @@ const SettingsScreen = (props) => {
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Waga</Text>
-						<RangeSlider min={30} max={150} fromValueOnChange={(value) => setFromWeight(value)} toValueOnChange={(value) => setToWeight(value)}  initialFromValue={fromWeight} initialToValue={toWeight} />
+						<RangeSlider
+							min={30}
+							max={150}
+							fromValueOnChange={(value) => setFromWeight(value)}
+							toValueOnChange={(value) => setToWeight(value)}
+							initialFromValue={fromWeight}
+							initialToValue={toWeight}
+						/>
 						<Text style={styles.subText}>
 							Waga od: {fromWeight} do {toWeight}
 						</Text>
@@ -348,7 +359,7 @@ const SettingsScreen = (props) => {
 					<View style={styles.sectionContainer}></View>
 				</View>
 			</ScrollView>
-			<Menu settings={true} />
+			<Menu settings={true} {...props} />
 		</View>
 	);
 };

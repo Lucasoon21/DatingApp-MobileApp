@@ -10,6 +10,7 @@ import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import ProfileService from '../../service/ProfileService';
 import { Constants, Spacings, Carousel } from 'react-native-ui-lib';
+import * as SecureStore from 'expo-secure-store';
 
 const DetailsProfileScreen = (props) => {
 	const goBack = () => props.navigation.goBack();
@@ -40,57 +41,63 @@ const DetailsProfileScreen = (props) => {
 	const [gallery, setGallery] = useState([]);
 
 	useEffect(() => {
-		async function fetchDetailsProfile() {
-			let response = await ProfileService.getProfileDetails();
+		
+		async function fetchDetailsProfile(profileId) {
+		//	console.log("props navigation ",props.navigation)
+			
+			let response = await ProfileService.getProfileDetails(profileId);
+			//console.log(response)
 			if (response.status === 200) {
 				let data = response.data;
 				//	console.log('ok', data.alcohol);
 				setDescription(data.description);
-				setAlcohol(data.alcohol.name);
-				setCigarette(data.cigarettes.name);
-				setChildren(data.children.name);
-				setReligion(data.religious.name);
-				setEducation(data.education.name);
-				setOrientation(data.orientation.name);
+				setAlcohol(data.alcohol);
+				setCigarette(data.cigarettes);
+				setChildren(data.children);
+				setReligion(data.religious);
+				setEducation(data.education);
+				setOrientation(data.orientation);
 				setWeight(data.weight);
 				setHeight(data.height);
-				setEyeColor(data.eyeColor.name);
+				setEyeColor(data.eyeColor);
 				setJob(data.job);
-				setGender(data.gender.name);
+				setGender(data.gender);
 				setName(data.name);
-				setZodiac(data.zodiac.name);
+				setZodiac(data.zodiac);
 				setAge(data.age);
 			} else {
 				console.log('nie ok');
 			}
 			//console.log(response);
 		}
-		async function fetchProfileHobby() {
-			let response = await ProfileService.getProfileHobby();
+		async function fetchProfileHobby(profileId) {
+			let response = await ProfileService.getProfileHobby(profileId);
 			if (response.status == 200) {
 				setHobby(response.data);
 			}
 		}
-		async function fetchProfileRelationship() {
-			let response = await ProfileService.getProfileRelationship();
+		async function fetchProfileRelationship(profileId) {
+			let response = await ProfileService.getProfileRelationship(profileId);
 			if (response.status == 200) {
 				setRelationship(response.data);
 			}
 		}
-		const willFocusSubscription = props.navigation.addListener('focus', () => {
+		 const willFocusSubscription = props.navigation.addListener('focus', async () => {
+			let isLoggedUser = props.route.params.myProfile
+			let profileId = isLoggedUser ? await SecureStore.getItemAsync('profileId') : props.route.params.profileUser.profileId
 			setHobby([]);
 			setRelationship([]);
-			fetchDetailsProfile();
-			fetchProfileHobby();
-			fetchProfileRelationship();
-			fetchImages();
+			fetchDetailsProfile(profileId);
+			fetchProfileHobby(profileId);
+			fetchProfileRelationship(profileId);
+			fetchImages(profileId);
 		});
 
 		return willFocusSubscription;
-	}, [props.navigation]);
+	}, [props.navigation,  props.route.params.myProfile]);
 
-	async function fetchImages() {
-		let responseImage = await ProfileService.getProfileImage();
+	async function fetchImages(profileId) {
+		let responseImage = await ProfileService.getProfileImage(profileId);
 		if (responseImage.status == 200) {
 			setGallery(responseImage.data);
 			//console.log('galeria', gallery);
@@ -262,7 +269,7 @@ const DetailsProfileScreen = (props) => {
 					</View>
 				</View>
 			</ScrollView>
-			<Menu swipe={props.route.params.myProfile ? false : true} profile={props.route.params.myProfile ? true : false} />
+			<Menu swipe={props.route.params.myProfile ? false : true} profile={props.route.params.myProfile ? true : false}  {...props}/>
 		</View>
 	);
 };

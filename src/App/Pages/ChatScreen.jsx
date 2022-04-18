@@ -45,7 +45,7 @@ const ChatScreen = (props) => {
                 <Ionicons name="send" size={40} color="rgba(255, 0, 0, 1)" style={chat.sendIcon} />
             </View>
 
-            <Menu chat={true} />
+            <Menu chat={true} {...props} />
         </View>
     );
 };

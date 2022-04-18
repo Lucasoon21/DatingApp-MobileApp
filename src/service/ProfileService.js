@@ -50,8 +50,11 @@ export async function changeProfileDetails(alcohol, job, height, weight, orienta
 	}
 }
 
-export async function getProfileDetails() {
-	let profileIdd = await SecureStore.getItemAsync('profileId');
+export async function getProfileDetails(id) {
+	//console.log("get details ", id)
+//	let profileIdd = await SecureStore.getItemAsync('profileId');
+	let profileIdd = id;
+
 	let userId = await SecureStore.getItemAsync('userId');
 	try {
 		const response = await httpService.axiosInstance.put(API_URL + '/getProfileDetails', {
@@ -65,8 +68,10 @@ export async function getProfileDetails() {
 	}
 }
 
-export async function getProfileHobby() {
-	let profileId = await SecureStore.getItemAsync('profileId');
+export async function getProfileHobby(id) {
+	let profileId = id;
+//	let profileId = await SecureStore.getItemAsync('profileId');
+
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getProfileHobby?profile=' + profileId);
 		//console.log('response', response.data);
@@ -92,8 +97,10 @@ export async function changeProfileHobby(hobbyList) {
 	}
 }
 
-export async function getProfileRelationship() {
-	let profileId = await SecureStore.getItemAsync('profileId');
+export async function getProfileRelationship(id) {
+//	let profileId = await SecureStore.getItemAsync('profileId');
+	let profileId = id
+
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getProfileRelationship?profile=' + profileId);
 		//console.log('response', response.data);
@@ -122,7 +129,7 @@ export async function changeProfileRelationship(listRelationship) {
 
 export async function uploadImage(params) {
 	let profileId = await SecureStore.getItemAsync('profileId');
-	console.log('\n\n\n\n\n====================================================================================');
+	//console.log('\n\n\n\n\n====================================================================================');
 	try {
 		//console.log(params)
 		const response = await httpService.axiosInstance.put(API_URL + '/uploadImage', {
@@ -138,8 +145,9 @@ export async function uploadImage(params) {
 	}
 }
 
-export async function getProfileImage() {
-	let profileId = await SecureStore.getItemAsync('profileId');
+export async function getProfileImage(id) {
+	//	let profileId = await SecureStore.getItemAsync('profileId');
+	let profileId = id
 	//console.log('\n\n\n\n\n====================================================================================');
 	try {
 		//console.log(params)
@@ -157,15 +165,31 @@ export async function deleteProfileImage(params) {
 	//console.log('\n\n\n\n\n====================================================================================');
 	try {
 		//console.log(params)
-		
 
-		const response = await httpService.axiosInstance.delete(API_URL + '/deleteProfileImage', { data: {
-			profileId: profileId,
-			deleteHashImgur: params.deleteHashImgur,
-			idImgur: params.idImgur,
-			linkImgur: params.linkImgur
-		} });
+		const response = await httpService.axiosInstance.delete(API_URL + '/deleteProfileImage', {
+			data: {
+				profileId: profileId,
+				deleteHashImgur: params.deleteHashImgur,
+				idImgur: params.idImgur,
+				linkImgur: params.linkImgur,
+			},
+		});
 		//console.log(response.data);
+		return response;
+	} catch (err) {
+		console.log('image response  ' + err);
+		return err;
+	}
+}
+
+export async function changeMainPhotoProfile(idImgur) {
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.put(API_URL + '/changeMainPhotoProfile', {
+			profileId: profileId,
+			imgurPhotoId: idImgur,
+		});
+	//	console.log(response.data);
 		return response;
 	} catch (err) {
 		console.log('image response  ' + err);
@@ -184,6 +208,7 @@ export default {
 	uploadImage,
 	getProfileImage,
 	deleteProfileImage,
+	changeMainPhotoProfile,
 };
 
 /*	//console.log("image: ",image)

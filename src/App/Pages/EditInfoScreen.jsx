@@ -309,7 +309,7 @@ const EditInfoScreen = (props) => {
 					</Button>
 				</View>
 			</ScrollView>
-			<Menu profile={true} />
+			<Menu profile={true}  {...props}/>
 		</View>
 	);
 };
