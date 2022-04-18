@@ -72,7 +72,7 @@ const EditHobbyScreen = (props) => {
 						<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
 					</Button>
 			</View>
-			<Menu settings={true} />
+			<Menu settings={true}  {...props}/>
 		</View>
 	);
 };

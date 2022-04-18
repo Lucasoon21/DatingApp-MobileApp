@@ -18,15 +18,18 @@ const styles = StyleSheet.create({
         width: '30%',
         maxWidth: '30%',
         height: '100%',
+        minHeight: 180,
         maxHeight: 180,
        // maxHeight: '100%',
         marginHorizontal: '1.5%',
-        marginVertical: '3%'
+        marginVertical: '3%',
+        position: 'relative',
+       // paddingVertical: '2%',
     },
     image: {
 		maxWidth: '100%',
-        minHeight: '80%',
-		maxHeight: '80%',
+        minHeight: '90%',
+		maxHeight: '90%',
 		//width: '100%',
         aspectRatio: 1/1,
 		//height:'100%',
@@ -37,6 +40,7 @@ const styles = StyleSheet.create({
 		padding: 0,
 		margin: 0,
         resizeMode: 'cover',
+        position: 'absolute',
 	},
     imagesGroup: {
         display: 'flex',
@@ -46,11 +50,41 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     buttomImgRemove: {
-        height: '20%',
-        backgroundColor: 'rgba(13,153,193,1)',
+        height: 40,
+        margin: 0,
+        position: 'relative',
+        //backgroundColor: 'rgba(13,153,193,0)',
+        backgroundColor: 'rgba(250, 77, 152,0.81)',
+        width: 40,
+        padding: 0,
+        right: 20,
+        borderRadius: 150,
         color: 'white',
         
     },
+    buttonsActionsContainer: {
+        maxHeight: 100,
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        backgroundColor: 'rgba(250, 67, 152,0.81)',
+        
+        margin: 0,
+        padding: 0,
+        //flex: 1,
+    },
+    buttonAction: {
+        width: '50%',
+       // height: 50,
+    },
+    radioStyles: {
+        position: 'absolute',
+        bottom: 0,
+        padding: 0,
+    },
+
     addImageContainer: {
         width: '30%',
         maxWidth: '30%',

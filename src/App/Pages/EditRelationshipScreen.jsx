@@ -64,7 +64,7 @@ const EditRelationshipScreen = (props) => {
 						<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
 					</Button>
 			</View>
-			<Menu profile={true} />
+			<Menu profile={true}  {...props}/>
 		</View>
 	);
 };

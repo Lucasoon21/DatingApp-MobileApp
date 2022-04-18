@@ -38,7 +38,7 @@ const ConversationsScreen = (props) => {
             </ScrollView>
 
 
-            <Menu swipe={true} />
+            <Menu swipe={true}  {...props}/>
         </View>
     );
 };

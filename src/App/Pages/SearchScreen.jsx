@@ -8,7 +8,7 @@ const SearchScreen = (props) => {
             <Text>
                 xddaaa
             </Text>
-            <Menu search={true}/>
+            <Menu search={true}  {...props}/>
         </View>
     );
 };

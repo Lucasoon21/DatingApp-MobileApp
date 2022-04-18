@@ -65,7 +65,7 @@ export async function getHeightPreferences() {
 		const response = await httpService.axiosInstance.get(API_URL + '/getHeightPreferences?profile='+profileId);
 		return response;
 	} catch (err) {
-		console.log('get height  ' + err.messheight);
+		console.log('get height  ' + err.message);
 		return err;
 	}
 }
@@ -81,7 +81,7 @@ export async function changeHeightPreferences(heightFrom, heightTo) {
 		//console.log('response', response.data);
 		return response;
 	} catch (err) {
-		console.log('change description  ' + err.messheight);
+		console.log('change description  ' + err.message);
 		return err;
 	}
 }
@@ -92,7 +92,7 @@ export async function getWeightPreferences() {
 		const response = await httpService.axiosInstance.get(API_URL + '/getWeightPreferences?profile='+profileId);
 		return response;
 	} catch (err) {
-		console.log('get weight  ' + err.messweight);
+		console.log('get weight  ' + err.message);
 		return err;
 	}
 }
@@ -108,7 +108,7 @@ export async function changeWeightPreferences(weightFrom, weightTo) {
 		//console.log('response', response.data);
 		return response;
 	} catch (err) {
-		console.log('change description  ' + err.messweight);
+		console.log('change description  ' + err.message);
 		return err;
 	}
 }
