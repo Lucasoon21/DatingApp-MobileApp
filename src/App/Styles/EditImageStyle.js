@@ -104,6 +104,40 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(13,153,193,1)',
     },
 
+    imageContainerNot: {
+      //  width: '90%',
+      //  maxWidth: '90%',
+      //  height: '90%',
+        minHeight: 180,
+        maxHeight: 180,
+        minWidth: 180,
+        maxWidth: 180,
+       // maxHeight: '100%',
+        marginHorizontal: '1.5%',
+        marginVertical: '3%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        //position: 'relative',
+       // paddingVertical: '2%',
+    }, 
+    imageNot: {
+        minHeight: 180,
+        maxHeight: 180,
+        minWidth: 180,
+        maxWidth: 180,
+		//width: '100%',
+        aspectRatio: 1/1,
+		//height:'100%',
+		borderRadius: 1,
+		// borderRadius: CARD.BORDER_RADIUS,
+        justifyContent: 'center',
+        alignItems: 'center',
+		padding: 0,
+		margin: 0,
+        resizeMode: 'cover',
+        position: 'absolute',
+    }
 });
 
 export { styles }

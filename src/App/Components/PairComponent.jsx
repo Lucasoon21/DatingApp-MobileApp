@@ -8,7 +8,10 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 const PairComponent = (props) => {
-	const goProfile = () => props.navigation.navigate('DetailsProfileScreen');
+	const goProfile = () => props.navigation.navigate('DetailsProfileScreen', {
+		myProfile: false,
+		profileUser: profileData,
+	});
 	const goChat = () => props.navigation.navigate('ChatScreen');
 	const [profileData, setProfileData] = useState([]);
 

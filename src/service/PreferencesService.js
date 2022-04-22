@@ -114,6 +114,33 @@ export async function changeWeightPreferences(weightFrom, weightTo) {
 }
 
 
+export async function getGenderPreferences() {
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.get(API_URL + '/getPreferencesGender?profile='+profileId);
+		return response;
+	} catch (err) {
+		console.log('get weight  ' + err.message);
+		return err;
+	}
+}
+
+export async function changePreferencesGender(genderList) {
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.put(API_URL + '/changePreferencesGender',{
+			profileId: profileId,
+			listGender: genderList
+		});
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change gender  ' + err.message);
+		return err;
+	}
+}
+
+
 
 export default {
 	
@@ -125,4 +152,6 @@ export default {
     changeHeightPreferences,
     getWeightPreferences, 
     changeWeightPreferences,
+	getGenderPreferences,
+	changePreferencesGender,
 };

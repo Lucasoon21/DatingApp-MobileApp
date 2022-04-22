@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import Menu from '../Controls/Menu';
 import { styles } from '../Styles/SettingsStyle';
 import { TextInput, Button } from 'react-native-paper';
-import RangeSlider, { Slider } from 'react-native-range-slider-expo';
+import { Slider } from 'react-native-range-slider-expo';
+//import RangeSlider, { Slider } from 'react-native-range-slider-expo';
+
 import { Picker } from '@react-native-picker/picker';
 import HobbyButton from '../Controls/HobbyButton';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -12,20 +14,59 @@ import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
 import PreferencesService from '../../service/PreferencesService';
 import { Entypo } from '@expo/vector-icons';
+import { RangeSlider } from '@sharcoux/slider';
+import ProfileService from '../../service/ProfileService';
 
 const SettingsScreen = (props) => {
-	const deleteAccount = () => {
-		console.log('deleteAccount');
+	const enableScroll = () => setScrollEnabled(true);
+	const disableScroll = () => setScrollEnabled(false);
+
+	const deleteAccount = async () => {
+		setReturnDelete(true);
+
+		let response = await ProfileService.deleteAccount();
+		if (response.status === 200) {
+			await SecureStore.deleteItemAsync('access_token');
+			await SecureStore.deleteItemAsync('refresh_token');
+			await SecureStore.deleteItemAsync('profileId');
+			await SecureStore.deleteItemAsync('userId');
+			setReturnDelete(false);
+			props.navigation.navigate('AuthScreen');
+		}
 	};
-	const deactivationAccount = () => {
+	const deactivationAccount = async () => {
 		console.log('deactivateAccount');
+		setReturnDeactivate(true);
+		let response = await ProfileService.deactivateAccount();
+		if (response.status === 200) {
+			await SecureStore.deleteItemAsync('access_token');
+			await SecureStore.deleteItemAsync('refresh_token');
+			await SecureStore.deleteItemAsync('profileId');
+			await SecureStore.deleteItemAsync('userId');
+			setReturnDeactivate(false);
+			props.navigation.navigate('AuthScreen');
+		}
 	};
 	const changePassword = () => {
-		console.log('changePassword');
+		props.navigation.navigate('ChangePasswordScreen');
 	};
+
+	const [scrollEnabled, setScrollEnabled] = useState(true);
 
 	const [fromAge, setFromAge] = useState(18);
 	const [toAge, setToAge] = useState(100);
+	const [returnAge, setReturnAge] = useState(false);
+	const [returnKilometers, setReturnKilometers] = useState(false);
+	const [returnWeight, setReturnWeight] = useState(false);
+	const [returnHeight, setReturnHeight] = useState(false);
+	const [returnHobby, setReturnHobby] = useState(false);
+	const [returnSave, setReturnSave] = useState(false);
+	const [returnDelete, setReturnDelete] = useState(false);
+	const [returnDeactivate, setReturnDeactivate] = useState(false);
+
+	const [returnGender, setReturnGender] = useState(false);
+	const [gender, setGender] = useState([]);
+
 	const [kilometers, setKilometers] = useState(0);
 	const [interestedSex, setInterestedSex] = useState('Kobieta');
 	const [fromHeight, setFromHeight] = useState(100);
@@ -128,6 +169,12 @@ const SettingsScreen = (props) => {
 		setCigarette(newArr);
 	};
 
+	const updateGender = (index, status) => {
+		console.log('zmiana');
+		let newArr = [...gender];
+		newArr[index].decision = status;
+		setGender(newArr);
+	};
 	const logout = async () => {
 		//console.log('wyloguj');
 		await SecureStore.deleteItemAsync('access_token');
@@ -141,9 +188,11 @@ const SettingsScreen = (props) => {
 
 	useEffect(() => {
 		async function fetchProfileHobby() {
+			setReturnHobby(false);
 			let response = await PreferencesService.getHobbyPreferences();
 			if (response.status == 200) {
 				setHobby(response.data);
+				setReturnHobby(true);
 			}
 			//console.log(response.data)
 		}
@@ -152,40 +201,60 @@ const SettingsScreen = (props) => {
 			setToAge(to);
 		};
 		async function fetchProfileAge() {
+			setReturnAge(false);
 			let response = await PreferencesService.getAgePreferences();
 			//	console.log(response.status ?? '---');
 
 			if (response.status == 200) {
 				xdd(response.data.ageFrom, response.data.ageTo);
+				setReturnAge(true);
 			}
 		}
 
 		async function fetchProfileHeight() {
+			setReturnHeight(false);
 			let response = await PreferencesService.getHeightPreferences();
 			//console.log(response.status ?? '---');
 			if (response.status == 200) {
 				setFromHeight(response.data.heightFrom);
 				setToHeight(response.data.heightTo);
+				setReturnHeight(true);
 				//console.log(response.data);
 			}
 		}
 
 		async function fetchProfileWeight() {
+			setReturnWeight(false);
 			let response = await PreferencesService.getWeightPreferences();
 			//console.log(response.status ?? '---');
 			if (response.status == 200) {
 				setFromWeight(response.data.weightFrom);
 				setToWeight(response.data.weightTo);
+				setReturnWeight(true);
+				//setReturnKilometers(true)
 				//	console.log(response.data);
 			}
 		}
+
+		async function fetchGenders() {
+			setReturnGender(false);
+			let response = await PreferencesService.getGenderPreferences();
+			if (response.status == 200) {
+				setGender(response.data);
+				setReturnGender(true);
+			}
+		}
+
 		fetchProfileHeight();
 		fetchProfileAge();
 		fetchProfileHobby();
 		fetchProfileWeight();
+		fetchGenders();
+		setReturnKilometers(true);
 	}, []);
 
 	const changePreferences = async () => {
+		setReturnSave(true);
 		let responseAge = await PreferencesService.changeAgePreferences(fromAge, toAge);
 		//console.log(responseAge.status)
 		let responseHobby = await PreferencesService.changePreferencesHobby(hobby);
@@ -193,6 +262,13 @@ const SettingsScreen = (props) => {
 		let responseHeight = await PreferencesService.changeHeightPreferences(fromHeight, toHeight);
 		//	console.log(responseHeight.status)
 		let responseWeight = await PreferencesService.changeWeightPreferences(fromWeight, toWeight);
+
+		let responseGender = await PreferencesService.changePreferencesGender(gender);
+
+		if (responseAge.status == 200 && responseWeight.status == 200 && responseHeight.status == 200 && responseHobby.status == 200 && responseGender.status == 200) {
+			setReturnSave(false);
+		}
+
 		//	console.log(responseWeight.status)
 	};
 
@@ -216,56 +292,176 @@ const SettingsScreen = (props) => {
 				<View style={styles.scrollContainer}>
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Działania dotyczące konta</Text>
-						<Button mode='contained' onPress={() => deleteAccount()} title='Delete' style={styles.button}>
-							Usuń konto
+						<Button mode='contained' onPress={() => deleteAccount()} title='Delete' style={styles.button} disabled={returnDelete || returnDeactivate || returnSave}>
+							{returnDelete ? <>Trwa usuwanie...</> : <>Usuń konto</>}
 						</Button>
-						<Button mode='contained' onPress={() => deactivationAccount()} title='deactivate' style={styles.button}>
-							Dezaktywuj konto
+						<Button mode='contained' onPress={() => deactivationAccount()} title='deactivate' style={styles.button} disabled={returnDelete || returnDeactivate || returnSave}>
+							{returnDeactivate ? <>Trwa deaktywacja konta...</> : <>Deaktywuj konto</>}
 						</Button>
 						<Button mode='contained' onPress={() => changePassword()} title='changePassword' style={styles.button}>
 							Zmień hasło
 						</Button>
-						<Button mode='contained' onPress={() => logout()} title='logout' style={styles.button}>
-							Wyloguj
+						<Button mode='contained' onPress={() => logout()} title='logout' style={styles.button} disabled={returnDelete || returnDeactivate || returnSave}>
+							{returnDeactivate ? <>Trwa wylogowanie...</> : <>Wyloguj</>}
 						</Button>
-						<Button type='submit' title='submit' onPress={() => changePreferences()} mode='contained'>
-							<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
-							<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
-						</Button>
+
+						{returnSave ? (
+							<ActivityIndicator size='large' color='#0000ff' />
+						) : (
+							<>
+								<Button type='submit' title='submit' onPress={() => changePreferences()} mode='contained' disabled={returnDelete || returnDeactivate || returnSave}>
+									<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
+									<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
+								</Button>
+							</>
+						)}
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Zakres wieku</Text>
-						<RangeSlider min={18} max={100} fromValueOnChange={(value) => setFromAge(value)} toValueOnChange={(value) => setToAge(value)} initialFromValue={fromAge} initialToValue={toAge} />
-						<Text style={styles.subText}>
-							Wiek od: {fromAge} do {toAge}
-						</Text>
+
+						{returnAge ? (
+							<>
+								<RangeSlider
+									range={[fromAge, toAge]} // set the current slider's value
+									minimumValue={18} // Minimum value
+									maximumValue={100} // Maximum value
+									step={1} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
+									crossingAllowed={false} // If true, the user can make one thumb cross over the second thumb
+									vertical={false} // If true, the slider will be drawn vertically
+									inverted={false} // If true, min value will be on the right, and max on the left
+									enabled={true} // If false, the slider won't respond to touches anymore
+									trackHeight={6} // The track's height in pixel
+									thumbSize={20} // The thumb's size in pixel
+									slideOnTap={true} // If true, touching the slider will update it's value. No need to slide the thumb.
+									onSlidingComplete={(value) => {
+										setFromAge(value[0]);
+										setToAge(value[1]);
+									}}
+									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
+								/>
+
+								<Text style={styles.subText}>
+									Wiek od: {fromAge} do {toAge}
+								</Text>
+							</>
+						) : (
+							<ActivityIndicator size='large' color='#0000ff' />
+						)}
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Maksymalna odległość</Text>
-						<Slider
-							min={3}
-							max={100} //step={4}
-							valueOnChange={(value) => setKilometers(value)}
-							initialValue={50}
-							knobColor='red'
-							valueLabelsBackgroundColor='black'
-							inRangeBarColor='orange'
-							outOfRangeBarColor='purple'
-						/>
-						<Text style={styles.subText}>Szukaj w maksymalnej odległości do {kilometers} km</Text>
+						{returnKilometers ? (
+							<>
+								<Slider
+									min={3}
+									max={100} //step={4}
+									valueOnChange={(value) => setKilometers(value)}
+									initialValue={50}
+									knobColor='red'
+									valueLabelsBackgroundColor='black'
+									inRangeBarColor='orange'
+									outOfRangeBarColor='purple'
+								/>
+
+								<Text style={styles.subText}>Szukaj w maksymalnej odległości do {kilometers} km</Text>
+							</>
+						) : (
+							<ActivityIndicator size='large' color='#0000ff' />
+						)}
+					</View>
+
+					<View style={styles.sectionContainer}>
+						<Text style={styles.headerText}>Wzrost</Text>
+
+						{returnHeight ? (
+							<>
+								<RangeSlider
+									range={[fromHeight, toHeight]} // set the current slider's value
+									minimumValue={100} // Minimum value
+									maximumValue={200} // Maximum value
+									step={1} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
+									crossingAllowed={false} // If true, the user can make one thumb cross over the second thumb
+									vertical={false} // If true, the slider will be drawn vertically
+									inverted={false} // If true, min value will be on the right, and max on the left
+									enabled={true} // If false, the slider won't respond to touches anymore
+									trackHeight={6} // The track's height in pixel
+									thumbSize={20} // The thumb's size in pixel
+									slideOnTap={true} // If true, touching the slider will update it's value. No need to slide the thumb.
+									onSlidingComplete={(value) => {
+										setFromHeight(value[0]);
+										setToHeight(value[1]);
+									}}
+									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
+								/>
+								<Text style={styles.subText}>
+									Wzrost od: {fromHeight} do {toHeight}
+								</Text>
+							</>
+						) : (
+							<ActivityIndicator size='large' color='#0000ff' />
+						)}
+					</View>
+
+					<View style={styles.sectionContainer}>
+						<Text style={styles.headerText}>Waga</Text>
+
+						{returnWeight ? (
+							<>
+								<RangeSlider
+									range={[fromWeight, toWeight]} // set the current slider's value
+									minimumValue={30} // Minimum value
+									maximumValue={150} // Maximum value
+									step={1} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
+									crossingAllowed={false} // If true, the user can make one thumb cross over the second thumb
+									vertical={false} // If true, the slider will be drawn vertically
+									inverted={false} // If true, min value will be on the right, and max on the left
+									enabled={true} // If false, the slider won't respond to touches anymore
+									trackHeight={6} // The track's height in pixel
+									thumbSize={20} // The thumb's size in pixel
+									slideOnTap={true} // If true, touching the slider will update it's value. No need to slide the thumb.
+									onSlidingComplete={(value) => {
+										setFromWeight(value[0]);
+										setToWeight(value[1]);
+									}}
+									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
+								/>
+								<Text style={styles.subText}>
+									Waga od: {fromWeight} do {toWeight}
+								</Text>
+							</>
+						) : (
+							<ActivityIndicator size='large' color='#0000ff' />
+						)}
 					</View>
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Pokaż mi</Text>
-						<View style={styles.pickerView}>
-							<Picker style={styles.pickerStyle} selectedValue={interestedSex} onValueChange={(itemValue) => setInterestedSex(itemValue)}>
+
+						{returnGender ? (
+							<>
+								{gender.map((subItems, sIndex) => {
+									return (
+										<Checkbox.Item
+											key={sIndex}
+											label={subItems.name}
+											status={subItems.decision == 1 ? 'checked' : 'unchecked'}
+											onPress={() => updateGender(sIndex, subItems.decision == 1 ? 0 : 1)}
+										/>
+									);
+								})}
+							</>
+						) : (
+							<>
+								<ActivityIndicator size='large' color='#0000ff' />
+							</>
+						)}
+						{/* <Picker style={styles.pickerStyle} selectedValue={interestedSex} onValueChange={(itemValue) => setInterestedSex(itemValue)}>
 								<Picker.Item label='Kobiety' value='Kobieta'></Picker.Item>
 								<Picker.Item label='Mężczyzn' value='Mężczyzna'></Picker.Item>
 								<Picker.Item label='Wszystkich' value='Kobiety i mężczyźni'></Picker.Item>
-							</Picker>
-						</View>
+							</Picker> */}
 					</View>
 
 					<View style={styles.sectionContainer}>
@@ -282,36 +478,6 @@ const SettingsScreen = (props) => {
 							<HobbyButton text='Podróże' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
 							<HobbyButton text='Sport' edit={true} index={1} status={true} changeValue={changeValueHobby}/> */}
 						</View>
-					</View>
-
-					<View style={styles.sectionContainer}>
-						<Text style={styles.headerText}>Wzrost</Text>
-						<RangeSlider
-							min={100}
-							max={200}
-							fromValueOnChange={(value) => setFromHeight(value)}
-							toValueOnChange={(value) => setToHeight(value)}
-							initialFromValue={fromHeight}
-							initialToValue={toHeight}
-						/>
-						<Text style={styles.subText}>
-							Wzrost od: {fromHeight} do {toHeight}
-						</Text>
-					</View>
-
-					<View style={styles.sectionContainer}>
-						<Text style={styles.headerText}>Waga</Text>
-						<RangeSlider
-							min={30}
-							max={150}
-							fromValueOnChange={(value) => setFromWeight(value)}
-							toValueOnChange={(value) => setToWeight(value)}
-							initialFromValue={fromWeight}
-							initialToValue={toWeight}
-						/>
-						<Text style={styles.subText}>
-							Waga od: {fromWeight} do {toWeight}
-						</Text>
 					</View>
 
 					<View style={styles.sectionContainer}>

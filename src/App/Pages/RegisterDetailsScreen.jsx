@@ -40,8 +40,9 @@ const RegisterDetailsScreen = (props) => {
 		//console.log("Dane: "+values.email+" "+values.password)
 		const response = await AuthenticationService.registerDetails(props.route.params.email, values.name, genderValue, date, orientationValue);
         //console.log(genderValue)
-        navigation.navigate('ChatScreen') //TODO 
         if (response.status == 200 || response.status == 202) {
+			console.log(response)
+			navigation.navigate('SwipeScreen') //TODO 
             //props.navigation.navigate("RegisterDetails")
 		//	history.push('/RegisterDetail');
 		} else {

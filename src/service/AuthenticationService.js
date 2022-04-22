@@ -12,23 +12,32 @@ export async function login(email, password) {
 			email: email,
 			password: password,
 		});
-
+		console.log(promise)
 		//onsole.log(promise.data);
 		const { data: response, status: status } = promise;
-		await SecureStore.setItemAsync('access_token', promise.data.access_token);
-		await SecureStore.setItemAsync('refresh_token', promise.data.refresh_token);
-		await SecureStore.setItemAsync('profileId', promise.data.profile_id);
-		await SecureStore.setItemAsync('userId', promise.data.user_id);
-		const token = await SecureStore.getItemAsync('access_token');
-		//console.log('token jwt = ', token);
-		httpService.setJwt(token);
-		//console.log("http service ",httpService.axiosInstance.defaults)
+		console.log(promise.data)
+		if(promise.status==200) {
+			if(promise.data.isError=="YES") {
+				return promise.data
+			} else {
+				await SecureStore.setItemAsync('access_token', promise.data.access_token);
+				await SecureStore.setItemAsync('refresh_token', promise.data.refresh_token);
+				await SecureStore.setItemAsync('profileId', promise.data.profile_id);
+				await SecureStore.setItemAsync('userId', promise.data.user_id);
+				const token = await SecureStore.getItemAsync('access_token');
+				httpService.setJwt(token);
+			}
+		}
 		
+
+		//console.log('token jwt = ', token);
+		//console.log("http service ",httpService.axiosInstance.defaults)
+
 		// AsyncStorage.setItem('access_token', promise.data.access_token)
 		//  AsyncStorage.setItem('refresh_token',promise.data.refresh_token)
 		//console.log("promise access = ",promise.data.access_token)
-		return status;
- 
+		return promise;
+
 		//return {response, status}
 	} catch (err) {
 		console.log('Login: ' + err);
@@ -57,13 +66,19 @@ export async function login(email, password) {
 	}*/
 }
 
-export async function register(email, password) {
+export async function register(email, password, confirmPassword, name, date, genderValue, orientationValue) {
+	console.log(email, password, confirmPassword, name, date, genderValue, orientationValue)
 	try {
 		const response = await httpService.axiosInstance.post(API_URL + '/register', {
 			email: email,
-			password: password,
+			password: password, 
+			confirmPassword: confirmPassword,
+			name: name,
+			dateBirth: date,
+			gender: genderValue,
+			orientation: orientationValue,
 		});
-	//	console.log(response.status);
+		//	console.log(response.status);
 		return response;
 	} catch (err) {
 		console.log('Rejestracja ' + err.message);
@@ -71,6 +86,7 @@ export async function register(email, password) {
 	}
 }
 export async function registerDetails(email, name, gender, dateBirth, orientation) {
+	console.log(email, name, gender, dateBirth, orientation);
 	try {
 		const response = await httpService.axiosInstance.post(API_URL + '/registerDetails', {
 			email: email,

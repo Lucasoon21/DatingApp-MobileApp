@@ -35,7 +35,7 @@ const Menu = (props) => {
 				<MaterialIcons name='swipe' size={30} color={props.swipe ? 'red' : 'rgba(180,180,180,1)'} style={styles.icon} />
 			</Button>
 
-			<Button onPress={() => changeScreen("SearchScreen")} style={styles.link}>
+			<Button onPress={() => changeScreen("LikedMeScreen")} style={styles.link}>
 				<Ionicons name='search-circle' size={30} color={props.search ? 'red' : 'rgba(180,180,180,1)'} style={styles.icon} />
 			</Button>
 			<Button onPress={() => changeScreen("PairsScreen")} style={styles.link}>

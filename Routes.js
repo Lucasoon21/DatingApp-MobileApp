@@ -10,9 +10,14 @@ import EditPhotoScreen from './src/App/Pages/EditPhotoScreen';
 import EditRelationshipScreen from './src/App/Pages/EditRelationshipScreen';
 import PairsScreen from './src/App/Pages/PairsScreen';
 import SearchScreen from './src/App/Pages/SearchScreen';
+import NewMatchScreen from './src/App/Pages/NewMatchScreen';
 import SettingsScreen from './src/App/Pages/SettingsScreen';
 import SwipeScreen from './src/App/Pages/SwipeScreen';
+import LikedMeScreen from './src/App/Pages/LikedMeScreen';
 import RegisterDetailsScreen from './src/App/Pages/RegisterDetailsScreen';
+import ChangePasswordScreen from './src/App/Pages/ChangePasswordScreen';
+import AreUnderAgeScreen from './src/App/Pages/AreUnderAgeScreen';
+import ActivateAccountScreen from './src/App/Pages/ActivateAccountScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -45,7 +50,6 @@ export class Routes extends Component {
 			userIsLogin: token ? true : false,
 		});
 		//console.log('xdd token access = ', token ?? "");
-		
 	}
 	render() {
 		const { Navigator, Screen, Group } = createNativeStackNavigator();
@@ -58,10 +62,15 @@ export class Routes extends Component {
 							<>
 								<Screen name='AuthScreen' component={AuthenticationScreen}></Screen>
 								<Screen name='RegisterDetailsScreen' component={RegisterDetailsScreen}></Screen>
+								<Screen name="AreUnderAgeScreen" component={AreUnderAgeScreen}></Screen>
+								<Screen name="ActivateAccountScreen" component={ActivateAccountScreen}></Screen>
 							</>
 						) : (
 							<>
 								<Screen name='SwipeScreen' component={SwipeScreen}></Screen>
+								<Screen name="ActivateAccountScreen" component={ActivateAccountScreen}></Screen>
+								<Screen name='LikedMeScreen' component={LikedMeScreen}></Screen>
+
 								<Screen name='ChatScreen' component={ChatScreen}></Screen>
 								<Screen name='ConversationScreen' component={ConversationsScreen}></Screen>
 								<Screen name='DetailsProfileScreen' component={DetailsProfileScreen} initialParams={{ myProfile: false }} />
@@ -73,12 +82,12 @@ export class Routes extends Component {
 								<Screen name='EditRelationshipScreen' component={EditRelationshipScreen}></Screen>
 								<Screen name='PairsScreen' component={PairsScreen}></Screen>
 								<Screen name='SearchScreen' component={SearchScreen}></Screen>
+								<Screen name='NewMatchScreen' component={NewMatchScreen}></Screen>
+								<Screen name='ChangePasswordScreen' component={ChangePasswordScreen}></Screen>
+								
 								<Screen name='SettingsScreen' component={SettingsScreen}></Screen>
-							
-									<Screen name='DetailsForeignProfileScreen' component={DetailsProfileScreen} initialParams={{ myProfile: false }}
-										screenOptions={{presentation: "transparentModal"}}
-									/>
-							
+
+								<Screen name='DetailsForeignProfileScreen' component={DetailsProfileScreen} initialParams={{ myProfile: false }} screenOptions={{ presentation: 'transparentModal' }} />
 							</>
 						)}
 					</Navigator>
