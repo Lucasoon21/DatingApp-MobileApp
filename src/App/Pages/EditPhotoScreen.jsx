@@ -12,6 +12,7 @@ import * as ExpoFileSystem from 'expo-file-system';
 import axios from 'axios';
 import { Constants, Spacings, Carousel, RadioButton, RadioGroup, Badge } from 'react-native-ui-lib';
 import 'react-native-gesture-handler';
+import * as SecureStore from 'expo-secure-store';
 
 const EditPhotoScreen = (props) => {
 	const [galleryPermission, setGalleryPermission] = useState('');
@@ -36,13 +37,18 @@ const EditPhotoScreen = (props) => {
 	}
 
 	async function fetchImages() {
-		let responseImage = await ProfileService.getProfileImage();
+		let profileId = await SecureStore.getItemAsync('profileId');
+		let responseImage = await ProfileService.getProfileImage(profileId);
 		if (responseImage.status == 200) {
 			setGallery(responseImage.data);
 			let arrayTmp = responseImage.data;
 			let xd = arrayTmp.find((mainPh) => mainPh.isMainPhoto === true);
-			console.log('głowne zdjęcie z bazy ', xd.idImgur);
-			setMainPhoto(xd.idImgur);
+			console.log("xd",xd)
+			if(xd!=null) {
+				
+				console.log('głowne zdjęcie z bazy ', xd.idImgur);
+				setMainPhoto(xd.idImgur);
+			}
 			//console.log('galeria', responseImage.data);
 		}
 		//console.log(responseImage)
@@ -214,19 +220,12 @@ const EditPhotoScreen = (props) => {
 										<View style={styles.radioStyles}>
 											<RadioButton value={image.idImgur} size={20} borderRadius={0} label='Zdjęcie główne' />
 										</View>
-
-										{/* <Button style={styles.buttomImgRemove} labelStyle={{ color: 'white' }} onPress={() => deleteImageFromProfile(image)}>
-											X
-										</Button> */}
 									</View>
 								);
 							})
 						) : (
-							<View style={styles.imageContainer}>
-								<Image source={require('../../Images/default.jpg')} style={styles.image} />
-								<Button style={styles.buttomImgRemove} labelStyle={{ color: 'white' }}>
-									X
-								</Button>
+							<View style={styles.imageContainerNot}>
+								<Image source={require('../../Images/default.jpg')} style={styles.imageNot} />
 							</View>
 						)}
 

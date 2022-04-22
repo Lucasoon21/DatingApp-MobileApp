@@ -115,6 +115,11 @@ const styles = StyleSheet.create({
     textHeader:{
         fontSize: 30,
         fontWeight: 'bold',
-    }
+    },
+    input: {
+		//maxHeight: 50,
+		width: 300,
+		marginBottom: 20,
+	},
 })
 export {styles}

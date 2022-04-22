@@ -69,6 +69,13 @@ const chat = StyleSheet.create({
 
 
 const styles = StyleSheet.create({
+    pairComponent: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'silver',
+        borderTopWidth: 1,
+        borderTopColor: 'silver',
+        marginVertical: 5,
+    },  
     container: {
         flex: 1,
         alignItems: 'center',
@@ -195,10 +202,10 @@ const contact = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: 15,
+       paddingHorizontal: 15,
         paddingVertical: 5,
 
-        marginVertical: 5,
+       // marginVertical: 5,
         alignItems: 'center',
         width: '100%',
     },

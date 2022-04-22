@@ -17,13 +17,25 @@ export async function getAllProfile() {
 		//console.log(response.status);
 		return response;
 	} catch (err) {
-		console.log('fetch profiles  ' + err.message);
+		console.log('fetch profiles  ' + err);
+		return err;
+	}
+}
+export async function getLikesForMyProfile() {
+    let profileId = await SecureStore.getItemAsync('profileId');
+	console.log("Profile id = ",profileId);
+	try {
+		const response = await httpService.axiosInstance.get(API_URL+'/getLikesForMyProfile?profile='+profileId);
+		//console.log(response.status);
+		return response;
+	} catch (err) {
+		console.log('fetch getLikesForMyProfile  ' + err);
 		return err;
 	}
 }
 
-
 export default {
     getAllProfile,
+	getLikesForMyProfile,
 
 };

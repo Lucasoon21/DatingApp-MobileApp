@@ -7,6 +7,68 @@ import base64 from 'react-native-base64';
 
 const API_URL = apiUrl + '/profile';
 
+
+export async function deleteAccount() {
+
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.delete(API_URL + '/deleteAccount?profile=' + profileId);
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change description  ' + err.message);
+		return err;
+	}
+}
+
+export async function deactivateAccount() {
+
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.put(API_URL + '/deactivateAccount?profile=' + profileId);
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change description  ' + err.message);
+		return err;
+	}
+}
+
+export async function activateAccount() {
+
+	let profileId = await SecureStore.getItemAsync('profileId');
+	try {
+		const response = await httpService.axiosInstance.put(API_URL + '/activateAccount?profile=' + profileId);
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change description  ' + err.message);
+		return err;
+	}
+}
+
+
+export async function changePassword(params) {
+	let profileId = await SecureStore.getItemAsync('profileId');
+	console.log(params)
+	try {
+		const response = await httpService.axiosInstance.put(API_URL + '/changePassword', {
+			profileId: profileId,
+			oldPassword: params.oldPassword,
+			newPassword: params.newPassword,
+			newConfirmPassword: params.confirmPassword
+
+		});
+		//console.log('response', response.data);
+		return response;
+	} catch (err) {
+		console.log('change description  ' + err.message);
+		return err;
+	}
+}
+
+
+
 export async function changeDescription(description) {
 	let profileId = await SecureStore.getItemAsync('profileId');
 	let userId = await SecureStore.getItemAsync('userId');
@@ -198,6 +260,7 @@ export async function changeMainPhotoProfile(idImgur) {
 }
 
 export default {
+	changePassword,
 	changeDescription,
 	changeProfileDetails,
 	getProfileDetails,
@@ -209,6 +272,9 @@ export default {
 	getProfileImage,
 	deleteProfileImage,
 	changeMainPhotoProfile,
+	deactivateAccount,
+	activateAccount,
+	deleteAccount,
 };
 
 /*	//console.log("image: ",image)
