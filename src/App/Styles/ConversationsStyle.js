@@ -144,10 +144,11 @@ const singleConversation = StyleSheet.create({
         marginVertical: 5,
         alignItems: 'center',
         width: '100%',
+        maxWidth: '100%',
     },
     headerText: {
         fontSize: 17,
-        maxWidth: '60%',
+        maxWidth: '80%',
         fontWeight: 'bold',
     },
     subText: {
@@ -156,12 +157,14 @@ const singleConversation = StyleSheet.create({
     textContainer: {
         display: 'flex',
         alignItems: 'center',
-        marginLeft: 30,
-        marginRight: 30,
-        maxWidth: '65%',
+        marginLeft: 10,
+        //marginRight: 30,
+        maxWidth: '75%',
     },
     message: {
         maxWidth: '100%',
+        width: '100%',
+        textAlign: 'left',
     },
     headerContainer: {
         display: 'flex',
