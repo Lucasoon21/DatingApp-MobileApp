@@ -126,7 +126,6 @@ const SwipeScreen = (props) => {
 					cardHorizontalMargin={30}
 					cardStyle={{ margin: 0 }}
 					cardIndex={0}
-					backgroundColor={'#4FD0E9'}
 					verticalSwipe={false}
 					animateCardOpacity
 					stackSize={3}

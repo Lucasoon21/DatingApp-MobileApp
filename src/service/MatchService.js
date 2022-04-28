@@ -8,18 +8,21 @@ import base64 from 'react-native-base64';
 const API_URL = apiUrl + '/match';
 
 export async function getAllMatch() {
+	console.log('>>> match/getAllMatch');
+
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllMatch?profile=' + profileId);
-		//console.log(response.status);
 		return response;
 	} catch (err) {
-		console.log('fetch matches  ' + err.message);
+		console.log('>>> match/getAllMatch: '+err);
 		return err;
 	}
 }
 
 export async function deleteMatch(matchId) {
+	console.log('>>> match/deleteMatch');
+
 	let profileId = await SecureStore.getItemAsync('profileId');
 
 	try {
@@ -29,10 +32,9 @@ export async function deleteMatch(matchId) {
 				selectProfileUserId: matchId,
 			},
 		});
-		//console.log('response', response);
 		return response;
 	} catch (err) {
-		console.log('delete match  ' + err);
+		console.log('>>> match/deleteMatch: '+err);
 		return err;
 	}
 }

@@ -46,12 +46,14 @@ const RegisterPanel = (props) => {
 	useEffect(() => {
 		getDropdownList();
 	}, []);
-
+ 
 	const getDropdownList = async () => {
-		let Orientation = await DictionaryService.getOrientationDictionary();
+console.log("wczytywanie dropdown")
+        let Orientation = await DictionaryService.getOrientationDictionary();
 		setOrientationDropdown(Orientation);
 		let Gender = await DictionaryService.getGenderDictionary();
 		setGenderDropdown(Gender);
+        console.log(Orientation)
 	};
 
 	const renderGenderList = () => {
@@ -153,10 +155,11 @@ const RegisterPanel = (props) => {
 								{renderOrientationList()}
 							</Picker>
 						</View>
-						<Button onPress={() => setOpen(true)} uppercase={false} mode='contained'>
-							{date.toLocaleDateString('en-US', { dateStyle: 'medium' })}
+						<Button onPress={() => setOpen(true)} uppercase={false} mode='contained' 							style={styles.input}
+>
+							Wybierz datę urodzin: {date.toLocaleDateString('en-US', { dateStyle: 'medium' })}
 						</Button>
-						<Text>{date.toLocaleDateString('pl', { dateStyle: 'medium' })}</Text>
+						{/* <Text>{date.toLocaleDateString('pl', { dateStyle: 'medium' })}</Text> */}
 						<DatePickerModal
 							//locale={'en'} optional, default: automatic
 							mode='single'
@@ -209,7 +212,7 @@ const styles = StyleSheet.create({
 	},
 
 	input: {
-		maxHeight: 50,
+		//maxHeight: 50,
 		width: 330,
 		marginBottom: 20,
 	},

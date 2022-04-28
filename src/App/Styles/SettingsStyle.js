@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontWeight: 'bold',
         textAlign: 'center',
+        marginBottom: 10,
     },
     subText: {
         fontSize: 17,

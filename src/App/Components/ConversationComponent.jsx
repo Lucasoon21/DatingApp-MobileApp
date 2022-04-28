@@ -15,12 +15,13 @@ const ConversationComponent = (props) => {
 	useEffect(() => {
 		if (props.conversations != null) {
 			setDataConversation(props.conversations);
+			console.log("dataConversation",dataConversation)
 		}
 	}, []);
 
 	return (
 		<TouchableOpacity onPress={goChat} style={singleConversation.container}>
-			{dataConversation.image ? (
+			{dataConversation.profileImageLink ? (
 				<Image source={{ uri: dataConversation.profileImageLink }} style={singleConversation.image} />
 			) : (
 				<Image source={require('../../Images/default.jpg')} style={singleConversation.image} />

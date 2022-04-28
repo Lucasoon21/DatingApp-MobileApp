@@ -10,7 +10,7 @@ const AuthenticationScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Button onPress={() => { setLoginPanel(true) }} >Logowaniee</Button>
+      <Button onPress={() => { setLoginPanel(true) }} >Logowanie</Button>
       <Button onPress={() => { setLoginPanel(false) }}>Rejestracja</Button>
       
       {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, StatusBar,ActivityIndicator } from 'react-native';
 import Menu from '../Controls/Menu';
 import DetailsProfileScreen from '../Pages/DetailsProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
@@ -24,6 +24,8 @@ const EditPhotoScreen = (props) => {
 	const [response, setResponse] = useState('tutaj response');
 	const [gallery, setGallery] = useState([]);
 	const [mainPhoto, setMainPhoto] = useState('');
+	const [galleryReturn, setGalleryReturn] = useState(false)
+
 
 	useEffect(() => {
 		fetchImages();
@@ -37,6 +39,7 @@ const EditPhotoScreen = (props) => {
 	}
 
 	async function fetchImages() {
+		setGalleryReturn(false)
 		let profileId = await SecureStore.getItemAsync('profileId');
 		let responseImage = await ProfileService.getProfileImage(profileId);
 		if (responseImage.status == 200) {
@@ -50,11 +53,14 @@ const EditPhotoScreen = (props) => {
 				setMainPhoto(xd.idImgur);
 			}
 			//console.log('galeria', responseImage.data);
+			setGalleryReturn(true)
 		}
 		//console.log(responseImage)
 	}
 
 	const loadImageToApp = async () => {
+		setGalleryReturn(false)
+
 		let responsePermissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
 		if (responsePermissions.status !== 'granted') {
 			alert('Potrzebne są uprawnienia');
@@ -71,8 +77,11 @@ const EditPhotoScreen = (props) => {
 			if (!responseImage.cancelled) {
 				setPicture(responseImage.uri);
 				uploadImage(responseImage.uri);
+
 			}
 		}
+		
+
 	};
 
 	const uploadImage = (uriImage) => {
@@ -211,6 +220,7 @@ const EditPhotoScreen = (props) => {
 							</>
 						)} */}
 
+						{galleryReturn? (<>
 						{gallery.length > 0 ? (
 							gallery.map((image, ind) => {
 								return (
@@ -228,6 +238,12 @@ const EditPhotoScreen = (props) => {
 								<Image source={require('../../Images/default.jpg')} style={styles.imageNot} />
 							</View>
 						)}
+
+						</>):(<>
+							<ActivityIndicator size='large' color='#0000ff' />
+
+						</>)}
+
 
 						{/* <View>
 						<Text>{response}</Text>

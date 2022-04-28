@@ -12,7 +12,9 @@ const PairComponent = (props) => {
 		myProfile: false,
 		profileUser: profileData,
 	});
-	const goChat = () => props.navigation.navigate('ChatScreen');
+	const goChat = () => props.navigation.navigate('ChatScreen',{
+        profileId: profileData.profileId,
+    })
 	const [profileData, setProfileData] = useState([]);
 
 	useEffect(() => {

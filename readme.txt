@@ -6,3 +6,6 @@ expo init DatingAppMobile
 
 # start
 npm run android
+
+#apk
+expo build:android

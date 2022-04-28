@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, Scr
 import Menu from '../Controls/Menu';
 import { styles } from '../Styles/SettingsStyle';
 import { TextInput, Button } from 'react-native-paper';
-import { Slider } from 'react-native-range-slider-expo';
+//import { Slider } from 'react-native-range-slider-expo';
 //import RangeSlider, { Slider } from 'react-native-range-slider-expo';
 
 import { Picker } from '@react-native-picker/picker';
@@ -14,7 +14,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
 import PreferencesService from '../../service/PreferencesService';
 import { Entypo } from '@expo/vector-icons';
-import { RangeSlider } from '@sharcoux/slider';
+import { RangeSlider, Slider } from '@sharcoux/slider';
 import ProfileService from '../../service/ProfileService';
 
 const SettingsScreen = (props) => {
@@ -54,7 +54,7 @@ const SettingsScreen = (props) => {
 	const [scrollEnabled, setScrollEnabled] = useState(true);
 
 	const [fromAge, setFromAge] = useState(18);
-	const [toAge, setToAge] = useState(100);
+	const [toAge, setToAge] = useState(60);
 	const [returnAge, setReturnAge] = useState(false);
 	const [returnKilometers, setReturnKilometers] = useState(false);
 	const [returnWeight, setReturnWeight] = useState(false);
@@ -67,29 +67,14 @@ const SettingsScreen = (props) => {
 	const [returnGender, setReturnGender] = useState(false);
 	const [gender, setGender] = useState([]);
 
-	const [kilometers, setKilometers] = useState(0);
+	const [kilometers, setKilometers] = useState(10);
 	const [interestedSex, setInterestedSex] = useState('Kobieta');
-	const [fromHeight, setFromHeight] = useState(100);
+	const [fromHeight, setFromHeight] = useState(140);
 	const [toHeight, setToHeight] = useState(200);
-	const [fromWeight, setFromWeight] = useState(30);
-	const [toWeight, setToWeight] = useState(150);
+	const [fromWeight, setFromWeight] = useState(40);
+	const [toWeight, setToWeight] = useState(130);
 	const navigation = useNavigation();
 	const [checked, setChecked] = React.useState(false);
-
-	const [zodiac, setZodiac] = useState([
-		{ label: 'Baran', status: false },
-		{ label: 'Byk', status: false },
-		{ label: 'Bliźnięta', status: false },
-		{ label: 'Rak', status: false },
-		{ label: 'Lew', status: false },
-		{ label: 'Panna', status: false },
-		{ label: 'Waga', status: false },
-		{ label: 'Skorpion', status: false },
-		{ label: 'Strzelec', status: false },
-		{ label: 'Koziorożec', status: false },
-		{ label: 'Wodnik', status: false },
-		{ label: 'Ryby', status: false },
-	]);
 
 	const [education, setEducation] = useState([
 		{ label: 'Podstawowe', status: false },
@@ -131,15 +116,6 @@ const SettingsScreen = (props) => {
 		{ label: 'Palę dosyć często', status: false },
 		{ label: 'Palę nałogowo', status: false },
 	]);
-
-	const updatezodiac = (index, status) => {
-		//  console.log("\n\ index: "+index + ", status: "+status);
-		//  console.log("PRZED \t label: "+zodiac[index].label + ", status: "+zodiac[index].status);
-		let newArr = [...zodiac];
-		newArr[index].status = status;
-		setZodiac(newArr);
-		//console.log("PO \t label: "+zodiac[index].label + ", status: "+zodiac[index].status);
-	};
 
 	const updateEducation = (index, status) => {
 		let newArr = [...education];
@@ -226,13 +202,11 @@ const SettingsScreen = (props) => {
 		async function fetchProfileWeight() {
 			setReturnWeight(false);
 			let response = await PreferencesService.getWeightPreferences();
-			//console.log(response.status ?? '---');
 			if (response.status == 200) {
+				console.log(response.data);
 				setFromWeight(response.data.weightFrom);
 				setToWeight(response.data.weightTo);
 				setReturnWeight(true);
-				//setReturnKilometers(true)
-				//	console.log(response.data);
 			}
 		}
 
@@ -256,15 +230,10 @@ const SettingsScreen = (props) => {
 	const changePreferences = async () => {
 		setReturnSave(true);
 		let responseAge = await PreferencesService.changeAgePreferences(fromAge, toAge);
-		//console.log(responseAge.status)
 		let responseHobby = await PreferencesService.changePreferencesHobby(hobby);
-		//	console.log(responseHobby.status)
 		let responseHeight = await PreferencesService.changeHeightPreferences(fromHeight, toHeight);
-		//	console.log(responseHeight.status)
 		let responseWeight = await PreferencesService.changeWeightPreferences(fromWeight, toWeight);
-
 		let responseGender = await PreferencesService.changePreferencesGender(gender);
-
 		if (responseAge.status == 200 && responseWeight.status == 200 && responseHeight.status == 200 && responseHobby.status == 200 && responseGender.status == 200) {
 			setReturnSave(false);
 		}
@@ -273,16 +242,11 @@ const SettingsScreen = (props) => {
 	};
 
 	const changeValueHobby = (index, status) => {
-		//console.log("index="+index)
-		//console.log("status="+status)
 		let items = [...hobby];
 		let item = { ...items[index] };
 		item.decision = status === true ? 1 : 0;
 		items[index] = item;
 		setHobby(items);
-		//	console.log(hobby)
-		//console.log("===========================================================")
-		//console.log(hobby)
 	};
 	const [hobby, setHobby] = useState([]);
 
@@ -309,10 +273,13 @@ const SettingsScreen = (props) => {
 							<ActivityIndicator size='large' color='#0000ff' />
 						) : (
 							<>
-								<Button type='submit' title='submit' onPress={() => changePreferences()} mode='contained' disabled={returnDelete || returnDeactivate || returnSave}>
-									<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
-									<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
+								<Button type='submit' title='submit' onPress={() => changePreferences()} mode='contained' disabled={returnDelete || returnDeactivate || returnSave} style={styles.button}>
+									Zapisz preferencje
 								</Button>
+								{/* <Button type='submit' title='submit' onPress={() => changePreferences()} mode='contained' disabled={returnDelete || returnDeactivate || returnSave}>
+									<Entypo name='save' size={20} color='rgba(250,250,250,1)' />
+									<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 17 }}> Zapisz preferencje</Text>
+								</Button> */}
 							</>
 						)}
 					</View>
@@ -325,7 +292,7 @@ const SettingsScreen = (props) => {
 								<RangeSlider
 									range={[fromAge, toAge]} // set the current slider's value
 									minimumValue={18} // Minimum value
-									maximumValue={100} // Maximum value
+									maximumValue={60} // Maximum value
 									step={1} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
 									crossingAllowed={false} // If true, the user can make one thumb cross over the second thumb
 									vertical={false} // If true, the slider will be drawn vertically
@@ -355,14 +322,23 @@ const SettingsScreen = (props) => {
 						{returnKilometers ? (
 							<>
 								<Slider
-									min={3}
-									max={100} //step={4}
-									valueOnChange={(value) => setKilometers(value)}
-									initialValue={50}
-									knobColor='red'
-									valueLabelsBackgroundColor='black'
-									inRangeBarColor='orange'
-									outOfRangeBarColor='purple'
+									value={kilometers} // set the current slider's value
+									minimumValue={3} // Minimum value
+									maximumValue={100} // Maximum value
+									step={1} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
+									minimumTrackTintColor='red' // The track color before the current value
+									maximumTrackTintColor='grey' // The track color after the current value
+									thumbTintColor='darkcyan' // The color of the slider's thumb
+									vertical={false} // If true, the slider will be drawn vertically
+									inverted={false} // If true, min value will be on the right, and max on the left
+									enabled={true} // If false, the slider won't respond to touches anymore
+									trackHeight={6} // The track's height in pixel
+									thumbSize={20} // The thumb's size in pixel
+									slideOnTap={true} // If true, touching the slider will update it's value. No need to slide the thumb.
+									//onValueChange={(value) => setKilometers(value)}        // Called each time the value changed. The type is (value: number) => void
+									onSlidingStart={undefined} // Called when the slider is pressed. The type is (value: number) => void
+									onSlidingComplete={(value) => setKilometers(value)} // Called when the press is released. The type is (value: number) => void
+									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
 								/>
 
 								<Text style={styles.subText}>Szukaj w maksymalnej odległości do {kilometers} km</Text>
@@ -379,7 +355,7 @@ const SettingsScreen = (props) => {
 							<>
 								<RangeSlider
 									range={[fromHeight, toHeight]} // set the current slider's value
-									minimumValue={100} // Minimum value
+									minimumValue={140} // Minimum value
 									maximumValue={200} // Maximum value
 									step={1} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
 									crossingAllowed={false} // If true, the user can make one thumb cross over the second thumb
@@ -412,7 +388,7 @@ const SettingsScreen = (props) => {
 								<RangeSlider
 									range={[fromWeight, toWeight]} // set the current slider's value
 									minimumValue={30} // Minimum value
-									maximumValue={150} // Maximum value
+									maximumValue={130} // Maximum value
 									step={1} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
 									crossingAllowed={false} // If true, the user can make one thumb cross over the second thumb
 									vertical={false} // If true, the slider will be drawn vertically
@@ -478,13 +454,6 @@ const SettingsScreen = (props) => {
 							<HobbyButton text='Podróże' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
 							<HobbyButton text='Sport' edit={true} index={1} status={true} changeValue={changeValueHobby}/> */}
 						</View>
-					</View>
-
-					<View style={styles.sectionContainer}>
-						<Text style={styles.headerText}>Znak zodiaku</Text>
-						{zodiac.map((subItems, sIndex) => {
-							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updatezodiac(sIndex, !subItems.status)} />;
-						})}
 					</View>
 
 					<View style={styles.sectionContainer}>

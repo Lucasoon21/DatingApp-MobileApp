@@ -7,15 +7,14 @@ import * as SecureStore from 'expo-secure-store';
 const API_URL = apiUrl + '/auth';
 
 export async function login(email, password) {
+	console.log('>>> auth/login');
+
 	try {
 		const promise = await httpService.axiosInstance.post(API_URL + '/login', {
 			email: email,
 			password: password,
 		});
-		console.log(promise)
-		//onsole.log(promise.data);
 		const { data: response, status: status } = promise;
-		console.log(promise.data)
 		if(promise.status==200) {
 			if(promise.data.isError=="YES") {
 				return promise.data
@@ -25,22 +24,13 @@ export async function login(email, password) {
 				await SecureStore.setItemAsync('profileId', promise.data.profile_id);
 				await SecureStore.setItemAsync('userId', promise.data.user_id);
 				const token = await SecureStore.getItemAsync('access_token');
-				httpService.setJwt(token);
+				httpService.setJwt(promise.data.access_token);
+				return promise.status
 			}
 		}
-		
-
-		//console.log('token jwt = ', token);
-		//console.log("http service ",httpService.axiosInstance.defaults)
-
-		// AsyncStorage.setItem('access_token', promise.data.access_token)
-		//  AsyncStorage.setItem('refresh_token',promise.data.refresh_token)
-		//console.log("promise access = ",promise.data.access_token)
 		return promise;
-
-		//return {response, status}
 	} catch (err) {
-		console.log('Login: ' + err);
+		console.log('auth/login: ' + err);
 		return err;
 	}
 	/*
@@ -67,7 +57,8 @@ export async function login(email, password) {
 }
 
 export async function register(email, password, confirmPassword, name, date, genderValue, orientationValue) {
-	console.log(email, password, confirmPassword, name, date, genderValue, orientationValue)
+	console.log('>>> auth/register');
+
 	try {
 		const response = await httpService.axiosInstance.post(API_URL + '/register', {
 			email: email,
@@ -78,15 +69,15 @@ export async function register(email, password, confirmPassword, name, date, gen
 			gender: genderValue,
 			orientation: orientationValue,
 		});
-		//	console.log(response.status);
 		return response;
 	} catch (err) {
-		console.log('Rejestracja ' + err.message);
+		console.log('>>> auth/register: '+err);
 		return err;
 	}
 }
 export async function registerDetails(email, name, gender, dateBirth, orientation) {
-	console.log(email, name, gender, dateBirth, orientation);
+	console.log('>>> auth/registerDetails');
+
 	try {
 		const response = await httpService.axiosInstance.post(API_URL + '/registerDetails', {
 			email: email,
@@ -98,7 +89,7 @@ export async function registerDetails(email, name, gender, dateBirth, orientatio
 		//console.log(response.status);
 		return response;
 	} catch (err) {
-		console.log('Rejestracja detale ' + err.message);
+		console.log('>>> auth/registerDetails: '+err);
 		return err;
 	}
 }
