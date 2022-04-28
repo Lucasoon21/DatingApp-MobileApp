@@ -110,6 +110,7 @@ const DetailsProfileScreen = (props) => {
 		let responseImage = await ProfileService.getProfileImage(profileId);
 		if (responseImage.status == 200) {
 			setGallery(responseImage.data);
+			console.log(responseImage.data);
 			setReturnImages(true);
 			//console.log('galeria', gallery);
 		}
@@ -126,34 +127,39 @@ const DetailsProfileScreen = (props) => {
 						</TouchableOpacity>
 					)}
 
-
 					{returnImages ? (
 						<>
-											{props.route.params.myProfile ? (
-						<TouchableOpacity onPress={goEditPhoto} style={styles.buttonEdit}>
-							<MaterialIcons name='edit' size={40} color='rgba(250,250,250,1)' />
-						</TouchableOpacity>
-					) : null}
+							{props.route.params.myProfile ? (
+								<TouchableOpacity onPress={goEditPhoto} style={styles.buttonEdit}>
+									<MaterialIcons name='edit' size={40} color='rgba(250,250,250,1)' />
+								</TouchableOpacity>
+							) : null}
 
 							{gallery.length > 0 ? (
-								<Carousel
-									//onChangePage={() => console.log('page changed')}
-									containerStyle={{
-										width: '100%',
-									}}
-									loop
-									pageControlProps={{
-										size: 10,
-										containerStyle: styles.loopCarousel,
-									}}
-									pageControlPosition={Carousel.pageControlPositions.OVER}
-									animated
-									//showCounter
-								>
-									{gallery.map((item, i) => {
-										return <Image source={{ uri: item.linkImgur }} style={styles.image} key={item.idImgur} />;
-									})}
-								</Carousel>
+								<>
+									{gallery.length == 1 ? (
+										<Image source={{ uri: gallery[0].linkImgur }} style={styles.image} />
+									) : (
+										<Carousel
+											//onChangePage={() => console.log('page changed')}
+											containerStyle={{
+												width: '100%',
+											}}
+											loop
+											pageControlProps={{
+												size: 10,
+												containerStyle: styles.loopCarousel,
+											}}
+											pageControlPosition={Carousel.pageControlPositions.OVER}
+											animated
+											//showCounter
+										>
+											{gallery.map((item, i) => {
+												return <Image source={{ uri: item.linkImgur }} style={styles.image} key={item.idImgur} />;
+											})}
+										</Carousel>
+									)}
+								</>
 							) : (
 								<Image source={require('../../Images/default.jpg')} style={styles.image} />
 							)}
@@ -188,82 +194,80 @@ const DetailsProfileScreen = (props) => {
 
 						{returnDetails ? (
 							<>
-						{props.route.params.myProfile ? (
-							<TouchableOpacity onPress={goEditInfo} style={styles.buttonEditProfile}>
-								<MaterialIcons name='edit' size={30} color='rgba(0,0,0,1)' />
-							</TouchableOpacity>
-						) : null}
-						<View style={styles.personalInfo}>
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Imię</Text>
-								<Text style={styles.info}>{name}</Text>
-							</View>
+								{props.route.params.myProfile ? (
+									<TouchableOpacity onPress={goEditInfo} style={styles.buttonEditProfile}>
+										<MaterialIcons name='edit' size={30} color='rgba(0,0,0,1)' />
+									</TouchableOpacity>
+								) : null}
+								<View style={styles.personalInfo}>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Imię</Text>
+										<Text style={styles.info}>{name}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Zawód</Text>
-								<Text style={styles.info}>{job}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Zawód</Text>
+										<Text style={styles.info}>{job}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Wzrost</Text>
-								<Text style={styles.info}>{height}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Wzrost</Text>
+										<Text style={styles.info}>{height}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Waga</Text>
-								<Text style={styles.info}>{weight}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Waga</Text>
+										<Text style={styles.info}>{weight}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Płeć</Text>
-								<Text style={styles.info}>{gender}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Płeć</Text>
+										<Text style={styles.info}>{gender}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Orientacja</Text>
-								<Text style={styles.info}>{orientation}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Orientacja</Text>
+										<Text style={styles.info}>{orientation}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Znak zodiaku</Text>
-								<Text style={styles.info}>{zodiac}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Znak zodiaku</Text>
+										<Text style={styles.info}>{zodiac}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Wykszatałcenie</Text>
-								<Text style={styles.info}>{education}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Wykszatałcenie</Text>
+										<Text style={styles.info}>{education}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Religia</Text>
-								<Text style={styles.info}>{religion}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Religia</Text>
+										<Text style={styles.info}>{religion}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Dzieci</Text>
-								<Text style={styles.info}>{children}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Dzieci</Text>
+										<Text style={styles.info}>{children}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Alkohol</Text>
-								<Text style={styles.info}>{alcohol}</Text>
-							</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Alkohol</Text>
+										<Text style={styles.info}>{alcohol}</Text>
+									</View>
 
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Papierosy</Text>
-								<Text style={styles.info}>{cigarette}</Text>
-							</View>
-							<View style={styles.infoGroup}>
-								<Text style={styles.infoHeader}>Kolor oczu</Text>
-								<Text style={styles.info}>{eyeColor}</Text>
-							</View>
-						</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Papierosy</Text>
+										<Text style={styles.info}>{cigarette}</Text>
+									</View>
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Kolor oczu</Text>
+										<Text style={styles.info}>{eyeColor}</Text>
+									</View>
+								</View>
 							</>
 						) : (
 							<ActivityIndicator size='large' color='#0000ff' />
 						)}
-
-
 					</View>
 
 					<View style={styles.sectionInfo}>
@@ -271,45 +275,41 @@ const DetailsProfileScreen = (props) => {
 
 						{returnHobby ? (
 							<>
-							{props.route.params.myProfile ? (
-								<TouchableOpacity onPress={goEditHobby} style={styles.buttonEditProfile}>
-									<MaterialIcons name='edit' size={30} color='rgba(0,0,0,1)' />
-								</TouchableOpacity>
-							) : null}
-						<View style={styles.hobbyContainer}>
-							{hobby.map((hobby, index) => {
-								return <HobbyButton text={hobby.name} edit={false} status={hobby.decision} key={index} />;
-							})}
-						</View>
+								{props.route.params.myProfile ? (
+									<TouchableOpacity onPress={goEditHobby} style={styles.buttonEditProfile}>
+										<MaterialIcons name='edit' size={30} color='rgba(0,0,0,1)' />
+									</TouchableOpacity>
+								) : null}
+								<View style={styles.hobbyContainer}>
+									{hobby.map((hobby, index) => {
+										return <HobbyButton text={hobby.name} edit={false} status={hobby.decision} key={index} />;
+									})}
+								</View>
 							</>
 						) : (
 							<ActivityIndicator size='large' color='#0000ff' />
 						)}
-
-
 					</View>
 
 					<View style={styles.sectionInfo}>
 						<Text style={styles.textHeader}>Szukam ...</Text>
 						{returnRelationship ? (
 							<>
-							{props.route.params.myProfile ? (
-								<TouchableOpacity onPress={goEditSearching} style={styles.buttonEditProfile}>
-									<MaterialIcons name='edit' size={30} color='rgba(0,0,0,1)' />
-								</TouchableOpacity>
-							) : null}
-						<View style={styles.hobbyContainer}>
-							{relationship.map((relationship, ind) => {
-								//console.log(hobby)
-								return <RelationButton text={relationship.name} edit={false} type={relationship.decision} index={ind} key={relationship.relationshipId} />;
-							})}
-						</View>
+								{props.route.params.myProfile ? (
+									<TouchableOpacity onPress={goEditSearching} style={styles.buttonEditProfile}>
+										<MaterialIcons name='edit' size={30} color='rgba(0,0,0,1)' />
+									</TouchableOpacity>
+								) : null}
+								<View style={styles.hobbyContainer}>
+									{relationship.map((relationship, ind) => {
+										//console.log(hobby)
+										return <RelationButton text={relationship.name} edit={false} type={relationship.decision} index={ind} key={relationship.relationshipId} />;
+									})}
+								</View>
 							</>
 						) : (
 							<ActivityIndicator size='large' color='#0000ff' />
 						)}
-
-
 					</View>
 				</View>
 			</ScrollView>

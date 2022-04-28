@@ -10,7 +10,7 @@ const API_URL = apiUrl + '/decision';
 
 
 export async function swipeDecision(params) {
-    console.log("params ",params)
+	console.log('>>> decision/swipeUser');
     let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.put(API_URL+'/swipeUser',{
@@ -18,10 +18,9 @@ export async function swipeDecision(params) {
             selectProfileUserId: params.selectProfileUserId,
             profileId: profileId,
         });
-	//	console.log(response);
 		return response;
 	} catch (err) {
-		console.log('fetch profiles  ' + err.message);
+		console.log('>>> decision/swipeUser: '+err);
 		return err;
 	}
 }

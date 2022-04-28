@@ -17,6 +17,7 @@ const LoginPanel = (props) => {
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 	const navigation = useNavigation();
+	const [showPassword, setShowPassword] = useState(false);
 
 	const [visible, setVisible] = React.useState(false);
 	const showDialog = () => setVisible(true);
@@ -44,6 +45,8 @@ const LoginPanel = (props) => {
 			console.log('Niekatywne');
 		} else if (response.password == 'ERR' || response.email == 'ERR') {
 			console.log('Złe hasło lub login');
+		} else if(response==200) {
+			navigation.navigate('SwipeScreen')
 		}
 		//await AsyncStorage.setItem('access_token', response.data.access_token);
 		//await AsyncStorage.setItem('refresh_token', response.data.refresh_token);
@@ -65,8 +68,8 @@ const LoginPanel = (props) => {
 				label='Hasło'
 				placeholder='Wpisz hasło...'
 				style={styles.input}
-				secureTextEntry
-				right={<TextInput.Icon name='eye' />}
+				secureTextEntry={!showPassword}
+				right={<TextInput.Icon name={showPassword ? 'eye-off' : 'eye'} onPress={() => setShowPassword(!showPassword)} />}
 				value={password}
 				onChangeText={(text) => setPassword(text)}
 			/>
@@ -165,7 +168,7 @@ const styles = StyleSheet.create({
 		height: 100,
 	},
 	input: {
-		maxHeight: 50,
+		//maxHeight: 50,
 		width: 200,
 		marginBottom: 20,
 	},

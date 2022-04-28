@@ -8,30 +8,34 @@ import base64 from 'react-native-base64';
 const API_URL = apiUrl + '/chat';
 
 export async function getConversation(profileSecond) {
+	console.log('>>> chat/getConversation');
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getConversation?profileFirst=' + profileId + '&profileSecond=' + profileSecond);
 		//	console.log(response);
 		return response;
 	} catch (err) {
-		console.log('fetch profiles  ' + err.message);
+		console.log('>>> chat/getConversation: '+err);
 		return err;
 	}
 }
 
 export async function getListConversation() {
+	console.log('>>> chat/getListConversation');
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getListConversation?profile=' + profileId);
 		//	console.log(response);
 		return response;
 	} catch (err) {
-		console.log('fetch profiles  ' + err.message);
+		console.log('>>> chat/getListConversation'+err);
 		return err;
 	}
 }
 
 export async function sendMessage(params) {
+	console.log('>>> chat/sendMessage');
+
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.post(API_URL + '/sendMessage', {
@@ -42,11 +46,11 @@ export async function sendMessage(params) {
 		//	console.log(response);
 		return response;
 	} catch (err) {
-		console.log('fetch profiles  ' + err.message);
+		console.log('>>> chat/sendMessage: '+err);
 		return err;
 	}
 }
-
+ 
 export default {
 	getListConversation,
 	getConversation,
