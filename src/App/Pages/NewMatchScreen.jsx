@@ -4,21 +4,23 @@ import Menu from '../Controls/Menu';
 import { Avatar, AvatarHelper, View, Text, Colors, Typography, Button } from 'react-native-ui-lib';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import BackNavigation from '../Components/BackNavigation';
 const NewMatchScreen = (props) => {
+	
 	const goBack = () => props.navigation.goBack();
-    const goProfile = () => {
-        props.navigation.navigate('DetailsForeignProfileScreen', {
+	const goProfile = () => {
+		props.navigation.navigate('DetailsForeignProfileScreen', {
 			myProfile: false,
 			profileUser: {
-                profileId:  props.route.params.profileId
-            },
+				profileId: props.route.params.profileId,
+			},
 		});
-    }
+	};
+
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity onPress={goBack} style={styles.buttonBack}>
-				<Ionicons name='arrow-back' size={40} color='rgba(250,250,250,1)' />
-			</TouchableOpacity>
+			<BackNavigation goBack={goBack} />
+
 			<Text style={styles.matchHeader}>Masz nową parę!</Text>
 			<Text style={styles.matchText}>Ty i {props.route.params.name || '  '} wpadliście sobie w oko! Nie czekaj, tylko napisz wiadomość</Text>
 

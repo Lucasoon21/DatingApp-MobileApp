@@ -12,8 +12,9 @@ export async function getConversation(profileSecond) {
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getConversation?profileFirst=' + profileId + '&profileSecond=' + profileSecond);
-		//	console.log(response);
-		return response;
+		 
+		console.log("<<< chat/getConversation STATUS >>> "+response.status)
+		return response;	
 	} catch (err) {
 		console.log('>>> chat/getConversation: '+err);
 		return err;
@@ -25,9 +26,10 @@ export async function getListConversation() {
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getListConversation?profile=' + profileId);
-		//	console.log(response);
-		return response;
-	} catch (err) {
+		 
+		console.log("<<< chat/getListConversation STATUS >>> "+response.status)
+		return response;	
+		} catch (err) {
 		console.log('>>> chat/getListConversation'+err);
 		return err;
 	}
@@ -43,9 +45,10 @@ export async function sendMessage(params) {
 			receiverProfileId: params.recieverId,
 			contentMessage: params.contentMessage,
 		});
-		//	console.log(response);
-		return response;
-	} catch (err) {
+		 
+		console.log("<<< chat/sendMessage STATUS >>> "+response.status)
+		return response;	
+		} catch (err) {
 		console.log('>>> chat/sendMessage: '+err);
 		return err;
 	}

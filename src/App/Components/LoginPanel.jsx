@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Pressable } from 'react-native';
+import { StyleSheet, Text, Image, Linking, Pressable } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import axios from 'axios';
 import api from '../../Api/posts';
@@ -7,9 +7,11 @@ import AuthenticationService from '../../service/AuthenticationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native'; // <-- import useNavigation hook
 import { Paragraph, Dialog, Portal, Provider } from 'react-native-paper';
-import {Colors, Carousel, PageControl, Modal} from 'react-native-ui-lib';
 import * as SecureStore from 'expo-secure-store';
 import httpService from '../../service/httpService';
+import Toast from 'react-native-toast-message';
+import { configToast } from './configToast';
+import LoaderElements from '../Components/LoaderElements';
 
 const LoginPanel = (props) => {
 	const [testApi, setTestApi] = useState('aa');
@@ -20,16 +22,25 @@ const LoginPanel = (props) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const [visible, setVisible] = React.useState(false);
-	const showDialog = () => setVisible(true);
-	const hideDialog = () => setVisible(false);
 	const [modalVisible, setModalVisible] = useState(false);
+	const [returnResponse, setReturnResponse] = useState(true);
+
+	const showToast = (type, headerText, subText) => {
+		Toast.show({
+			type: type,
+			text1: headerText,
+			text2: subText,
+			visibilityTime: 10000,
+		});
+	};
 
 	const login = async () => {
+		setReturnResponse(false);
 		//console.log('Dane: ' + email + ' ' + password);
 		let response = await AuthenticationService.login(email, password);
 		//console.log('res 1', response.status);
 		//console.log('res 2', response.data);
-
+		setVisible(true);
 		if (response.isOver18Years == 'ERR') {
 			navigation.navigate('AreUnderAgeScreen');
 			console.log('Wiek');
@@ -40,28 +51,23 @@ const LoginPanel = (props) => {
 			await SecureStore.setItemAsync('userId', response.user_id);
 			const token = await SecureStore.getItemAsync('access_token');
 			httpService.setJwt(token);
-
 			navigation.navigate('ActivateAccountScreen');
 			console.log('Niekatywne');
 		} else if (response.password == 'ERR' || response.email == 'ERR') {
-			console.log('Złe hasło lub login');
-		} else if(response==200) {
-			navigation.navigate('SwipeScreen')
+			showToast('error','Nieprawidłowe dane', 'Podane dane są nieprawdidłowe! Upewnij się że poprawnie wpisałeś swoje dane')
+		} else if (response == 200) {
+			navigation.navigate('SwipeScreen');
+		} else {
+			showToast('error','Błąd logowania', 'Wystąpił niespodziewany błąd, spróbuj ponownie później')
 		}
-		//await AsyncStorage.setItem('access_token', response.data.access_token);
-		//await AsyncStorage.setItem('refresh_token', response.data.refresh_token);
-		//console.log(response)
-		//navigation.navigate('SwipeScreen');
-		/*} else {
-			setError('BŁĄD');
-			alert('Nieprawidłowe dane logowania');
-		}*/
+		setReturnResponse(true);
+		//showToast();
 	};
-
+ 
 	return (
 		<>
-			{/* <Text>Witaj!</Text> */}
-			{/* <Image source={require('../Images/logo.png')} style={styles.logo}/> */}
+			<Toast config={configToast}/>
+
 			<TextInput mode='outlined' label='E-mail' placeholder='Wpisz e-mail...' style={styles.input} value={email} onChangeText={(text) => setEmail(text)} />
 			<TextInput
 				mode='outlined'
@@ -74,93 +80,22 @@ const LoginPanel = (props) => {
 				onChangeText={(text) => setPassword(text)}
 			/>
 			{/* <Text style={styles.forgot_password}>Nie pamiętasz hasła?</Text> */}
-			<Button mode='contained' style={styles.loginButton} onPress={() => login()}>
-				Zaloguj się
-			</Button>
-
-			{/* <Modal
-				animationType='slide'
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => {
-					Alert.alert('Modal has been closed.');
-					setModalVisible(!modalVisible);
-				}}>
-				<View style={stylesModal.centeredView}>
-					<View style={stylesModal.modalView}>
-						<Text style={stylesModal.modalText}>Hello World!</Text>
-						<Pressable style={[stylesModal.button, stylesModal.buttonClose]} onPress={() => setModalVisible(!modalVisible)}>
-							<Text style={stylesModal.textStyle}>Hide Modal</Text>
-						</Pressable>
-					</View>
-				</View>
-			</Modal>
-			<Pressable style={[stylesModal.button, stylesModal.buttonOpen]} onPress={() => setModalVisible(true)}>
-				<Text style={stylesModal.textStyle}>Show Modal</Text>
-			</Pressable> */}
-			{/* <Provider style={styles.container}>
-				<Portal>
-					<Dialog visible={visible} onDismiss={hideDialog}>
-						<Dialog.Title>Alert</Dialog.Title>
-						<Dialog.Content>
-							<Paragraph>This is simple dialog</Paragraph>
-						</Dialog.Content>
-						<Dialog.Actions>
-							<Button onPress={hideDialog}>Done</Button>
-						</Dialog.Actions>
-					</Dialog>
-				</Portal>
-			</Provider> */}
-			<Text style={styles.forgot_password}>{error}</Text>
+			{returnResponse ? (
+				<>
+					<Button mode='contained' style={styles.loginButton} onPress={() => login()}>
+						Zaloguj się
+					</Button>
+					<Text style={styles.errorText}>{error}</Text>
+				</>
+			) : (
+				<>
+					<LoaderElements />
+				</>
+			)}
 		</>
 	);
 };
 export default LoginPanel;
-
-
-const stylesModal = StyleSheet.create({
-	centeredView: {
-	  flex: 1,
-	  justifyContent: 'center',
-	  alignItems: 'center',
-	  marginTop: 22,
-	},
-	modalView: {
-	  margin: 20,
-	  backgroundColor: 'white',
-	  borderRadius: 20,
-	  padding: 35,
-	  alignItems: 'center',
-	  shadowColor: '#000',
-	  shadowOffset: {
-		width: 0,
-		height: 2,
-	  },
-	  shadowOpacity: 0.25,
-	  shadowRadius: 4,
-	  elevation: 5,
-	},
-	button: {
-	  borderRadius: 20,
-	  padding: 10,
-	  elevation: 2,
-	},
-	buttonOpen: {
-	  backgroundColor: '#F194FF',
-	},
-	buttonClose: {
-	  backgroundColor: '#2196F3',
-	},
-	textStyle: {
-	  color: 'white',
-	  fontWeight: 'bold',
-	  textAlign: 'center',
-	},
-	modalText: {
-	  marginBottom: 15,
-	  textAlign: 'center',
-	},
-  });
 
 const styles = StyleSheet.create({
 	logo: {
@@ -194,5 +129,11 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	errorText: {
+		marginTop: 10,
+		color: 'red',
+		fontSize: 15,
+		fontWeight: 'bold',
 	},
 });

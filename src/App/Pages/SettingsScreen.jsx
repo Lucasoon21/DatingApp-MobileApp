@@ -16,10 +16,22 @@ import PreferencesService from '../../service/PreferencesService';
 import { Entypo } from '@expo/vector-icons';
 import { RangeSlider, Slider } from '@sharcoux/slider';
 import ProfileService from '../../service/ProfileService';
+import Toast from 'react-native-toast-message';
+import { configToast } from '../Components/configToast';
+import LoaderElements from '../Components/LoaderElements';
 
 const SettingsScreen = (props) => {
 	const enableScroll = () => setScrollEnabled(true);
 	const disableScroll = () => setScrollEnabled(false);
+
+	const showToast = (type, headerText, subText) => {
+		Toast.show({
+			type: type,
+			text1: headerText,
+			text2: subText,
+			visibilityTime: 10000,
+		});
+	};
 
 	const deleteAccount = async () => {
 		setReturnDelete(true);
@@ -32,6 +44,9 @@ const SettingsScreen = (props) => {
 			await SecureStore.deleteItemAsync('userId');
 			setReturnDelete(false);
 			props.navigation.navigate('AuthScreen');
+			showToast('success', 'Usunięto konto!', 'Twoja konto zostało usunięte pomyślnie');
+		} else {
+			showToast('error', 'Nie usunięto konta', 'Nieudało się usunąć konta. Sprbuj ponownie później');
 		}
 	};
 	const deactivationAccount = async () => {
@@ -45,6 +60,9 @@ const SettingsScreen = (props) => {
 			await SecureStore.deleteItemAsync('userId');
 			setReturnDeactivate(false);
 			props.navigation.navigate('AuthScreen');
+			showToast('success', 'Dezaktywowano konto!', 'Twoja konto zostało dezaktywowane pomyślnie');
+		} else {
+			showToast('error', 'Nie dezaktywowano konto', 'Nieudało się dezaktywować konta. Sprbuj ponownie później');
 		}
 	};
 	const changePassword = () => {
@@ -75,6 +93,8 @@ const SettingsScreen = (props) => {
 	const [toWeight, setToWeight] = useState(130);
 	const navigation = useNavigation();
 	const [checked, setChecked] = React.useState(false);
+
+	const [error, setError] = useState(false);
 
 	const [education, setEducation] = useState([
 		{ label: 'Podstawowe', status: false },
@@ -158,7 +178,7 @@ const SettingsScreen = (props) => {
 		await SecureStore.deleteItemAsync('profileId');
 		await SecureStore.deleteItemAsync('userId');
 		//	const token = await SecureStore.getItemAsync('access_token');
-		//console.log('xdd token access wyloguj = ', token??"");
+		//console.log('changeAge token access wyloguj = ', token??"");
 		navigation.navigate('AuthScreen');
 	};
 
@@ -169,10 +189,12 @@ const SettingsScreen = (props) => {
 			if (response.status == 200) {
 				setHobby(response.data);
 				setReturnHobby(true);
+			} else {
+				setError(true);
 			}
 			//console.log(response.data)
 		}
-		const xdd = (from, to) => {
+		const changeAge = (from, to) => {
 			setFromAge(from);
 			setToAge(to);
 		};
@@ -182,8 +204,10 @@ const SettingsScreen = (props) => {
 			//	console.log(response.status ?? '---');
 
 			if (response.status == 200) {
-				xdd(response.data.ageFrom, response.data.ageTo);
+				changeAge(response.data.ageFrom, response.data.ageTo);
 				setReturnAge(true);
+			} else {
+				setError(true);
 			}
 		}
 
@@ -196,6 +220,8 @@ const SettingsScreen = (props) => {
 				setToHeight(response.data.heightTo);
 				setReturnHeight(true);
 				//console.log(response.data);
+			} else {
+				setError(true);
 			}
 		}
 
@@ -207,6 +233,8 @@ const SettingsScreen = (props) => {
 				setFromWeight(response.data.weightFrom);
 				setToWeight(response.data.weightTo);
 				setReturnWeight(true);
+			} else {
+				setError(true);
 			}
 		}
 
@@ -216,6 +244,15 @@ const SettingsScreen = (props) => {
 			if (response.status == 200) {
 				setGender(response.data);
 				setReturnGender(true);
+			} else {
+				setError(true);
+			}
+		}
+		function checkError() {
+			if (error == true) {
+				showToast('error', 'Nie wczytano danych', 'Nieudało się wczytać preferencji wyszukiwania użytkowników. Sprbuj ponownie później');
+
+				setError(false);
 			}
 		}
 
@@ -225,6 +262,7 @@ const SettingsScreen = (props) => {
 		fetchProfileWeight();
 		fetchGenders();
 		setReturnKilometers(true);
+		checkError();
 	}, []);
 
 	const changePreferences = async () => {
@@ -236,6 +274,9 @@ const SettingsScreen = (props) => {
 		let responseGender = await PreferencesService.changePreferencesGender(gender);
 		if (responseAge.status == 200 && responseWeight.status == 200 && responseHeight.status == 200 && responseHobby.status == 200 && responseGender.status == 200) {
 			setReturnSave(false);
+			showToast('success', 'zmieniono preferencje wyszukiwania!', 'Twoje preferencje co do wyszukiwania użytkowników zostało zmienione pomyślnie');
+		} else {
+			showToast('error', 'Nie zmieniono preferencji wyszukiwania!', 'Twoje preferencje co do wyszukiwania użytkowników nie zostało zmienione. Spróbuj ponownie później');
 		}
 
 		//	console.log(responseWeight.status)
@@ -252,6 +293,9 @@ const SettingsScreen = (props) => {
 
 	return (
 		<View style={styles.container}>
+			<View style={{ zIndex: 10, top: 0, position: 'absolute' }}>
+				<Toast config={configToast} />
+			</View>
 			<ScrollView style={styles.scrollView}>
 				<View style={styles.scrollContainer}>
 					<View style={styles.sectionContainer}>
@@ -262,7 +306,7 @@ const SettingsScreen = (props) => {
 						<Button mode='contained' onPress={() => deactivationAccount()} title='deactivate' style={styles.button} disabled={returnDelete || returnDeactivate || returnSave}>
 							{returnDeactivate ? <>Trwa deaktywacja konta...</> : <>Deaktywuj konto</>}
 						</Button>
-						<Button mode='contained' onPress={() => changePassword()} title='changePassword' style={styles.button}>
+						<Button mode='contained' onPress={() => changePassword()} title='changePassword' style={styles.button} disabled={returnDelete || returnDeactivate || returnSave}>
 							Zmień hasło
 						</Button>
 						<Button mode='contained' onPress={() => logout()} title='logout' style={styles.button} disabled={returnDelete || returnDeactivate || returnSave}>
@@ -270,7 +314,7 @@ const SettingsScreen = (props) => {
 						</Button>
 
 						{returnSave ? (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						) : (
 							<>
 								<Button type='submit' title='submit' onPress={() => changePreferences()} mode='contained' disabled={returnDelete || returnDeactivate || returnSave} style={styles.button}>
@@ -305,6 +349,10 @@ const SettingsScreen = (props) => {
 										setFromAge(value[0]);
 										setToAge(value[1]);
 									}}
+									onValueChange={(value) => {
+										setFromAge(value[0]);
+										setToAge(value[1]);
+									}}
 									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
 								/>
 
@@ -313,7 +361,7 @@ const SettingsScreen = (props) => {
 								</Text>
 							</>
 						) : (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						)}
 					</View>
 
@@ -335,7 +383,7 @@ const SettingsScreen = (props) => {
 									trackHeight={6} // The track's height in pixel
 									thumbSize={20} // The thumb's size in pixel
 									slideOnTap={true} // If true, touching the slider will update it's value. No need to slide the thumb.
-									//onValueChange={(value) => setKilometers(value)}        // Called each time the value changed. The type is (value: number) => void
+									onValueChange={(value) => setKilometers(value)} // Called each time the value changed. The type is (value: number) => void
 									onSlidingStart={undefined} // Called when the slider is pressed. The type is (value: number) => void
 									onSlidingComplete={(value) => setKilometers(value)} // Called when the press is released. The type is (value: number) => void
 									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
@@ -344,7 +392,7 @@ const SettingsScreen = (props) => {
 								<Text style={styles.subText}>Szukaj w maksymalnej odległości do {kilometers} km</Text>
 							</>
 						) : (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						)}
 					</View>
 
@@ -369,6 +417,10 @@ const SettingsScreen = (props) => {
 										setFromHeight(value[0]);
 										setToHeight(value[1]);
 									}}
+									onValueChange={(value) => {
+										setFromHeight(value[0]);
+										setToHeight(value[1]);
+									}}
 									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
 								/>
 								<Text style={styles.subText}>
@@ -376,7 +428,7 @@ const SettingsScreen = (props) => {
 								</Text>
 							</>
 						) : (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						)}
 					</View>
 
@@ -401,6 +453,10 @@ const SettingsScreen = (props) => {
 										setFromWeight(value[0]);
 										setToWeight(value[1]);
 									}}
+									onValueChange={(value) => {
+										setFromWeight(value[0]);
+										setToWeight(value[1]);
+									}}
 									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
 								/>
 								<Text style={styles.subText}>
@@ -408,7 +464,7 @@ const SettingsScreen = (props) => {
 								</Text>
 							</>
 						) : (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						)}
 					</View>
 
@@ -430,7 +486,7 @@ const SettingsScreen = (props) => {
 							</>
 						) : (
 							<>
-								<ActivityIndicator size='large' color='#0000ff' />
+								<LoaderElements />
 							</>
 						)}
 						{/* <Picker style={styles.pickerStyle} selectedValue={interestedSex} onValueChange={(itemValue) => setInterestedSex(itemValue)}>
@@ -443,16 +499,17 @@ const SettingsScreen = (props) => {
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Znajdź mi osoby które interesują się również...</Text>
 						<View style={styles.hobbyContainer}>
-							{hobby.map((hobby, ind) => {
-								//console.log(hobby)
-								return <HobbyButton text={hobby.name} edit={true} status={hobby.decision} index={ind} key={hobby.hobbyId} changeValue={changeValueHobby} />;
-							})}
-							{/* <HobbyButton text='Sport' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
-							<HobbyButton text='Muzyka' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
-							<HobbyButton text='Gotowanie' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
-							<HobbyButton text='Taniec' edit={true} index={1} status={true} changeValue={changeValueHobby}/> 
-							<HobbyButton text='Podróże' edit={true} index={1} status={true} changeValue={changeValueHobby}/>
-							<HobbyButton text='Sport' edit={true} index={1} status={true} changeValue={changeValueHobby}/> */}
+							{returnHobby && hobby.length > 0 ? (
+								<>
+									{hobby.map((hobby, ind) => {
+										return <HobbyButton text={hobby.name} edit={true} status={hobby.decision} index={ind} key={hobby.hobbyId} changeValue={changeValueHobby} />;
+									})}
+								</>
+							) : (
+								<>
+									<LoaderElements />
+								</>
+							)}
 						</View>
 					</View>
 
@@ -490,8 +547,6 @@ const SettingsScreen = (props) => {
 							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updateCigarette(sIndex, !subItems.status)} />;
 						})}
 					</View>
-
-					<View style={styles.sectionContainer}></View>
 				</View>
 			</ScrollView>
 			<Menu settings={true} {...props} />

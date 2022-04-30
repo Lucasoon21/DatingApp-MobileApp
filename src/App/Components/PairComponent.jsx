@@ -14,6 +14,8 @@ const PairComponent = (props) => {
 	});
 	const goChat = () => props.navigation.navigate('ChatScreen',{
         profileId: profileData.profileId,
+		name: profileData.name,
+		photo: profileData.image.imageLink
     })
 	const [profileData, setProfileData] = useState([]);
 
@@ -32,7 +34,7 @@ const PairComponent = (props) => {
 
 						<View style={contact.textContainer}>
 							<Text style={contact.text} numberOfLines={1}>
-								{profileData.name},{profileData.age}
+								{profileData.name}, {' '}{profileData.age}
 							</Text>
 							<Text style={contact.text} numberOfLines={1}>
 								22 km stąd

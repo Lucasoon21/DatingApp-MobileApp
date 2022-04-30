@@ -10,7 +10,8 @@ export async function getAlcoholDictionary() {
 
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllAlcoholDictionary');
-		//console.log(response.status);
+
+		console.log('<<< dictionary/getAlcoholDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAlcoholDictionary: ' + err);
@@ -23,7 +24,8 @@ export async function getZodiacDictionary() {
 
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllZodiacDictionary');
-		//console.log(response.status);
+
+		console.log('<<< dictionary/getAllZodiacDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllZodiacDictionary: ' + err);
@@ -35,7 +37,8 @@ export async function getReligiousDictionary() {
 	console.log('>>> dictionary/getAllReligiousDictionary');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllReligiousDictionary');
-		//	console.log(response.status);
+
+		console.log('<<< dictionary/getAllReligiousDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllReligiousDictionary: ' + err);
@@ -47,7 +50,8 @@ export async function getRelationshipDictionary() {
 	console.log('>>> dictionary/getAllRelationshipDictionary');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllRelationshipDictionary');
-		//console.log(response.status);
+
+		console.log('<<< dictionary/getAllRelationshipDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllRelationshipDictionary: ' + err);
@@ -59,7 +63,8 @@ export async function getOrientationDictionary() {
 	console.log('>>> dictionary/getAllOrientationDictionary');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllOrientationDictionary');
-		//	console.log(response.status);
+
+		console.log('<<< dictionary/getAllOrientationDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllOrientationDictionary: ' + err);
@@ -71,7 +76,8 @@ export async function getHobbyDictionary() {
 
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllHobbyDictionary');
-		//	console.log(response.status);
+
+		console.log('<<< dictionary/getAllHobbyDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllHobbyDictionary: ' + err);
@@ -83,7 +89,8 @@ export async function getGenderDictionary() {
 
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllGenderDictionary');
-		//	console.log(response.status);
+
+		console.log('<<< dictionary/getAllGenderDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllGenderDictionary: ' + err);
@@ -95,7 +102,8 @@ export async function getEyeColorDictionary() {
 
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllEyeColorDictionary');
-		//	console.log(response.status);
+
+		console.log('<<< dictionary/getAllEyeColorDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllEyeColorDictionary: ' + err);
@@ -107,7 +115,8 @@ export async function getEducationDictionary() {
 
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllEducationDictionary');
-		//	console.log(response.status);
+
+		console.log('<<< dictionary/getAllEducationDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllEducationDictionary: ' + err);
@@ -119,7 +128,8 @@ export async function getCigarettesDictionary() {
 
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllCigarettesDictionary');
-		//	console.log(response.status);
+
+		console.log('<<< dictionary/getAllCigarettesDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllCigarettesDictionary: ' + err);
@@ -132,7 +142,8 @@ export async function getChildrenDictionary() {
 
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllChildrenDictionary');
-		//	console.log(response.status);
+
+		console.log('<<< dictionary/getAllChildrenDictionary STATUS >>> ' + response.status);
 		return response.data;
 	} catch (err) {
 		console.log('>>> dictionary/getAllChildrenDictionary: ' + err);

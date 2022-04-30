@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Platform, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, Linking, Platform, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { chat, message } from '../Styles/ChatStyle';
 import { Ionicons } from '@expo/vector-icons';
 import Message from '../Components/Message';
@@ -12,6 +12,7 @@ import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import * as SecureStore from 'expo-secure-store';
 import { apiUrl } from '../../../config.json';
+import LoaderElements from '../Components/LoaderElements';
 
 var stompClient = null;
 
@@ -30,9 +31,8 @@ const ChatScreen = (props) => {
 	const [messages, setMessages] = useState([]);
 	const [returnMessage, setReturnMessage] = useState(false);
 
-	const [myProfile, setMyProfile] = useState()
-	const [otherProfile, setOtherProfile] = useState(props.route.params.profileId)
-
+	const [myProfile, setMyProfile] = useState();
+	const [otherProfile, setOtherProfile] = useState(props.route.params.profileId);
 
 	useEffect(() => {
 		async function fetchMessages() {
@@ -40,14 +40,14 @@ const ChatScreen = (props) => {
 			let result = await ChatService.getConversation(props.route.params.profileId);
 			let profile = await SecureStore.getItemAsync('profileId');
 			if (result.status == 200) {
-				setReturnMessage(true);
 				setMessages(result.data);
-				setOtherProfile(props.route.params.profileId)
-				setMyProfile(profile)
-				connectToChat(profile)
+				setOtherProfile(props.route.params.profileId);
+				setMyProfile(profile);
+				connectToChat(profile);
+				setReturnMessage(true);
 			}
-			console.log("CHAT Z UZYTKOWNIKIEM: "+props.route.params.profileId)
-			console.log("JESTEM UZYTKOWNIKIEM: "+profile)
+			console.log('CHAT Z UZYTKOWNIKIEM: ' + props.route.params.profileId);
+			console.log('JESTEM UZYTKOWNIKIEM: ' + profile);
 		}
 		fetchMessages();
 		//registerUser();
@@ -60,11 +60,9 @@ const ChatScreen = (props) => {
 	}, []);
 
 	const onRecieve = useCallback((messages = []) => {
-	//	console.log(">>> Dostałem wiadomosć... : ",messages);
+		//	console.log(">>> Dostałem wiadomosć... : ",messages);
 		setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
-		
 	}, []);
-
 
 	const sendMessage = async (message) => {
 		let result = await ChatService.sendMessage({
@@ -75,7 +73,7 @@ const ChatScreen = (props) => {
 			//sendPrivateValue(message.text);
 			console.log('ok wysłano');
 			let profile = await SecureStore.getItemAsync('profileId');
-			sendMsg(profile,message.text)
+			sendMsg(profile, message.text);
 		} else {
 			console.log('nie wysłano');
 		}
@@ -85,7 +83,7 @@ const ChatScreen = (props) => {
 		return (
 			<Send {...props}>
 				<View style={styles.sendingContainer}>
-					<IconButton icon='send-circle' size={32} color='#6646ee' />
+					<IconButton icon='send-circle' size={36} color='#6646ee' />
 				</View>
 			</Send>
 		);
@@ -98,44 +96,38 @@ const ChatScreen = (props) => {
 		);
 	}
 	function renderLoading() {
-		return (
-			<View style={styles.loadingContainer}>
-				<ActivityIndicator size='large' color='#6646ee' />
-			</View>
-		);
+		return <LoaderElements />;
 	}
 
 	//=========== WEBSOCKET
 
-	 function connectToChat(userName) {
-		console.log("connecting to chat...")
+	function connectToChat(userName) {
+		console.log('connecting to chat...');
 		let socket = new SockJS(apiUrl + '/chat');
 		stompClient = Stomp.over(socket);
 		stompClient.connect({}, function (frame) {
-			console.log("connected to: " + frame);
-			stompClient.subscribe("/topic/messages/" + userName, function (response) {
+			console.log('connected to: ' + frame);
+			stompClient.subscribe('/topic/messages/' + userName, function (response) {
 				let data = JSON.parse(response.body);
 				//if (otherProfile != data.senderProfileId) {
 				if (otherProfile != data.user._id) {
-
-					console.log(otherProfile," ============== TAK ==============",data)
-					if(props.route.params.profileId==data.userSender) {
+					console.log(otherProfile, ' ============== TAK ==============', data);
+					if (props.route.params.profileId == data.userSender) {
 						const dat = {
 							_id: uid(),
 							createdAt: data.createdAt,
 							text: data.text,
-							user:  {
-							  _id: data.user._id,
-							  avatar: data.user.avatar
+							user: {
+								_id: data.user._id,
+								avatar: data.user.avatar,
 							},
-						}
+						};
 						onRecieve(dat);
 					} else {
-						console.log("Dostałeś nową wiadomość")
+						console.log('Dostałeś nową wiadomość');
 					}
-
 				} else {
-					console.log(" ============== NIE ==============")
+					console.log(' ============== NIE ==============');
 
 					//newMessages.set(data.senderProfileId, data.contentMessage);
 					/*const dat = {
@@ -149,66 +141,80 @@ const ChatScreen = (props) => {
 					}
 					onRecieve(dat);
 */
-				//	$('#userNameAppender_' + data.senderProfileId).append('<span id="newMessage_' + data.senderProfileId + '" style="color: red">+1</span>');
+					//	$('#userNameAppender_' + data.senderProfileId).append('<span id="newMessage_' + data.senderProfileId + '" style="color: red">+1</span>');
 				}
 			});
 		});
-	} 
+	}
 	function uid() {
-		return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
-	  };
+		return (performance.now().toString(36) + Math.random().toString(36)).replace(/\./g, '');
+	}
 
 	function sendMsg(from, text) {
 		//console.log("other profile ============== ", from, text,otherProfile)
-		stompClient.send("/app/chat/" + otherProfile, {}, JSON.stringify({
+		stompClient.send(
+			'/app/chat/' + otherProfile,
+			{},
+			JSON.stringify({
 				receiverProfileId: otherProfile,
 				senderProfileId: from,
-				contentMessage: text
-		}));
+				contentMessage: text,
+			}),
+		);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 	return (
-		<GiftedChat
-			messages={messages}
-			showAvatarForEveryMessage
-			onSend={(messages) => onSend(messages)}
-			renderLoading={renderLoading}
-			inverted={true}
-			placeholder='Napisz wiadomość...a.'
-			// showUserAvatar
-			alwaysShowSend
-			scrollToBottom
-			scrollToBottomComponent={scrollToBottomComponent}
-			isAnimated
-			renderSend={renderSend}
-			user={{
-				_id: props.route.params.profileId,
-			}}
-		/>
+		<>
+			<View style={chat.buttonBack}>
+				<View style={{ zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+					<TouchableOpacity onPress={goBack}>
+						<Ionicons name='arrow-back' size={40} color='rgba(50,50,50,1)' />
+					</TouchableOpacity>
+				</View>
 
+				<View style={chat.profileTop}>
+					<TouchableOpacity onPress={goProfile} style={chat.profileTopTouch}>
+						{props.route.params.photo? <Image source={{ uri: props.route.params.photo }} style={chat.avatarTop} /> : <Image source={require('../../Images/default.jpg')} style={chat.avatarTop} />}
+						<Text style={chat.nameProfile} numberOfLines={1}>
+						{props.route.params.name}
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View ></View>
+			</View>
+			<View style={{ flex: 1, marginBottom: 50}}>
+				{returnMessage? (<>
+				<GiftedChat
+					messages={messages}
+					showAvatarForEveryMessage
+					onSend={(messages) => onSend(messages)}
+					renderLoading={renderLoading}
+					inverted={true}
+					placeholder='Napisz wiadomość...a.'
+					// showUserAvatar
+					alwaysShowSend
+					scrollToBottom
+					scrollToBottomComponent={scrollToBottomComponent}
+					isAnimated
+					loadEarlier 
+					renderSend={renderSend}
+					user={{
+						_id: props.route.params.profileId,
+					}} 
+					textInputProps={{
+						marginTop: 12,
+						marginLeft: 0,
+						marginBottom: 6,
+						marginRight: 0,
+						paddingTop: 0,
+					}}
+				/>
+				</>):(<>
+					<LoaderElements />
+				</>)}
+			</View>
+			<Menu chat={true} {...props} />
+		</>
 		// <View style={chat.container}>
 
 		//     <View style={chat.buttonBack}>

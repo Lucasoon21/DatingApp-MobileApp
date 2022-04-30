@@ -7,15 +7,15 @@ import base64 from 'react-native-base64';
 
 const API_URL = apiUrl + '/profile';
 
-
 export async function deleteAccount() {
 	console.log('>>> profile/deleteAccount');
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.delete(API_URL + '/deleteAccount?profile=' + profileId);
+		console.log('<<< profile/deleteAccount STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/deleteAccount: '+err);
+		console.log('>>> profile/deleteAccount: ' + err);
 		return err;
 	}
 }
@@ -26,9 +26,10 @@ export async function deactivateAccount() {
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.put(API_URL + '/deactivateAccount?profile=' + profileId);
+		console.log('<<< profile/deactivateAccount STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/deactivateAccount: '+err);
+		console.log('>>> profile/deactivateAccount: ' + err);
 		return err;
 	}
 }
@@ -39,34 +40,31 @@ export async function activateAccount() {
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.put(API_URL + '/activateAccount?profile=' + profileId);
+		console.log('<<< profile/activateAccount STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/activateAccount: '+err);
+		console.log('>>> profile/activateAccount: ' + err);
 		return err;
 	}
 }
 
-
 export async function changePassword(params) {
 	console.log('>>> profile/changePassword');
 	let profileId = await SecureStore.getItemAsync('profileId');
-	console.log(params)
 	try {
 		const response = await httpService.axiosInstance.put(API_URL + '/changePassword', {
 			profileId: profileId,
 			oldPassword: params.oldPassword,
 			newPassword: params.newPassword,
-			newConfirmPassword: params.confirmPassword
-
+			newConfirmPassword: params.confirmPassword,
 		});
+		console.log('<<< profile/changePassword STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/changePassword: '+err);
+		console.log('>>> profile/changePassword: ' + err);
 		return err;
 	}
 }
-
-
 
 export async function changeDescription(description) {
 	console.log('>>> profile/changeDescription');
@@ -76,12 +74,28 @@ export async function changeDescription(description) {
 			profileId: profileId,
 			description: description,
 		});
+		console.log('<<< profile/changeDescription STATUS >>> ' + response.status);
 		return response.status;
 	} catch (err) {
-		console.log('>>> profile/changeDescription: '+err);
+		console.log('>>> profile/changeDescription: ' + err);
 		return err;
 	}
 }
+
+
+
+export async function getDescription(id) {
+	console.log('>>> profile/getDescription');
+	try {
+		const response = await httpService.axiosInstance.get(API_URL + '/getDescription?profile='+id);
+		console.log('<<< profile/getDescription STATUS >>> ' + response.status);
+		return response;
+	} catch (err) {
+		console.log('>>> profile/getDescription: ' + err);
+		return err;
+	}
+}
+
 
 export async function changeProfileDetails(alcohol, job, height, weight, orientation, education, religious, children, cigarettes, eyeColor) {
 	console.log('>>> profile/changeProfileDetails');
@@ -100,24 +114,25 @@ export async function changeProfileDetails(alcohol, job, height, weight, orienta
 			cigarettesId: cigarettes,
 			eyeColorId: eyeColor,
 		});
+		console.log('<<< profile/changeProfileDetails STATUS >>> ' + response.status);
 		return response.status;
 	} catch (err) {
-		console.log('>>> profile/changeProfileDetails: '+err);
+		console.log('>>> profile/changeProfileDetails: ' + err);
 		return err;
 	}
 }
 
 export async function getProfileDetails(id) {
-	console.log('>>> profile/getProfileDetails');;
+	console.log('>>> profile/getProfileDetails');
 	let profileIdd = id;
-	let userId = await SecureStore.getItemAsync('userId');
 	try {
 		const response = await httpService.axiosInstance.put(API_URL + '/getProfileDetails', {
 			profileId: profileIdd,
 		});
+		console.log('<<< profile/getProfileDetails STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/getProfileDetails: '+err);
+		console.log('>>> profile/getProfileDetails: ' + err);
 		return err;
 	}
 }
@@ -127,9 +142,10 @@ export async function getProfileHobby(id) {
 	let profileId = id;
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getProfileHobby?profile=' + profileId);
+		console.log('<<< profile/getProfileHobby STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/getProfileHobby: '+err);
+		console.log('>>> profile/getProfileHobby: ' + err);
 		return err;
 	}
 }
@@ -143,21 +159,23 @@ export async function changeProfileHobby(hobbyList) {
 			profileId: profileId,
 			listHobby: hobbyList,
 		});
+		console.log('<<< profile/changeProfileHobby STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/changeProfileHobby: '+err);
+		console.log('>>> profile/changeProfileHobby: ' + err);
 		return err;
 	}
 }
 
 export async function getProfileRelationship(id) {
 	console.log('>>> profile/getProfileRelationship');
-	let profileId = id
+	let profileId = id;
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getProfileRelationship?profile=' + profileId);
+		console.log('<<< profile/getProfileRelationship STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/getProfileRelationship: '+err);
+		console.log('>>> profile/getProfileRelationship: ' + err);
 		return err;
 	}
 }
@@ -171,9 +189,10 @@ export async function changeProfileRelationship(listRelationship) {
 			profileId: profileId,
 			listRelationship: listRelationship,
 		});
+		console.log('<<< profile/changeProfileRelationship STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/changeProfileRelationship: '+err);
+		console.log('>>> profile/changeProfileRelationship: ' + err);
 		return err;
 	}
 }
@@ -189,22 +208,24 @@ export async function uploadImage(params) {
 			linkImgur: params.link,
 			profileId: profileId,
 		});
+		console.log('<<< profile/uploadImage STATUS >>> ' + response.status);
 		return response.status;
 	} catch (err) {
-		console.log('>>> profile/uploadImage: '+err);
+		console.log('>>> profile/uploadImage: ' + err);
 		return err;
 	}
 }
 
 export async function getProfileImage(id) {
 	console.log('>>> profile/getProfileImages');
-	let profileId = id
- 
+	let profileId = id;
+
 	try {
 		const response = await httpService.axiosInstance.put(API_URL + '/getProfileImages?profile=' + profileId);
+		console.log('<<< profile/getProfileImages STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/getProfileImages: '+err);
+		console.log('>>> profile/getProfileImages: ' + err);
 		return err;
 	}
 }
@@ -213,7 +234,7 @@ export async function deleteProfileImage(params) {
 	console.log('>>> profile/deleteProfileImage');
 
 	let profileId = await SecureStore.getItemAsync('profileId');
- 
+
 	try {
 		const response = await httpService.axiosInstance.delete(API_URL + '/deleteProfileImage', {
 			data: {
@@ -223,9 +244,10 @@ export async function deleteProfileImage(params) {
 				linkImgur: params.linkImgur,
 			},
 		});
+		console.log('<<< profile/deleteProfileImage STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/deleteProfileImage: '+err);
+		console.log('>>> profile/deleteProfileImage: ' + err);
 		return err;
 	}
 }
@@ -239,9 +261,10 @@ export async function changeMainPhotoProfile(idImgur) {
 			profileId: profileId,
 			imgurPhotoId: idImgur,
 		});
+		console.log('<<< profile/changeMainPhotoProfile STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> profile/changeMainPhotoProfile: '+err);
+		console.log('>>> profile/changeMainPhotoProfile: ' + err);
 		return err;
 	}
 }
@@ -249,6 +272,7 @@ export async function changeMainPhotoProfile(idImgur) {
 export default {
 	changePassword,
 	changeDescription,
+	getDescription,
 	changeProfileDetails,
 	getProfileDetails,
 	getProfileHobby,

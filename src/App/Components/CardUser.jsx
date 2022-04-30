@@ -12,25 +12,12 @@ function CardUser({ name,  profile, images, age, isFirst, swipe, tiltSign, ...re
 
     useEffect(() => {
         setGallery(images);
-        //console.log("images user ====== "+name+"   ",images)
-		//console.log("profile", profile)
     },[])
-/*
-	const rotate = Animated.multiply(swipe.x, tiltSign).interpolate({
-		inputRange: [-ACTION_OFFSET, 0, ACTION_OFFSET],
-		outputRange: ['8deg', '0deg', '-8deg'],
-	});
 
-	const animatedCardStyle = {
-		transform: [...swipe.getTranslateTransform(), { rotate }],
-	};
-*/
 	return (
-		// <Animated.View style={styles.container} {...rest}>
 
 
 		<View style={[styles.container]} >
-		 {/* <Image source={require('../../Images/default.jpg')} style={styles.image} />  */} 
 			 {profile.image? (
                 <Image source={{ uri: profile.image.imageLink }} style={styles.image} key={profile.image.idImgur}  />
 			) : (

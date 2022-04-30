@@ -56,6 +56,7 @@ export class Routes extends Component {
 		return (
 			<>
 				<NavigationContainer>
+					
 					{/*console.log('is login: ', this.state.userIsLogin)*/}
 					<Navigator screenOptions={{ headerShown: false }} initialRouteName={this.state.userIsLogin ? 'SwipeScreen' : 'AuthScreen'}>
 						{this.state.userIsLogin == false ? (

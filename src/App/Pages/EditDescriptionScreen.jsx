@@ -1,80 +1,98 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, StatusBar, TextInput } from 'react-native';
-import Menu from "../Controls/Menu";
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, StatusBar, TextInput, ActivityIndicator } from 'react-native';
+import Menu from '../Controls/Menu';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
 import { Entypo } from '@expo/vector-icons';
 import { styles } from '../Styles/ProfileStyle';
 import ProfileService from '../../service/ProfileService';
-
+import * as SecureStore from 'expo-secure-store';
+import Toast from 'react-native-toast-message';
+import { configToast } from '../Components/configToast';
+import BackNavigation from '../Components/BackNavigation';
+import LoaderElements from '../Components/LoaderElements';
 
 const EditDescriptionScreen = (props) => {
-    //const goBack = () => props.navigation.goBack();
-    const [description, setDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor");
-    const [characterCount, setCharacterCount] = useState(description.length);
-    const MAX_LENGTH = 250;
-    
-    const changeDescription = async () => {
-        let response = await ProfileService.changeDescription(description)
-       // console.log("response ",response)
-        if(response==200) {
-            alert('Zmieniono opis');
-        } else {
-            alert('Nieudało się zmienić opisu');
-        }
-    }
+	const goBack = () => props.navigation.goBack();
 
-    return (
-        <View style={styles.container}>
+	const [description, setDescription] = useState('');
+	const [returnDescription, setReturnDescription] = useState(false);
 
-            {/* <TouchableOpacity onPress={goBack} style={styles.buttonBack}>
-                <Ionicons name="arrow-back" size={40} color="rgba(50,50,50,1)" />
-                <Text style={styles.textBack}>Cofnij</Text>
-            </TouchableOpacity> */}
+	const [characterCount, setCharacterCount] = useState(description.length);
+	const MAX_LENGTH = 500;
 
-            <View style={styles.sectionContainer}>
-                <Text style={styles.headerText}>Edycja opisu </Text>
+	const showToast = (type, headerText, subText) => {
+		Toast.show({
+			type: type,
+			text1: headerText,
+			text2: subText,
+			visibilityTime: 10000,
+		});
+	};
 
-                {/* <TextInput
-                    mode="outlined"
-                  //  label="Opis"
-                    placeholder="Opisz siebie, napisz coś ciekawego, bądź kreatywny!"
-                    onChangeText={() => { alert("aa") }}
-                    value={description}
-                    multiline
-                    numberOfLines={10}
-                /> */}
-                <TextInput
-                    multiline
-                    numberOfLines={9}
-                    onChangeText={text => {
-                        setDescription(text)
-                        setCharacterCount(text.length)
-                    }}
-                    value={description}
-                    style={styles.textInput}
-                    editable
-                    maxLength={MAX_LENGTH}
-                />
-                <Text style={styles.characterCount}>{characterCount}/{MAX_LENGTH}</Text>
+	useEffect(() => {
+		async function fetchDescription() {
+			setReturnDescription(false);
+			let profileId = await SecureStore.getItemAsync('profileId');
+			let response = await ProfileService.getDescription(profileId);
+			if (response.status == 200) {
+				setDescription(response.data.description);
+				setCharacterCount(response.data.description.length || 0);
+				setReturnDescription(true);
+			}
+		}
+		fetchDescription();
+	}, []);
 
-                <Button
-                    type="submit"
-                    title="submit"
-                    onPress={() => changeDescription()}
-                    mode="contained"
-                    style={styles.buttonSave}
-                >
+	const changeDescription = async () => {
+		let response = await ProfileService.changeDescription(description);
+		if (response == 200) {
+			showToast('success', 'Opis zmieniony!', 'Twoja zmiana opisu została zakończona pomyślnie');
+		} else {
+			showToast('error', 'Nie zmieniono opisu', 'Nieudało się zmienić opisu. Sprbuj ponownie później');
+		}
+	};
 
-                    <Entypo name="save" size={25} color="rgba(250,250,250,1)" />
-                    <Text style={{ textAlignVertical: "center", textAlign: "center", fontSize: 25, }}>
-                        Zapisz
-                    </Text>
+	return (
+		<View style={styles.container}>
+			<View style={{ zIndex: 10, top: 0, position: 'absolute' }}>
+				<Toast config={configToast} />
+			</View>
 
-                </Button>
-            </View>
-            <Menu profile={true}  {...props}/>
-        </View>
-    );
+			<BackNavigation goBack={goBack} />
+
+			<View style={styles.sectionContainer}>
+				<Text style={styles.headerText}>Edycja opisu </Text>
+
+				{returnDescription ? (
+					<>
+						<TextInput
+							multiline
+							numberOfLines={9}
+							onChangeText={(text) => {
+								setDescription(text);
+								setCharacterCount(text.length);
+							}}
+							value={description}
+							style={styles.textInput}
+							editable
+							maxLength={MAX_LENGTH}
+						/>
+						<Text style={styles.characterCount}>
+							{characterCount}/{MAX_LENGTH}
+						</Text>
+
+						<Button type='submit' title='submit' onPress={() => changeDescription()} mode='contained' style={styles.buttonSave}>
+							<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
+							<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
+						</Button>
+					</>
+				) : (
+<LoaderElements />
+				)}
+			</View>
+			<Menu profile={true} {...props} />
+		</View>
+	);
 };
 export default EditDescriptionScreen;

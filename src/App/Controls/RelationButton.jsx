@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     item: {
         //backgroundColor: "#ff859f",
         paddingVertical: 7,
-        paddingHorizontal: 11,
+        paddingHorizontal: 5,
         margin: 3,
         display: "flex",
         borderRadius: 15,
