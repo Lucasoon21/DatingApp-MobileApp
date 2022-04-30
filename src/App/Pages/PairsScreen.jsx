@@ -10,12 +10,12 @@ import { Assets, Colors, Typography, View, Drawer, Text, Button, Avatar, Badge }
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { RectButton } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import EmptyPairs from './EmptyPairs';
+import LoaderElements from '../Components/LoaderElements';
 
 const PairsScreen = (props) => {
 	const goPairs = () => props.navigation.navigate('PairsScreen');
 	const goConversation = () => props.navigation.navigate('ConversationScreen');
-	const goChat = () => props.navigation.navigate('ChatScreen');
-	const [loading, setLoading] = useState(true);
 
 	const [pairs, setPairs] = useState([]);
 	const [returnPairs, setReturnPairs] = useState(false);
@@ -26,7 +26,6 @@ const PairsScreen = (props) => {
 	const fetchMatches = async () => {
 		setReturnPairs(false);
 		let response = await MatchService.getAllMatch();
-		console.log(response.data);
 		if (response.data != null) {
 			setPairs(response.data);
 			setReturnPairs(true);
@@ -34,7 +33,6 @@ const PairsScreen = (props) => {
 	};
 	const renderLeftActions = (item) => {
 		const removePair = async () => {
-			console.log('1', item);
 			let response = await MatchService.deleteMatch(item.profileId);
 			if (response.status == 200) {
 				console.log('usunięto');
@@ -77,11 +75,11 @@ const PairsScreen = (props) => {
 					</TouchableOpacity>
 				</View>
 
-				<ScrollView style={styles.containerContact}>
-					{returnPairs ? (
-						<>
-							{pairs.length > 0 ? (
-								<>
+				{returnPairs ? (
+					<>
+						{pairs.length > 0 ? (
+							<>
+								<ScrollView style={styles.containerContact}>
 									{pairs.map((pair, i) => {
 										return (
 											<View style={styles.pairComponent} key={i}>
@@ -91,24 +89,19 @@ const PairsScreen = (props) => {
 											</View>
 										);
 									})}
-								</>
-							) : ( 
-								<>
-									<Text>Brak par</Text>
-								</>
-							)}
-						</>
-					) : (
-						<>
-							<ActivityIndicator size='large' color='#0000ff' />
-						</>
-					)}
-					{/* <PairComponent navigation={props.navigation}/>
-                <PairComponent navigation={props.navigation}/>
-                <PairComponent navigation={props.navigation}/>
-                <PairComponent navigation={props.navigation}/>
-                <PairComponent navigation={props.navigation}/> */}
-				</ScrollView>
+								</ScrollView>
+							</>
+						) : (
+							<>
+								<EmptyPairs />
+							</>
+						)}
+					</>
+				) : (
+					<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<LoaderElements />
+				</View>
+				)}
 
 				<Menu chat={true} {...props} />
 			</View>
@@ -116,8 +109,3 @@ const PairsScreen = (props) => {
 	);
 };
 export default PairsScreen;
-const stylesSwipe = StyleSheet.create({
-	leftAction: {
-		backgroundColor: 'red',
-	},
-});

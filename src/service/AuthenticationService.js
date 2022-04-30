@@ -10,25 +10,25 @@ export async function login(email, password) {
 	console.log('>>> auth/login');
 
 	try {
-		const promise = await httpService.axiosInstance.post(API_URL + '/login', {
+		const response = await httpService.axiosInstance.post(API_URL + '/login', {
 			email: email,
 			password: password,
 		});
-		const { data: response, status: status } = promise;
-		if(promise.status==200) {
-			if(promise.data.isError=="YES") {
-				return promise.data
+		if (response.status == 200) {
+			console.log('<<< auth/login STATUS >>> ' + response.status);
+			if (response.data.isError == 'YES') {
+				return response.data;
 			} else {
-				await SecureStore.setItemAsync('access_token', promise.data.access_token);
-				await SecureStore.setItemAsync('refresh_token', promise.data.refresh_token);
-				await SecureStore.setItemAsync('profileId', promise.data.profile_id);
-				await SecureStore.setItemAsync('userId', promise.data.user_id);
+				await SecureStore.setItemAsync('access_token', response.data.access_token);
+				await SecureStore.setItemAsync('refresh_token', response.data.refresh_token);
+				await SecureStore.setItemAsync('profileId', response.data.profile_id);
+				await SecureStore.setItemAsync('userId', response.data.user_id);
 				const token = await SecureStore.getItemAsync('access_token');
-				httpService.setJwt(promise.data.access_token);
-				return promise.status
+				httpService.setJwt(response.data.access_token);
+				return response.status;
 			}
 		}
-		return promise;
+		return response;
 	} catch (err) {
 		console.log('auth/login: ' + err);
 		return err;
@@ -62,16 +62,17 @@ export async function register(email, password, confirmPassword, name, date, gen
 	try {
 		const response = await httpService.axiosInstance.post(API_URL + '/register', {
 			email: email,
-			password: password, 
+			password: password,
 			confirmPassword: confirmPassword,
 			name: name,
 			dateBirth: date,
 			gender: genderValue,
 			orientation: orientationValue,
 		});
+		console.log('<<< auth/register STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> auth/register: '+err);
+		console.log('>>> auth/register: ' + err);
 		return err;
 	}
 }
@@ -86,10 +87,11 @@ export async function registerDetails(email, name, gender, dateBirth, orientatio
 			dateBirth: dateBirth,
 			orientation: orientation,
 		});
-		//console.log(response.status);
+		 
+		console.log('<<< auth/registerDetails STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> auth/registerDetails: '+err);
+		console.log('>>> auth/registerDetails: ' + err);
 		return err;
 	}
 }

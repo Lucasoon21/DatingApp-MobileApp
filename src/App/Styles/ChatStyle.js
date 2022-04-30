@@ -12,22 +12,28 @@ const chat = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         width: '100%',
-        padding: 5,
-        borderBottomColor: 'rgba(240,240,240,1)',
-        borderBottomWidth: 2,
+        marginTop: StatusBar.currentHeight,
+        borderBottomColor: 'rgba(230,230,230,1)',
+        paddingBottom: 5,
+        paddingTop: 5,
+        borderBottomWidth: 3,
         borderStyle: 'solid',
+        backgroundColor: 'rgba(255,255,255,0.8)',
+       
     },
     profileTop: {
-        position: 'absolute',
-        width: '100%',
-        maxWidth: '100%',
+        //position: 'absolute',
+      //  width: '100%',
+       // maxWidth: '100%',
     },
     profileTopTouch:{
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        
     },
     avatarTop: {
         height: 40,
@@ -129,6 +135,7 @@ const styles = StyleSheet.create({
         // backgroundColor: 'rgba(250,50,250,1)',
         width: '100%',
         marginBottom: 50,
+        
     },
 
 })

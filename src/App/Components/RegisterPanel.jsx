@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { Formik } from 'formik';
@@ -11,6 +11,8 @@ import { Picker } from '@react-native-picker/picker';
 import AuthenticationService from '../../service/AuthenticationService';
 import { CommonActions, useNavigation } from '@react-navigation/native'; // <-- import useNavigation hook
 import DictionaryService from '../../service/DictionaryService';
+import Toast from 'react-native-toast-message';
+import { configToast } from './configToast';
 
 const RegisterPanel = (props) => {
 	let schema = yup.object().shape({
@@ -30,7 +32,14 @@ const RegisterPanel = (props) => {
 	const onDismissSingle = () => {
 		setOpen(false);
 	};
-
+	const showToast = (type, headerText, subText) => {
+		Toast.show({
+			type: type,
+			text1: headerText,
+			text2: subText,
+			visibilityTime: 10000,
+		});
+	};
 	const onConfirmSingle = (params) => {
 		setOpen(false);
 		setDate(params.date);
@@ -40,20 +49,21 @@ const RegisterPanel = (props) => {
 	const [orientationValue, setorientationValue] = useState('');
 	const [orientationDropdown, setOrientationDropdown] = useState([]);
 	const [genderDropdown, setGenderDropdown] = useState([]);
+    const formikRef = useRef();
 
 	//const goChat = () => props.navigation.navigate("Chat")
 
 	useEffect(() => {
 		getDropdownList();
 	}, []);
- 
+
 	const getDropdownList = async () => {
-console.log("wczytywanie dropdown")
-        let Orientation = await DictionaryService.getOrientationDictionary();
+		console.log('wczytywanie dropdown');
+		let Orientation = await DictionaryService.getOrientationDictionary();
 		setOrientationDropdown(Orientation);
 		let Gender = await DictionaryService.getGenderDictionary();
 		setGenderDropdown(Gender);
-        console.log(Orientation)
+		console.log(Orientation);
 	};
 
 	const renderGenderList = () => {
@@ -73,20 +83,36 @@ console.log("wczytywanie dropdown")
 
 		//console.log('Dane: ' + values.email + ' ' + values.password);
 		const response = await AuthenticationService.register(values.email, values.password, values.confirmPassword, values.name, date, genderValue, orientationValue);
-		if (response.status == 200 || response.status == 202) {
+		if (response.data.isError != 'YES') {
 			//navigation.navigate('RegisterDetailsScreen',{email: values.email})
 			console.log('udało sie zarejestrować');
 			//props.navigation.navigate("RegisterDetails")
 			//	history.push('/RegisterDetail');
+			showToast('success', 'Zarejestrowano', 'Twoje konto zostało zarejestrowane ');
+            formikRef.current?.resetForm()
+            
 		} else {
+			if (response.data.emailExists == 'YES') {
+				showToast('error', 'Błąd rejestracji', 'Podany adres email już istnieje ');
+			} else if (response.data.validate == 'YES') {
+				showToast('error', 'Błąd rejestracji', 'Podane dane nie przechodzą walidacji');
+			} else {
+				showToast('error', 'Błąd rejestracji', 'Wystąpił błąd podczas rejestracji! ');
+			}
+
 			console.log('Nieprawidłowe dane');
 		}
 		//console.log(response.data);
 	};
 
 	return (
-		<View>
+		<>
+        <View style={{zIndex:10, top: 0, position: 'absolute'}} >
+			<Toast config={configToast} />
+        </View>
+
 			<Formik
+                innerRef={formikRef}
 				initialValues={{ email: '', password: '', confirmPassword: '', name: '' }}
 				//onSubmit={async values => {// history.push("/Main")}}
 				onSubmit={(values) => register(values)}
@@ -98,7 +124,7 @@ console.log("wczytywanie dropdown")
 							mode='outlined'
 							label='E-mail'
 							placeholder='Wpisz e-mail...'
-							style={styles.input}
+							style={[styles.input, { zIndex: 1 }]}
 							onChangeText={handleChange('email')}
 							onBlur={handleBlur('email')}
 							value={values.email}
@@ -110,7 +136,7 @@ console.log("wczytywanie dropdown")
 							mode='outlined'
 							label='Hasło'
 							placeholder='Wpisz hasło...'
-							style={styles.input}
+							style={[styles.input, { zIndex: 1 }]}
 							secureTextEntry={!showPassword}
 							right={<TextInput.Icon name={showPassword ? 'eye-off' : 'eye'} onPress={() => setShowPassword(!showPassword)} />}
 							onChangeText={handleChange('password')}
@@ -123,7 +149,7 @@ console.log("wczytywanie dropdown")
 							mode='outlined'
 							label='Potwierdz hasło'
 							placeholder='Wpisz hasło...'
-							style={styles.input}
+							style={[styles.input, { zIndex: 1 }]}
 							secureTextEntry={!showConfirmPassword}
 							right={<TextInput.Icon name={showConfirmPassword ? 'eye-off' : 'eye'} onPress={() => setShowConfirmPassword(!showConfirmPassword)} />}
 							onChangeText={handleChange('confirmPassword')}
@@ -137,7 +163,7 @@ console.log("wczytywanie dropdown")
 							mode='outlined'
 							label='Podaj swoje imię'
 							placeholder='Wpisz imię...'
-							style={styles.input}
+							style={[styles.input, { zIndex: 1 }]}
 							onChangeText={handleChange('name')}
 							onBlur={handleBlur('name')}
 							value={values.name}
@@ -155,9 +181,8 @@ console.log("wczytywanie dropdown")
 								{renderOrientationList()}
 							</Picker>
 						</View>
-						<Button onPress={() => setOpen(true)} uppercase={false} mode='contained' 							style={styles.input}
->
-							Wybierz datę urodzin: {date.toLocaleDateString('en-US', { dateStyle: 'medium' })}
+						<Button onPress={() => setOpen(true)} uppercase={false} mode='contained' style={styles.input}>
+							Wybierz datę urodzin: {date.toLocaleDateString('pl', { dateStyle: 'medium' })}
 						</Button>
 						{/* <Text>{date.toLocaleDateString('pl', { dateStyle: 'medium' })}</Text> */}
 						<DatePickerModal
@@ -178,12 +203,12 @@ console.log("wczytywanie dropdown")
 						/>
 
 						<Button type='submit' title='submit' onPress={handleSubmit} mode='contained'>
-							Wyślij
+							Zarejestruj się
 						</Button>
 					</>
 				)}
 			</Formik>
-		</View>
+		</>
 	);
 };
 export default RegisterPanel;
@@ -194,14 +219,14 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		// backgroundColor: 'red',
-		maxHeight: 60,
+		maxHeight: 50,
 		borderColor: 'silver',
 		borderWidth: 2,
 		borderStyle: 'solid',
 		borderRadius: 5,
 		backgroundColor: 'rgba(245, 245, 245, 0.9)',
 		minHeight: 60,
-		marginBottom: 20,
+		marginBottom: 10,
 	},
 	pickerStyle: {
 		width: 330,
@@ -213,8 +238,9 @@ const styles = StyleSheet.create({
 
 	input: {
 		//maxHeight: 50,
+		zIndex: 100,
 		width: 330,
-		marginBottom: 20,
+		marginBottom: 10,
 	},
 });
 /*

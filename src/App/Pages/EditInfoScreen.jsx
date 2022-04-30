@@ -9,21 +9,22 @@ import { Button } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 //import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, FontAwesomeIcon } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import DictionaryService from '../../service/DictionaryService';
 import ProfileService from '../../service/ProfileService';
+import Toast from 'react-native-toast-message';
+import { configToast } from '../Components/configToast';
+import BackNavigation from '../Components/BackNavigation';
 
-const weightArray = new Array(120).fill().map((value, index) => ({ id: index + 30 }));
 
-const heightArray = new Array(100).fill().map((value, index) => ({ id: index + 100 }));
+const weightArray = new Array(91).fill().map((value, index) => ({ id: index + 40 }));
+
+const heightArray = new Array(61).fill().map((value, index) => ({ id: index + 140 }));
 
 const EditInfoScreen = (props) => {
-	//	var today = new Date();
-	//	var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-
-	//console.log('======== START =======' + time);
-	// const goBack = () => props.navigation.goBack();
+	const goBack = () => props.navigation.goBack();
 
 	const [cigarette, setCigarette] = useState('');
 	const [alcohol, setAlcohol] = useState('');
@@ -31,8 +32,8 @@ const EditInfoScreen = (props) => {
 	const [religion, setReligion] = useState('');
 	const [education, setEducation] = useState('');
 	const [orientation, setOrientation] = useState('');
-	const [weight, setWeight] = useState('');
-	const [height, setHeight] = useState('');
+	const [weight, setWeight] = useState(40);
+	const [height, setHeight] = useState(140);
 	const [eyeColor, setEyeColor] = useState('');
 	const [job, setJob] = useState('');
 
@@ -48,9 +49,14 @@ const EditInfoScreen = (props) => {
 	const [alcoholDropdown, setAlcoholDropdown] = useState([]);
 	const [cigarettesDropdown, setCigarettesDropdown] = useState([]);
 
-	const [weightDropdown, setWeightDropdown] = useState([]);
-	const [heightDropdown, setHeightDropdown] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const showToast = (type, headerText, subText) => {
+		Toast.show({
+			type: type,
+			text1: headerText,
+			text2: subText,
+			visibilityTime: 10000,
+		});
+	};
 
 	useEffect(() => {
 		getDropdownList();
@@ -58,8 +64,6 @@ const EditInfoScreen = (props) => {
 			let response = await ProfileService.getProfileDetails();
 			if (response.status === 200) {
 				let data = response.data;
-				// console.log("ok",data.alcohol.id)
-
 				setAlcohol(data.alcohol.id);
 				setCigarette(data.cigarettes.id);
 				setChildren(data.children.id);
@@ -73,7 +77,6 @@ const EditInfoScreen = (props) => {
 			} else {
 				console.log('nie ok');
 			}
-			//console.log(response);
 		}
 		fetchDetailsProfile();
 	}, []);
@@ -85,6 +88,7 @@ const EditInfoScreen = (props) => {
 		setChildrenDropdown(Children);
 		let Cigarettes = await DictionaryService.getCigarettesDictionary();
 		setCigarettesDropdown(Cigarettes);
+		console.log(Cigarettes)
 		let Education = await DictionaryService.getEducationDictionary();
 		setEducationDropdown(Education);
 		let EyeColor = await DictionaryService.getEyeColorDictionary();
@@ -95,19 +99,6 @@ const EditInfoScreen = (props) => {
 		setReligiousDropdown(Religious);
 		let Zodiac = await DictionaryService.getZodiacDictionary();
 		setZodiacDropdown(Zodiac);
-
-		// let Hobby = await DictionaryService.getHobbyDictionary();
-		// setHobbyDropdown(Hobby);
-		// let Gender = await DictionaryService.getGenderDictionary();
-		// setGenderDropdown(Gender);
-		// let Relationship = await DictionaryService.getRelationshipDictionary();
-		// setRelationshipDropdown(Relationship);
-	};
-
-	const renderZodiacList = () => {
-		return zodiacDropdown.map((Zodiac) => {
-			return <Picker.Item label={Zodiac.name} value={Zodiac.id} key={Zodiac.id} />;
-		});
 	};
 
 	const renderReligiousList = () => {
@@ -116,27 +107,9 @@ const EditInfoScreen = (props) => {
 		});
 	};
 
-	const renderRelationshipList = () => {
-		return relationshipDropdown.map((Relationship) => {
-			return <Picker.Item label={Relationship.name} value={Relationship.id} key={Relationship.id} />;
-		});
-	};
-
 	const renderOrientationList = () => {
 		return orientationDropdown.map((Orientation) => {
 			return <Picker.Item label={Orientation.name} value={Orientation.id} key={Orientation.id} />;
-		});
-	};
-
-	const renderHobbyList = () => {
-		return hobbyDropdown.map((Hobby) => {
-			return <Picker.Item label={Hobby.name} value={Hobby.id} key={Hobby.id} />;
-		});
-	};
-
-	const renderGenderList = () => {
-		return genderDropdown.map((Gender) => {
-			return <Picker.Item label={Gender.name} value={Gender.id} key={Gender.id} />;
 		});
 	};
 
@@ -171,22 +144,20 @@ const EditInfoScreen = (props) => {
 
 	const changeProfileDetails = async () => {
 		let response = await ProfileService.changeProfileDetails(alcohol, job, height, weight, orientation, education, religion, children, cigarette, eyeColor);
-		//console.log('response ', response);
-		//console.log(alcohol+" - "+job+" - "+height+" - "+weight+" - "+orientation+" - "+
-		//education+" - "+religion+" - "+children+" - "+cigarette+" - "+eyeColor)
 		if (response == 200) {
-			alert('Zmieniono szczegóły profilu');
+			showToast('success', 'Dane szczegółowe zmienione!', 'Szczegółowe dane twojego profilu zostały zmienione');
 		} else {
-			alert('Nieudało się zmienić szczegółów opisu');
+			showToast('error', 'Nie zmieniono danych profilu', 'Nieudało się zmienić danych profilu. Sprbuj ponownie później');
 		}
 	};
 
 	return (
 		<View style={styles.container}>
-			{/* <TouchableOpacity onPress={goBack} style={styles.buttonBack}>
-                <Ionicons name="arrow-back" size={40} color="rgba(50,50,50,1)" />
-                <Text style={styles.textBack}>Cofnij</Text>
-            </TouchableOpacity> */}
+			<BackNavigation goBack={goBack} />
+
+			<View style={{ zIndex: 10, top: 0, position: 'absolute' }}>
+				<Toast config={configToast} />
+			</View>
 
 			<ScrollView style={styles.scrollView}>
 				<View style={styles.scrollContainer}>
@@ -227,6 +198,8 @@ const EditInfoScreen = (props) => {
 
 					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
 						{/* <MaterialCommunityIcons name='human-male-height-variant' size={24} color='black' /> */}
+						<MaterialCommunityIcons name='human-male-height' size={24} color='black' />
+
 						<Text style={styles.infoHeader}>Wzrost</Text>
 
 						<Picker style={styles.pickerStyle} selectedValue={height} onValueChange={(itemValue) => setHeight(itemValue)}>
@@ -289,7 +262,7 @@ const EditInfoScreen = (props) => {
 					</View>
 
 					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
-						{/* <MaterialCommunityIcons name='cigar' size={24} color='black' /> */}
+						<MaterialCommunityIcons name='cigar' size={24} color='black' />
 						<Text style={styles.infoHeader}>Papierosy</Text>
 						<Picker style={styles.pickerStyle} selectedValue={cigarette} onValueChange={(itemValue) => setCigarette(itemValue)}>
 							{renderCigarettesList()}
@@ -297,19 +270,19 @@ const EditInfoScreen = (props) => {
 					</View>
 
 					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
-						{/* <MaterialCommunityIcons name='eye' size={24} color='black' /> */}
+						<MaterialCommunityIcons name='eye' size={24} color='black' />
 						<Text style={styles.infoHeader}>Kolor oczu</Text>
 						<Picker style={styles.pickerStyle} selectedValue={eyeColor} onValueChange={(itemValue) => setEyeColor(itemValue)}>
 							{renderEyeColorList()}
 						</Picker>
 					</View>
-					<Button type='submit' title='submit' onPress={() => changeProfileDetails()} mode='contained'>
+					<Button type='submit' title='submit' onPress={() => changeProfileDetails()} mode='contained' style={{ marginTop: 20, width: '90%' }}>
 						<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
 						<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
 					</Button>
 				</View>
 			</ScrollView>
-			<Menu profile={true}  {...props}/>
+			<Menu profile={true} {...props} />
 		</View>
 	);
 };

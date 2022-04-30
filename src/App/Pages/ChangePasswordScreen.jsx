@@ -8,6 +8,9 @@ import ProfileService from '../../service/ProfileService';
 import { TextInput, Button } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import Toast from 'react-native-toast-message';
+import { configToast } from '../Components/configToast';
+import BackNavigation from '../Components/BackNavigation';
 
 const ChangePasswordScreen = (props) => {
 	const goBack = () => props.navigation.goBack();
@@ -18,7 +21,7 @@ const ChangePasswordScreen = (props) => {
 		// name: yup.string().min(2, 'imię jest za krótkie').max(50, 'Imię jest za długie!').required('imię jest wymagane')
 		// dateBirth: yup.date().required('Data urodzenia jest wymagana').nullable(),
 	});
-    const [showOldPassword, setShowOldPassword] = useState(false);
+	const [showOldPassword, setShowOldPassword] = useState(false);
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const changePassword = async (values) => {
@@ -27,22 +30,30 @@ const ChangePasswordScreen = (props) => {
 			newPassword: values.newPassword,
 			confirmPassword: values.confirmPassword,
 		});
-        if(response.status==200) {
-            alert('Zmieniono opis');
-        } else {
-            alert('Nieudało się zmienić hasła');
-        }
-        
+		if (response.status == 200) {
+			showToast('success', 'Zmieniono hasło!', 'Twoja zmiana hasłu została zakończona pomyślnie');
+		} else {
+			showToast('error', 'Nie zmieniono hasła', 'Nieudało się zmienić hasła. Sprbuj ponownie później');
+		}
+
 		console.log('first', response);
 	};
 
-	return (
-		<View style={styles.container}>
-			<TouchableOpacity onPress={goBack} style={styles.buttonBack}>
-                <Ionicons name="arrow-back" size={40} color="rgba(50,50,50,1)" />
-                <Text style={styles.textBack}>Cofnij</Text>
-            </TouchableOpacity> 
+	const showToast = (type, headerText, subText) => {
+		Toast.show({
+			type: type,
+			text1: headerText,
+			text2: subText,
+			visibilityTime: 10000,
+		});
+	};
 
+	return (
+		<View style={styles.container} title={'Zmiana hasła'}>
+			<BackNavigation goBack={goBack} />
+			<View style={{ zIndex: 10, top: 0, position: 'absolute' }}>
+				<Toast config={configToast} />
+			</View>
 			<View style={styles.sectionContainer}>
 				<Text style={styles.headerText}>Edycja hasła </Text>
 
@@ -94,7 +105,7 @@ const ChangePasswordScreen = (props) => {
 							{errors.confirmPassword && touched.confirmPassword && <Text style={{ color: 'red', minHeight: 20, width: 300 }}>{errors.confirmPassword}</Text>}
 
 							<Button type='submit' title='submit' onPress={handleSubmit} mode='contained'>
-								Wyślij
+								Zmień hasło
 							</Button>
 						</>
 					)}

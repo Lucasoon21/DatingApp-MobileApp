@@ -10,11 +10,8 @@ const ActivateAccountScreen = (props) => {
 		await SecureStore.deleteItemAsync('refresh_token');
 		await SecureStore.deleteItemAsync('profileId');
 		await SecureStore.deleteItemAsync('userId');
-		//	const token = await SecureStore.getItemAsync('access_token');
-		//console.log('xdd token access wyloguj = ', token??"");
 		props.navigation.navigate('AuthScreen');
-	//	props.navigation.goBack();
-}
+	}
 	const goActivate = async () =>{
 		let response = await ProfileService.activateAccount();
 		if (response.status === 200) {

@@ -11,6 +11,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import ProfileService from '../../service/ProfileService';
 import { Constants, Spacings, Carousel } from 'react-native-ui-lib';
 import * as SecureStore from 'expo-secure-store';
+import BackNavigation from '../Components/BackNavigation';
+import LoaderElements from '../Components/LoaderElements';
 
 const DetailsProfileScreen = (props) => {
 	const goBack = () => props.navigation.goBack();
@@ -47,13 +49,10 @@ const DetailsProfileScreen = (props) => {
 
 	useEffect(() => {
 		async function fetchDetailsProfile(profileId) {
-			//	console.log("props navigation ",props.navigation)
 			setReturnDetails(false);
 			let response = await ProfileService.getProfileDetails(profileId);
-			//console.log(response)
 			if (response.status === 200) {
 				let data = response.data;
-				//	console.log('ok', data.alcohol);
 				setDescription(data.description);
 				setAlcohol(data.alcohol);
 				setCigarette(data.cigarettes);
@@ -73,7 +72,6 @@ const DetailsProfileScreen = (props) => {
 			} else {
 				console.log('nie ok');
 			}
-			//console.log(response);
 		}
 		async function fetchProfileHobby(profileId) {
 			setReturnHobby(false);
@@ -112,25 +110,19 @@ const DetailsProfileScreen = (props) => {
 			setGallery(responseImage.data);
 			console.log(responseImage.data);
 			setReturnImages(true);
-			//console.log('galeria', gallery);
 		}
-		//console.log(responseImage)
 	}
 
 	return (
 		<View style={styles.container}>
 			<ScrollView style={styles.scrollView}>
 				<View style={styles.scrollContainer}>
-					{props.route.params.myProfile ? null : (
-						<TouchableOpacity onPress={goBack} style={styles.buttonBack}>
-							<Ionicons name='arrow-back' size={40} color='rgba(250,250,250,1)' />
-						</TouchableOpacity>
-					)}
+					{props.route.params.myProfile ? null : <BackNavigation goBack={goBack} />}
 
 					{returnImages ? (
 						<>
 							{props.route.params.myProfile ? (
-								<TouchableOpacity onPress={goEditPhoto} style={styles.buttonEdit}>
+								<TouchableOpacity onPress={goEditPhoto} style={[styles.buttonEdit, styles.buttonEditPhoto]}>
 									<MaterialIcons name='edit' size={40} color='rgba(250,250,250,1)' />
 								</TouchableOpacity>
 							) : null}
@@ -141,7 +133,6 @@ const DetailsProfileScreen = (props) => {
 										<Image source={{ uri: gallery[0].linkImgur }} style={styles.image} />
 									) : (
 										<Carousel
-											//onChangePage={() => console.log('page changed')}
 											containerStyle={{
 												width: '100%',
 											}}
@@ -165,7 +156,7 @@ const DetailsProfileScreen = (props) => {
 							)}
 						</>
 					) : (
-						<ActivityIndicator size='large' color='#0000ff' />
+						<LoaderElements />
 					)}
 
 					<View style={styles.sectionInfo}>
@@ -185,7 +176,7 @@ const DetailsProfileScreen = (props) => {
 								<Text style={styles.description}>{description}</Text>
 							</>
 						) : (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						)}
 					</View>
 
@@ -266,7 +257,7 @@ const DetailsProfileScreen = (props) => {
 								</View>
 							</>
 						) : (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						)}
 					</View>
 
@@ -287,7 +278,7 @@ const DetailsProfileScreen = (props) => {
 								</View>
 							</>
 						) : (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						)}
 					</View>
 
@@ -308,7 +299,7 @@ const DetailsProfileScreen = (props) => {
 								</View>
 							</>
 						) : (
-							<ActivityIndicator size='large' color='#0000ff' />
+							<LoaderElements />
 						)}
 					</View>
 				</View>
@@ -333,6 +324,8 @@ const styles = StyleSheet.create({
 	},
 	info: {
 		fontSize: 18,
+		maxWidth: '55%',
+		textAlign: 'right',
 	},
 
 	container: {
@@ -363,6 +356,12 @@ const styles = StyleSheet.create({
 		top: 35,
 		zIndex: 30,
 	},
+	buttonEditPhoto: {
+		backgroundColor: 'rgba(104, 104, 104, 0.47)',
+		borderRadius: 30,
+		padding: 10,
+	},
+
 	buttonEdit: {
 		position: 'absolute',
 		right: 20,
@@ -402,8 +401,8 @@ const styles = StyleSheet.create({
 		width: '90%',
 		paddingTop: 30,
 		paddingBottom: 30,
-		paddingLeft: 30,
-		paddingRight: 30,
+		paddingLeft: 20,
+		paddingRight: 20,
 		marginTop: 20,
 		borderRadius: 20,
 	},

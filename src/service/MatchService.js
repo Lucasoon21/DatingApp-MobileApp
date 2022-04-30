@@ -13,9 +13,10 @@ export async function getAllMatch() {
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
 		const response = await httpService.axiosInstance.get(API_URL + '/getAllMatch?profile=' + profileId);
+		console.log('<<< match/getAllMatch STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> match/getAllMatch: '+err);
+		console.log('>>> match/getAllMatch: ' + err);
 		return err;
 	}
 }
@@ -32,9 +33,10 @@ export async function deleteMatch(matchId) {
 				selectProfileUserId: matchId,
 			},
 		});
+		console.log('<<< match/deleteMatch STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> match/deleteMatch: '+err);
+		console.log('>>> match/deleteMatch: ' + err);
 		return err;
 	}
 }

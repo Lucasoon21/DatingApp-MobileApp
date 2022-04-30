@@ -14,26 +14,15 @@ import SwipeService from '../../service/SwipeService';
 import DecisionService from '../../service/DecisionService';
 import Swiper from 'react-native-deck-swiper';
 import { SafeAreaView } from 'react-native-web';
+import EmptyLikedMe from './EmptyLikedMe';
+import LoaderElements from '../Components/LoaderElements';
 
 //const SwipeScreen = (props) => {
 const LikedMeScreen = (props) => {
 	const [persons, setPersons] = useState([]);
-	const swipe = useRef(new Animated.ValueXY()).current;
-	const tiltSign = useRef(new Animated.Value(1)).current;
 	const swipeRef = useRef(null);
 	const [usersIsReturned, setUsersInReturned] = useState(false);
 	const [currIndex, setCurrIndex] = useState(0);
-
-	async function fetchProfiles() {
-		let response = await SwipeService.getLikesForMyProfile();
-		if (response.status == 200) {
-			//	console.log(response.data);
-			setPersons(response.data);
-            setUsersInReturned(true);
-            
-			//console.log(response.data);
-		}
-	}
 
 	useEffect(() => {
 		setCurrIndex(0);
@@ -49,9 +38,15 @@ const LikedMeScreen = (props) => {
 			fetchProfiles();
 		}
 	}, [persons.length]);
-	/*
-						return <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} />;
-					*/
+
+	async function fetchProfiles() {
+		let response = await SwipeService.getLikesForMyProfile();
+		if (response.status == 200) {
+			setPersons(response.data);
+			setUsersInReturned(true);
+		}
+	}
+
 	const profile = () => {
 		console.log('curr index', currIndex);
 		props.navigation.navigate('DetailsForeignProfileScreen', {
@@ -59,6 +54,7 @@ const LikedMeScreen = (props) => {
 			profileUser: persons[currIndex],
 		});
 	};
+
 	const swipeLeft = async (index) => {
 		setCurrIndex(index + 1);
 		console.log('left ', index);
@@ -80,7 +76,7 @@ const LikedMeScreen = (props) => {
 		let response = await DecisionService.swipeDecision({
 			decision: 1,
 			selectProfileUserId: userSwiped.profileId,
-		}); 
+		});
 		console.log('rs', response.data);
 		if (response.status == 200 && response.data != '') {
 			console.log('Match!', response.data);
@@ -93,8 +89,9 @@ const LikedMeScreen = (props) => {
 				<Swiper
 					ref={swipeRef}
 					cards={persons}
+					backgroundColor='rgba(220,220,220,1)'
 					swipeAnimationDuration={200}
-					renderCard={(card) => (card ? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} /> : <Text>Null</Text>)}
+					renderCard={(card) => (card ? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} /> : <EmptyLikedMe />)}
 					onSwiped={(cardIndex) => {
 						console.log('CARD INDEX', cardIndex);
 					}}
@@ -118,7 +115,7 @@ const LikedMeScreen = (props) => {
 					cardIndex={0}
 					verticalSwipe={false}
 					animateCardOpacity
-					stackSize={3}
+					stackSize={1}
 					overlayLabels={{
 						left: {
 							title: 'NOPE',
@@ -138,15 +135,16 @@ const LikedMeScreen = (props) => {
 								},
 							},
 						},
-					}}>
-				</Swiper>
+					}}></Swiper>
 			);
 		} else {
-			return <ActivityIndicator size='large' color='#0000ff' />;
+			return (
+				<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<LoaderElements />
+				</View>
+			);
 		}
 	};
-
-
 
 	return (
 		<>
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		padding: 30,
-		backgroundColor: '#F5FCFF',
+		backgroundColor: 'rgba(220,220,220,1)',
 	},
 	actionButton: {
 		position: 'absolute',
@@ -235,6 +233,4 @@ const styles = StyleSheet.create({
 		fontSize: 50,
 		backgroundColor: 'transparent',
 	},
-
 });
-

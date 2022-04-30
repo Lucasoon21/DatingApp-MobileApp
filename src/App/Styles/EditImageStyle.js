@@ -137,6 +137,23 @@ const styles = StyleSheet.create({
 		margin: 0,
         resizeMode: 'cover',
         position: 'absolute',
+    },
+    notImagesInProfileContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 30
+    },
+    notImagesHeaderText: {
+        fontSize: 23,
+        fontWeight: 'bold',
+        textAlign: 'center',
+
+    },
+    notImagesSubText: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginVertical: 10,
     }
 });
 

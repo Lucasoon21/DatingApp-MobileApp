@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexWrap: 'wrap',
         flexDirection: 'row',
+        marginBottom: 15,
     },
     textHeader:{
         fontSize: 30,

@@ -14,39 +14,18 @@ import SwipeService from '../../service/SwipeService';
 import DecisionService from '../../service/DecisionService';
 import Swiper from 'react-native-deck-swiper';
 import { SafeAreaView } from 'react-native-web';
+import EmptyFoundProfile from './EmptyFoundProfile';
+import LoaderElements from '../Components/LoaderElements';
 
-//const SwipeScreen = (props) => {
 const SwipeScreen = (props) => {
 	const [persons, setPersons] = useState([]);
-	const swipe = useRef(new Animated.ValueXY()).current;
-	const tiltSign = useRef(new Animated.Value(1)).current;
 	const swipeRef = useRef(null);
 	const [usersIsReturned, setUsersInReturned] = useState(false);
 	const [currIndex, setCurrIndex] = useState(0);
 
-	async function fetchProfiles() {
-		let response = await SwipeService.getAllProfile();
-		if (response.status == 200) {
-			//	console.log(response.data);
-			setPersons(response.data);
-
-			//console.log(response.data);
-		}
-	}
-
 	useEffect(() => {
 		setCurrIndex(0);
 		fetchProfiles();
-
-		/*//console.log('Aktualnie na początku', persons[0]);
-		const willFocusSubscription = props.navigation.addListener('focus', () => {
-			if (!persons.length) {
-				setPersons([]);
-			}
-			setPersons([]);
-			fetchProfiles();
-		});
-		return willFocusSubscription;*/
 	}, [persons.length]);
 
 	useEffect(() => {
@@ -58,9 +37,14 @@ const SwipeScreen = (props) => {
 			fetchProfiles();
 		}
 	}, [persons.length]);
-	/*
-						return <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} />;
-					*/
+
+	async function fetchProfiles() {
+		let response = await SwipeService.getAllProfile();
+		if (response.status == 200) {
+			setPersons(response.data);
+		}
+	}
+
 	const profile = () => {
 		console.log('curr index', currIndex);
 		props.navigation.navigate('DetailsForeignProfileScreen', {
@@ -70,10 +54,8 @@ const SwipeScreen = (props) => {
 	};
 	const swipeLeft = async (index) => {
 		setCurrIndex(index + 1);
-		console.log('left ', index);
 		if (!persons[index]) return;
 		const userSwiped = persons[index];
-		console.log('user swiped', userSwiped);
 		let response = await DecisionService.swipeDecision({
 			decision: 0,
 			selectProfileUserId: userSwiped.profileId,
@@ -82,17 +64,14 @@ const SwipeScreen = (props) => {
 
 	const swipeRight = async (index) => {
 		setCurrIndex(index + 1);
-		console.log('right ', index);
 		if (!persons[index]) return;
 		const userSwiped = persons[index];
-		//console.log('user swiped', userSwiped);
 		let response = await DecisionService.swipeDecision({
 			decision: 1,
 			selectProfileUserId: userSwiped.profileId,
 		});
-		console.log('rs', response.data);
 		if (response.status == 200 && response.data != '') {
-			console.log('Match!', response.data);
+			console.log('Match!');
 			props.navigation.navigate('NewMatchScreen', { name: response.data.name, profileId: response.data.profileId, image: response.data.profileImageDTO });
 		}
 	};
@@ -103,7 +82,8 @@ const SwipeScreen = (props) => {
 					ref={swipeRef}
 					cards={persons}
 					swipeAnimationDuration={200}
-					renderCard={(card) => (card ? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} /> : <Text>Null</Text>)}
+					backgroundColor='rgba(220,220,220,1)'
+					renderCard={(card) => (card ? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} /> : <EmptyFoundProfile />)}
 					onSwiped={(cardIndex) => {
 						console.log('CARD INDEX', cardIndex);
 					}}
@@ -148,110 +128,21 @@ const SwipeScreen = (props) => {
 								},
 							},
 						},
-					}}>
-					{/* <Button 
-		onPress={() => {
-			console.log('oulala');
-		}}
-		title='Press me'>
-		You can press me
-	</Button> */}
-				</Swiper>
+					}}></Swiper>
 			);
 		} else {
-			return <ActivityIndicator size='large' color='#0000ff' />;
+			return (
+				<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<LoaderElements />
+				</View>
+			);
 		}
 	};
 
-	const panResponder = PanResponder.create({
-		onMoveShouldSetPanResponder: () => true,
-		onPanResponderMove: (_, { dx, dy, y0 }) => {
-			swipe.setValue({ x: dx, y: dy });
-			tiltSign.setValue(y0 > CARD.HEIGHT / 2 ? 1 : -1);
-		},
-		onPanResponderRelease: (_, { dx, dy }) => {
-			const direction = Math.sign(dx);
-			const isActionActive = Math.abs(dx) > ACTION_OFFSET;
-
-			if (isActionActive) {
-				Animated.timing(swipe, {
-					duration: 200,
-					toValue: {
-						x: direction * CARD.OUT_OF_SCREEN,
-						y: dy,
-					},
-					useNativeDriver: true,
-				}).start(removeTopCard);
-			} else {
-				Animated.spring(swipe, {
-					toValue: {
-						x: 0,
-						y: 0,
-					},
-					useNativeDriver: true,
-					friction: 5,
-				}).start();
-			}
-		},
-	});
-
-	const removeTopCard = useCallback(() => {
-		setPersons((prevState) => prevState.slice(1));
-		swipe.setValue({ x: 0, y: 0 });
-	}, [swipe]);
-
-	/*
-	const handleChoice = useCallback(
-		(direction) => {
-			Animated.timing(swipe.x, {
-				toValue: direction * CARD.OUT_OF_SCREEN,
-				duration: 400,
-				useNativeDriver: true,
-			}).start(removeTopCard);
-
-			swipeDecision(direction);
-		},
-		[removeTopCard, swipe.x],
-	);
-
-	const swipeDecision = async (decision) => {
-		console.log(decision);
-		console.log('person ', persons[0]);
-		let response = await DecisionService.swipeDecision({
-			selectProfileUserId: persons[0].profileId,
-			decision: decision,
-		});
-	};
-*/
 	return (
 		<>
 			<View style={styles.container}>
-				{/* {persons
-					.map((person, index) => {
-						const isFirst = index === 0;
-						// const panHandlers = isFirst ? panResponder.panHandlers : {};
-
-						const dragHandlers = isFirst ? panResponder.panHandlers : {};
-						return <CardUser key={index} profile={person} name={person.name} images={person.image} age={person.age} isFirst={isFirst} swipe={swipe} tiltSign={tiltSign} {...dragHandlers} />;
-					})
-					.reverse()} */}
-				{/* .reverse()} */}
-
-				{/* <Swiper
-					cards={['DO', 'MORE', 'OF', 'WHAT', 'MAKES', 'YOU', 'HAPPY']}
-					containerStyle={{ width: 100, height: 200, backgroundColor: 'red', marginTop: 50, marginLeft: 100 }}
-					renderCard={(card) => {
-						return (
-							<View style={[styles.card, { backgroundColor: 'blue' }]}>
-								<Text>Elo</Text>
-								<Image source={require('../../Images/default.jpg')} style={styles.image} />
-							</View>
-						);
-					}}
-				/> */}
-
 				{renderCards()}
-
 				<View style={styles.actionButton}>
 					<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeLeft()}>
 						<AntDesign name='dislike2' size={40} color='red' />
@@ -275,7 +166,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		padding: 30,
-		backgroundColor: '#F5FCFF',
+		backgroundColor: 'rgba(220,220,220,1)',
 	},
 	actionButton: {
 		position: 'absolute',

@@ -9,6 +9,8 @@ import PairComponent from './PairComponent';
 const ConversationComponent = (props) => {
 	const goChat = () => props.navigation.navigate('ChatScreen',{
         profileId: dataConversation.profileId,
+		name: dataConversation.name,
+		photo: dataConversation.profileImageLink
     })
 	const [dataConversation, setDataConversation] = useState([]);
 

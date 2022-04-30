@@ -11,10 +11,11 @@ export async function getAgePreferences() {
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.get(API_URL + '/getAgePreferences?profile='+profileId);
+		const response = await httpService.axiosInstance.get(API_URL + '/getAgePreferences?profile=' + profileId);
+		console.log('<<< preferences/getAgePreferences STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/getAgePreferences: '+err);
+		console.log('>>> preferences/getAgePreferences: ' + err);
 		return err;
 	}
 }
@@ -24,15 +25,15 @@ export async function changeAgePreferences(ageFrom, ageTo) {
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.put(API_URL + '/changeAgePreferences',{
+		const response = await httpService.axiosInstance.put(API_URL + '/changeAgePreferences', {
 			profileId: profileId,
 			ageFrom: ageFrom,
 			ageTo: ageTo,
 		});
-		//console.log('response', response.data);
+		console.log('<<< preferences/changeAgePreferences STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/changeAgePreferences: '+err);
+		console.log('>>> preferences/changeAgePreferences: ' + err);
 		return err;
 	}
 }
@@ -41,11 +42,11 @@ export async function getHobbyPreferences() {
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.get(API_URL + '/getPreferencesHobby?profile='+profileId);
-		//console.log('response', response.data);
+		const response = await httpService.axiosInstance.get(API_URL + '/getPreferencesHobby?profile=' + profileId);
+		console.log('<<< preferences/getPreferencesHobby STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/getPreferencesHobby: '+err);
+		console.log('>>> preferences/getPreferencesHobby: ' + err);
 		return err;
 	}
 }
@@ -54,28 +55,28 @@ export async function changePreferencesHobby(hobbyList) {
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.put(API_URL + '/changePreferencesHobby',{
+		const response = await httpService.axiosInstance.put(API_URL + '/changePreferencesHobby', {
 			profileId: profileId,
-			listHobby: hobbyList
+			listHobby: hobbyList,
 		});
-		//console.log('response', response.data);
+		console.log('<<< preferences/changePreferencesHobby STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/changePreferencesHobby: '+err);
+		console.log('>>> preferences/changePreferencesHobby: ' + err);
 		return err;
 	}
 }
-
 
 export async function getHeightPreferences() {
 	console.log('>>> preferences/getHeightPreferences');
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.get(API_URL + '/getHeightPreferences?profile='+profileId);
+		const response = await httpService.axiosInstance.get(API_URL + '/getHeightPreferences?profile=' + profileId);
+		console.log('<<< preferences/getHeightPreferences STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/getHeightPreferences: '+err);
+		console.log('>>> preferences/getHeightPreferences: ' + err);
 		return err;
 	}
 }
@@ -85,15 +86,15 @@ export async function changeHeightPreferences(heightFrom, heightTo) {
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.put(API_URL + '/changeHeightPreferences',{
+		const response = await httpService.axiosInstance.put(API_URL + '/changeHeightPreferences', {
 			profileId: profileId,
 			heightFrom: heightFrom,
 			heightTo: heightTo,
 		});
-		//console.log('response', response.data);
+		console.log('<<< preferences/changeHeightPreferences STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/changeHeightPreferences: '+err);
+		console.log('>>> preferences/changeHeightPreferences: ' + err);
 		return err;
 	}
 }
@@ -103,10 +104,11 @@ export async function getWeightPreferences() {
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.get(API_URL + '/getWeightPreferences?profile='+profileId);
+		const response = await httpService.axiosInstance.get(API_URL + '/getWeightPreferences?profile=' + profileId);
+		console.log('<<< preferences/getWeightPreferences STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/getWeightPreferences: '+err);
+		console.log('>>> preferences/getWeightPreferences: ' + err);
 		return err;
 	}
 }
@@ -116,29 +118,29 @@ export async function changeWeightPreferences(weightFrom, weightTo) {
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.put(API_URL + '/changeWeightPreferences',{
+		const response = await httpService.axiosInstance.put(API_URL + '/changeWeightPreferences', {
 			profileId: profileId,
 			weightFrom: weightFrom,
 			weightTo: weightTo,
 		});
-		//console.log('response', response.data);
+		console.log('<<< preferences/changeWeightPreferences STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/changeWeightPreferences: '+err);
+		console.log('>>> preferences/changeWeightPreferences: ' + err);
 		return err;
 	}
 }
-
 
 export async function getGenderPreferences() {
 	console.log('>>> preferences/getPreferencesGender');
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.get(API_URL + '/getPreferencesGender?profile='+profileId);
+		const response = await httpService.axiosInstance.get(API_URL + '/getPreferencesGender?profile=' + profileId);
+		console.log('<<< preferences/getPreferencesGender STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/getPreferencesGender: '+err);
+		console.log('>>> preferences/getPreferencesGender: ' + err);
 		return err;
 	}
 }
@@ -148,30 +150,27 @@ export async function changePreferencesGender(genderList) {
 
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
-		const response = await httpService.axiosInstance.put(API_URL + '/changePreferencesGender',{
+		const response = await httpService.axiosInstance.put(API_URL + '/changePreferencesGender', {
 			profileId: profileId,
-			listGender: genderList
+			listGender: genderList,
 		});
-		//console.log('response', response.data);
+		console.log('<<< preferences/changePreferencesGender STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {
-		console.log('>>> preferences/changePreferencesGender: '+err);
+		console.log('>>> preferences/changePreferencesGender: ' + err);
 		return err;
 	}
 }
 
-
-
 export default {
-	
-    getAgePreferences,
-    changeAgePreferences,
-    getHobbyPreferences,
-    changePreferencesHobby,
-    getHeightPreferences, 
-    changeHeightPreferences,
-    getWeightPreferences, 
-    changeWeightPreferences,
+	getAgePreferences,
+	changeAgePreferences,
+	getHobbyPreferences,
+	changePreferencesHobby,
+	getHeightPreferences,
+	changeHeightPreferences,
+	getWeightPreferences,
+	changeWeightPreferences,
 	getGenderPreferences,
 	changePreferencesGender,
 };
