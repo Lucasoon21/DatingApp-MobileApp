@@ -43,6 +43,12 @@ function setJwt(jwt) {
 	axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
 	headers.Authorization = 'Bearer ${jwt}';
 }
+function getJwt() {
+	//console.log("set jwt",jwt)
+
+	return axios.defaults.headers.common['Authorization']
+}
+
 const setAuthHeader = (token) => {
 	if (token) {
 		axios.defaults.headers = { Authorization: 'Bearer ' + token };
@@ -58,6 +64,7 @@ export default {
 	setJwt,
 	setAuthHeader,
 	axiosInstance,
+	getJwt,
 };
 
 /*

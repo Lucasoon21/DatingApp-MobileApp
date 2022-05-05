@@ -13,6 +13,7 @@ import { CommonActions, useNavigation } from '@react-navigation/native'; // <-- 
 import DictionaryService from '../../service/DictionaryService';
 import Toast from 'react-native-toast-message';
 import { configToast } from './configToast';
+import { useToast } from 'react-native-toast-notifications';
 
 const RegisterPanel = (props) => {
 	let schema = yup.object().shape({
@@ -32,14 +33,20 @@ const RegisterPanel = (props) => {
 	const onDismissSingle = () => {
 		setOpen(false);
 	};
+	const toast = useToast();
 	const showToast = (type, headerText, subText) => {
-		Toast.show({
+		toast.show(subText, {
 			type: type,
-			text1: headerText,
-			text2: subText,
-			visibilityTime: 10000,
+			placement: 'top',
+			duration: 40000,
+			animationDuration: 100,
+			animationType: 'zoom-in',
+			data: {
+				title: headerText,
+			},
 		});
 	};
+
 	const onConfirmSingle = (params) => {
 		setOpen(false);
 		setDate(params.date);

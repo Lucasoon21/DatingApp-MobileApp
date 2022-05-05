@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import Menu from '../Controls/Menu';
 import { styles } from '../Styles/SettingsStyle';
@@ -19,23 +19,26 @@ import ProfileService from '../../service/ProfileService';
 import Toast from 'react-native-toast-message';
 import { configToast } from '../Components/configToast';
 import LoaderElements from '../Components/LoaderElements';
+import { useToast } from 'react-native-toast-notifications';
 
 const SettingsScreen = (props) => {
-	const enableScroll = () => setScrollEnabled(true);
-	const disableScroll = () => setScrollEnabled(false);
 
+	const toast = useToast();
 	const showToast = (type, headerText, subText) => {
-		Toast.show({
+		toast.show(subText, {
 			type: type,
-			text1: headerText,
-			text2: subText,
-			visibilityTime: 10000,
+			placement: 'top',
+			duration: 40000,
+			animationDuration: 100,
+			animationType: 'zoom-in',
+			data: {
+				title: headerText,
+			},
 		});
 	};
 
 	const deleteAccount = async () => {
 		setReturnDelete(true);
-
 		let response = await ProfileService.deleteAccount();
 		if (response.status === 200) {
 			await SecureStore.deleteItemAsync('access_token');
@@ -274,9 +277,11 @@ const SettingsScreen = (props) => {
 		let responseGender = await PreferencesService.changePreferencesGender(gender);
 		if (responseAge.status == 200 && responseWeight.status == 200 && responseHeight.status == 200 && responseHobby.status == 200 && responseGender.status == 200) {
 			setReturnSave(false);
-			showToast('success', 'zmieniono preferencje wyszukiwania!', 'Twoje preferencje co do wyszukiwania użytkowników zostało zmienione pomyślnie');
+			showToast('success', 'Zmieniono preferencje wyszukiwania!', 'Twoje preferencje co do wyszukiwania użytkowników zostało zmienione pomyślnie.');
 		} else {
-			showToast('error', 'Nie zmieniono preferencji wyszukiwania!', 'Twoje preferencje co do wyszukiwania użytkowników nie zostało zmienione. Spróbuj ponownie później');
+			setReturnSave(false);
+			//toast.show("Hello World");
+			showToast('error', 'Nie zmieniono preferencji wyszukiwania!', 'Twoje preferencje co do wyszukiwania użytkowników nie zostało zmienione. Spróbuj ponownie później.');
 		}
 
 		//	console.log(responseWeight.status)
@@ -293,9 +298,6 @@ const SettingsScreen = (props) => {
 
 	return (
 		<View style={styles.container}>
-			<View style={{ zIndex: 10, top: 0, position: 'absolute' }}>
-				<Toast config={configToast} />
-			</View>
 			<ScrollView style={styles.scrollView}>
 				<View style={styles.scrollContainer}>
 					<View style={styles.sectionContainer}>
@@ -311,8 +313,7 @@ const SettingsScreen = (props) => {
 						</Button>
 						<Button mode='contained' onPress={() => logout()} title='logout' style={styles.button} disabled={returnDelete || returnDeactivate || returnSave}>
 							{returnDeactivate ? <>Trwa wylogowanie...</> : <>Wyloguj</>}
-						</Button>
-
+						</Button> 
 						{returnSave ? (
 							<LoaderElements />
 						) : (
@@ -349,10 +350,10 @@ const SettingsScreen = (props) => {
 										setFromAge(value[0]);
 										setToAge(value[1]);
 									}}
-									onValueChange={(value) => {
-										setFromAge(value[0]);
-										setToAge(value[1]);
-									}}
+									// onValueChange={(value) => {
+									// 	setFromAge(value[0]);
+									// 	setToAge(value[1]);
+									// }}
 									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
 								/>
 
@@ -364,8 +365,8 @@ const SettingsScreen = (props) => {
 							<LoaderElements />
 						)}
 					</View>
-
-					<View style={styles.sectionContainer}>
+ 
+					{/* <View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Maksymalna odległość</Text>
 						{returnKilometers ? (
 							<>
@@ -394,7 +395,7 @@ const SettingsScreen = (props) => {
 						) : (
 							<LoaderElements />
 						)}
-					</View>
+					</View> */}
 
 					<View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>Wzrost</Text>
@@ -417,10 +418,10 @@ const SettingsScreen = (props) => {
 										setFromHeight(value[0]);
 										setToHeight(value[1]);
 									}}
-									onValueChange={(value) => {
-										setFromHeight(value[0]);
-										setToHeight(value[1]);
-									}}
+									// onValueChange={(value) => {
+									// 	setFromHeight(value[0]);
+									// 	setToHeight(value[1]);
+									// }}
 									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
 								/>
 								<Text style={styles.subText}>
@@ -453,10 +454,10 @@ const SettingsScreen = (props) => {
 										setFromWeight(value[0]);
 										setToWeight(value[1]);
 									}}
-									onValueChange={(value) => {
-										setFromWeight(value[0]);
-										setToWeight(value[1]);
-									}}
+									// onValueChange={(value) => {
+									// 	setFromWeight(value[0]);
+									// 	setToWeight(value[1]);
+									// }}
 									{...props} // Add any View Props that will be applied to the container (style, ref, etc)
 								/>
 								<Text style={styles.subText}>
@@ -513,7 +514,7 @@ const SettingsScreen = (props) => {
 						</View>
 					</View>
 
-					<View style={styles.sectionContainer}>
+					{/* <View style={styles.sectionContainer}>
 						<Text style={styles.headerText}>wykształcenie</Text>
 						{education.map((subItems, sIndex) => {
 							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updateEducation(sIndex, !subItems.status)} />;
@@ -546,7 +547,8 @@ const SettingsScreen = (props) => {
 						{cigarette.map((subItems, sIndex) => {
 							return <Checkbox.Item key={sIndex} label={subItems.label} status={subItems.status ? 'checked' : 'unchecked'} onPress={() => updateCigarette(sIndex, !subItems.status)} />;
 						})}
-					</View>
+					</View> */}
+
 				</View>
 			</ScrollView>
 			<Menu settings={true} {...props} />

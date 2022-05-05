@@ -47,24 +47,6 @@ const PairComponent = (props) => {
 				</TouchableOpacity>
 			</View>
 
-			{/* <View style={[contact.container, { justifyContent: "flex-start" }]}>
-            <Image source={require('../Images/person1.jpg')} style={contact.image} />
-            <View style={{ display: 'flex', alignItems: 'center', marginLeft: 30 }}>
-
-                <Text style={contact.text}>Łukasz, 22</Text>
-                <Text style={contact.text}>22 km stąd</Text>
-            </View>
-        </View>
-
-        <View style={contact.container}>
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-
-                <Image source={require('../Images/person4.jpeg')} style={[contact.image, { marginRight: 10 }]} />
-
-                <Text style={contact.text}>Krystyrddfgfdg, 22</Text>
-            </View>
-            <Text style={contact.text}>22 km stąd</Text>
-        </View> */}
 		</>
 	);
 };

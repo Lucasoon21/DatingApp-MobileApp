@@ -62,6 +62,7 @@
     "react-native-stack": "^1.0.0",
     "react-native-svg": "^12.3.0",
     "react-native-toast-message": "^2.1.5",
+    "react-native-toast-notifications": "^3.2.3",
     "react-native-ui-lib": "^6.13.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "0.17.1",
