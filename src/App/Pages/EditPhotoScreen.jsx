@@ -17,6 +17,7 @@ import Toast from 'react-native-toast-message';
 import { configToast } from '../Components/configToast';
 import BackNavigation from '../Components/BackNavigation';
 import LoaderElements from '../Components/LoaderElements';
+import { useToast } from 'react-native-toast-notifications';
 
 const EditPhotoScreen = (props) => {
 	const goBack = () => props.navigation.goBack();
@@ -29,12 +30,17 @@ const EditPhotoScreen = (props) => {
 		fetchImages();
 	}, []);
 
+	const toast = useToast();
 	const showToast = (type, headerText, subText) => {
-		Toast.show({
+		toast.show(subText, {
 			type: type,
-			text1: headerText,
-			text2: subText,
-			visibilityTime: 10000,
+			placement: 'top',
+			duration: 40000,
+			animationDuration: 100,
+			animationType: 'zoom-in',
+			data: {
+				title: headerText,
+			},
 		});
 	};
 

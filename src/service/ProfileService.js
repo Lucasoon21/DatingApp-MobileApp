@@ -126,9 +126,7 @@ export async function getProfileDetails(id) {
 	console.log('>>> profile/getProfileDetails');
 	let profileIdd = id;
 	try {
-		const response = await httpService.axiosInstance.put(API_URL + '/getProfileDetails', {
-			profileId: profileIdd,
-		});
+		const response = await httpService.axiosInstance.get(API_URL + '/getProfileDetails?profile='+profileIdd);
 		console.log('<<< profile/getProfileDetails STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {

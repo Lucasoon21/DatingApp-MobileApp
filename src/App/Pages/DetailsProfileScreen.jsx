@@ -170,9 +170,9 @@ const DetailsProfileScreen = (props) => {
 								<Text style={styles.name}>
 									{name},{age}
 								</Text>
-								<Text style={styles.localization}>
+								{/* <Text style={styles.localization}>
 									<Entypo name='location-pin' size={25} color='black' /> 88 km stąd
-								</Text>
+								</Text> */}
 								<Text style={styles.description}>{description}</Text>
 							</>
 						) : (

@@ -7,26 +7,24 @@ import { ACTION_OFFSET } from '../../utils/constants';
 import { CARD } from '../../utils/constants';
 import { Constants, Spacings, Carousel } from 'react-native-ui-lib';
 
-function CardUser({ name,  profile, images, age, isFirst, swipe, tiltSign, ...rest }) {
+function CardUser({ name, profile, images, age, isFirst, swipe, tiltSign, ...rest }) {
 	const [gallery, setGallery] = useState([]);
 
-    useEffect(() => {
-        setGallery(images);
-    },[])
+	useEffect(() => {
+		setGallery(images);
+	}, []);
 
 	return (
-
-
-		<View style={[styles.container]} >
-			 {profile.image? (
-                <Image source={{ uri: profile.image.imageLink }} style={styles.image} key={profile.image.idImgur}  />
+		<View style={[styles.container]}>
+			{profile.image ? (
+				<Image source={{ uri: profile.image.imageLink }} style={styles.image} key={profile.image.idImgur} />
 			) : (
 				<Image source={require('../../Images/default.jpg')} style={styles.image} />
-			)} 
+			)}
 			<Text style={styles.name}>
-				{name ?? ""}, {age ?? ""}{' '}
+				{name ?? ''}, {age ?? ''}{' '}
 			</Text>
-			<Text style={styles.localitation}> 10km stąd </Text>
+			{/* <Text style={styles.localitation}> 10km stąd </Text> */}
 		</View>
 	);
 }

@@ -1,21 +1,14 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Platform, Animated, PanResponder, TouchableOpacity, Button, ActivityIndicator } from 'react-native';
-import { Feather, Entypo, MaterialIcons } from '@expo/vector-icons';
-import Menu from '../Controls/Menu';
-import CardUser from '../Components/CardUser';
-import { person as tablicaOsob } from '../Assets/ProfileData';
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons';
-import { SimpleLineIcons } from '@expo/vector-icons';
-import { CARD, ACTION_OFFSET } from '../../utils/constants';
-import { Fontisto } from '@expo/vector-icons';
-import SwipeService from '../../service/SwipeService';
-import DecisionService from '../../service/DecisionService';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { useEffect, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
-import { SafeAreaView } from 'react-native-web';
-import EmptyLikedMe from './EmptyLikedMe';
+import DecisionService from '../../service/DecisionService';
+import SwipeService from '../../service/SwipeService';
+import { CARD } from '../../utils/constants';
+import CardUser from '../Components/CardUser';
 import LoaderElements from '../Components/LoaderElements';
+import Menu from '../Controls/Menu';
+import EmptyLikedMe from './EmptyLikedMe';
 
 //const SwipeScreen = (props) => {
 const LikedMeScreen = (props) => {
