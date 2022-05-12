@@ -3,7 +3,6 @@ import { StyleSheet, Image, Linking, Platform, ScrollView, TouchableOpacity, Act
 import Menu from '../Controls/Menu';
 import DetailsProfileScreen from './DetailsProfileScreen';
 import { contact, styles } from '../Styles/ChatStyle';
-import MenuTop from '../Unused/MenuTop';
 import PairComponent from '../Components/PairComponent';
 import MatchService from '../../service/MatchService';
 import { Assets, Colors, Typography, View, Drawer, Text, Button, Avatar, Badge } from 'react-native-ui-lib';
@@ -26,10 +25,11 @@ const PairsScreen = (props) => {
 	const fetchMatches = async () => {
 		setReturnPairs(false);
 		let response = await MatchService.getAllMatch();
+		console.log('koniec');
 		if (response.data != null) {
 			setPairs(response.data);
-			setReturnPairs(true);
 		}
+		setReturnPairs(true);
 	};
 	const renderLeftActions = (item) => {
 		const removePair = async () => {
@@ -99,8 +99,8 @@ const PairsScreen = (props) => {
 					</>
 				) : (
 					<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-					<LoaderElements />
-				</View>
+						<LoaderElements />
+					</View>
 				)}
 
 				<Menu chat={true} {...props} />

@@ -9,6 +9,7 @@ import CardUser from '../Components/CardUser';
 import LoaderElements from '../Components/LoaderElements';
 import Menu from '../Controls/Menu';
 import EmptyFoundProfile from './EmptyFoundProfile';
+import * as SecureStore from 'expo-secure-store';
 
 const SwipeScreen = (props) => {
 	const [persons, setPersons] = useState([]);
@@ -28,11 +29,13 @@ const SwipeScreen = (props) => {
 			setCurrIndex(0);
 			setUsersInReturned(false);
 			fetchProfiles();
+			setUsersInReturned(true);
 		}
 	}, [persons.length]);
 
-
 	async function fetchProfiles() {
+		const token = await SecureStore.getItemAsync('profileId');
+		console.log('usr ' + token);
 		let response = await SwipeService.getAllProfile();
 		if (response.status == 200) {
 			setPersons(response.data);
@@ -71,59 +74,78 @@ const SwipeScreen = (props) => {
 	};
 	const renderCards = () => {
 		if (usersIsReturned === true) {
-			return (
-				<Swiper
-					ref={swipeRef}
-					cards={persons}
-					swipeAnimationDuration={200}
-					backgroundColor='rgba(220,220,220,1)'
-					renderCard={(card) => (card ? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} /> : <EmptyFoundProfile />)}
-					onSwiped={(cardIndex) => {
-						console.log('CARD INDEX', cardIndex);
-					}}
-					onSwipedAll={() => {
-						setCurrIndex(0);
-						console.log('onSwipedAll');
-						setPersons([]);
-						fetchProfiles();
-					}}
-					onSwipedLeft={(cardIndex) => {
-						swipeLeft(cardIndex);
-						console.log('left', cardIndex);
-					}}
-					onSwipedRight={(cardIndex) => {
-						swipeRight(cardIndex);
-						console.log('right', cardIndex);
-					}}
-					//overlayLabelStyle={{padding: 0}}
-					cardVerticalMargin={0}
-					cardHorizontalMargin={30}
-					cardStyle={{ margin: 0 }}
-					cardIndex={0}
-					verticalSwipe={false}
-					animateCardOpacity
-					stackSize={3}
-					overlayLabels={{
-						left: {
-							title: 'NOPE',
-							style: {
-								label: {
-									textAlign: 'right',
-									color: 'red',
+			if (persons.length > 0) {
+				console.log(persons);
+
+				return (
+					<> 
+						<Swiper
+							ref={swipeRef}
+							cards={persons}
+							swipeAnimationDuration={200}
+							backgroundColor='rgba(220,220,220,1)'
+							renderCard={(card) => card? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} city={card.city ?? ''} />: <EmptyFoundProfile />}
+							onSwiped={(cardIndex) => {
+								console.log('CARD INDEX', cardIndex);
+							}}
+							onSwipedAll={() => {
+								setCurrIndex(0);
+								console.log('onSwipedAll');
+								setPersons([]);
+								//fetchProfiles();
+							}}
+							onSwipedLeft={(cardIndex) => {  
+								swipeLeft(cardIndex);
+								console.log('left', cardIndex);
+							}}
+							onSwipedRight={(cardIndex) => {
+								swipeRight(cardIndex);
+								console.log('right', cardIndex);
+							}}
+							//overlayLabelStyle={{padding: 0}}
+							cardVerticalMargin={0}
+							cardHorizontalMargin={30}
+							cardStyle={{ margin: 0 }}
+							cardIndex={0}
+							verticalSwipe={false}
+							animateCardOpacity
+							stackSize={1}
+							overlayLabels={{ 
+								left: {
+									title: 'NOPE',
+									style: {
+										label: {
+											textAlign: 'right',
+											color: 'red',
+										},
+									},
 								},
-							},
-						},
-						right: {
-							title: 'LIKE',
-							style: {
-								label: {
-									textAlign: 'left',
-									color: 'green',
-								},
-							},
-						},
-					}}></Swiper>
-			);
+								right: {
+									title: 'LIKE',
+									style: {
+										label: {
+											textAlign: 'left',
+											color: 'green',
+										},
+									},
+								}, 
+							}}></Swiper>
+						<View style={styles.actionButton}>
+							<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeLeft()}>
+								<AntDesign name='dislike2' size={40} color='red' />
+							</TouchableOpacity>
+							<TouchableOpacity style={styles.button} onPress={profile}>
+								<Ionicons name='md-person-outline' size={40} color='black' />
+							</TouchableOpacity>
+							<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeRight()}>
+								<AntDesign name='like2' size={40} color='green' />
+							</TouchableOpacity>
+						</View>
+					</>
+				);
+			} else {
+				return <EmptyFoundProfile />;
+			}
 		} else {
 			return (
 				<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -135,20 +157,7 @@ const SwipeScreen = (props) => {
 
 	return (
 		<>
-			<View style={styles.container}>
-				{renderCards()}
-				<View style={styles.actionButton}>
-					<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeLeft()}>
-						<AntDesign name='dislike2' size={40} color='red' />
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.button} onPress={profile}>
-						<Ionicons name='md-person-outline' size={40} color='black' />
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeRight()}>
-						<AntDesign name='like2' size={40} color='green' />
-					</TouchableOpacity>
-				</View>
-			</View>
+			<View style={styles.container}>{renderCards()}</View>
 			<Menu swipe={true} {...props} />
 		</>
 	);

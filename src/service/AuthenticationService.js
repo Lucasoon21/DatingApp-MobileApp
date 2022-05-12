@@ -33,27 +33,7 @@ export async function login(email, password) {
 		console.log('auth/login: ' + err);
 		return err;
 	}
-	/*
-	try {
-		const response = await httpService.axiosInstance
-			.post(API_URL+'login', {
-				email: email,
-				password: password,
-			})
-			.then((response) => {
-                console.log(response)
-				AsyncStorage.setItem('access_token', response.data.access_token);
-				httpService.axiosInstance.setAuthHeader(response.data.access_token);
-			})
-			.catch((error) => {
-				console.log("Błąd ",error.response);
-			});
 
-		return response;
-	} catch (err) {
-		console.log('Login: ' + err);
-		return err;
-	}*/
 }
 
 export async function register(email, password, confirmPassword, name, date, genderValue, orientationValue) {

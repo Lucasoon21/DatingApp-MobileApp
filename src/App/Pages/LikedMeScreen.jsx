@@ -41,7 +41,6 @@ const LikedMeScreen = (props) => {
 	}
 
 	const profile = () => {
-		console.log('curr index', currIndex);
 		props.navigation.navigate('DetailsForeignProfileScreen', {
 			myProfile: false,
 			profileUser: persons[currIndex],
@@ -50,10 +49,8 @@ const LikedMeScreen = (props) => {
 
 	const swipeLeft = async (index) => {
 		setCurrIndex(index + 1);
-		console.log('left ', index);
 		if (!persons[index]) return;
 		const userSwiped = persons[index];
-		console.log('user swiped', userSwiped);
 		let response = await DecisionService.swipeDecision({
 			decision: 0,
 			selectProfileUserId: userSwiped.profileId,
@@ -62,7 +59,6 @@ const LikedMeScreen = (props) => {
 
 	const swipeRight = async (index) => {
 		setCurrIndex(index + 1);
-		console.log('right ', index);
 		if (!persons[index]) return;
 		const userSwiped = persons[index];
 		//console.log('user swiped', userSwiped);
@@ -70,7 +66,6 @@ const LikedMeScreen = (props) => {
 			decision: 1,
 			selectProfileUserId: userSwiped.profileId,
 		});
-		console.log('rs', response.data);
 		if (response.status == 200 && response.data != '') {
 			console.log('Match!', response.data);
 			props.navigation.navigate('NewMatchScreen', { name: response.data.name, profileId: response.data.profileId, image: response.data.profileImageDTO });
@@ -78,58 +73,78 @@ const LikedMeScreen = (props) => {
 	};
 	const renderCards = () => {
 		if (usersIsReturned === true) {
-			return (
-				<Swiper
-					ref={swipeRef}
-					cards={persons}
-					backgroundColor='rgba(220,220,220,1)'
-					swipeAnimationDuration={200}
-					renderCard={(card) => (card ? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} /> : <EmptyLikedMe />)}
-					onSwiped={(cardIndex) => {
-						console.log('CARD INDEX', cardIndex);
-					}}
-					onSwipedAll={() => {
-						setCurrIndex(0);
-						console.log('onSwipedAll');
-						setPersons([]);
-						fetchProfiles();
-					}}
-					onSwipedLeft={(cardIndex) => {
-						swipeLeft(cardIndex);
-						console.log('left', cardIndex);
-					}}
-					onSwipedRight={(cardIndex) => {
-						swipeRight(cardIndex);
-						console.log('right', cardIndex);
-					}}
-					cardVerticalMargin={0}
-					cardHorizontalMargin={30}
-					cardStyle={{ margin: 0 }}
-					cardIndex={0}
-					verticalSwipe={false}
-					animateCardOpacity
-					stackSize={1}
-					overlayLabels={{
-						left: {
-							title: 'NOPE',
-							style: {
-								label: {
-									textAlign: 'right',
-									color: 'red',
+			if(persons.length>0) {
+
+			
+				return (
+					<> 
+						<Swiper
+							ref={swipeRef}
+							cards={persons}
+							swipeAnimationDuration={200}
+							backgroundColor='rgba(220,220,220,1)'
+							renderCard={(card) => card? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} city={card.city ?? ''} />: <EmptyLikedMe />}
+							onSwiped={(cardIndex) => {
+								console.log('CARD INDEX', cardIndex);
+							}}
+							onSwipedAll={() => {
+								setCurrIndex(0);
+								console.log('onSwipedAll');
+								setPersons([]);
+								//fetchProfiles();
+							}}
+							onSwipedLeft={(cardIndex) => {  
+								swipeLeft(cardIndex);
+								console.log('left', cardIndex);
+							}}
+							onSwipedRight={(cardIndex) => {
+								swipeRight(cardIndex);
+								console.log('right', cardIndex);
+							}}
+							//overlayLabelStyle={{padding: 0}}
+							cardVerticalMargin={0}
+							cardHorizontalMargin={30}
+							cardStyle={{ margin: 0 }}
+							cardIndex={0}
+							verticalSwipe={false}
+							animateCardOpacity
+							stackSize={1}
+							overlayLabels={{ 
+								left: {
+									title: 'NOPE',
+									style: {
+										label: {
+											textAlign: 'right',
+											color: 'red',
+										},
+									},
 								},
-							},
-						},
-						right: {
-							title: 'LIKE',
-							style: {
-								label: {
-									textAlign: 'left',
-									color: 'green',
-								},
-							},
-						},
-					}}></Swiper>
-			);
+								right: {
+									title: 'LIKE',
+									style: {
+										label: {
+											textAlign: 'left',
+											color: 'green',
+										},
+									},
+								}, 
+							}}></Swiper>
+						<View style={styles.actionButton}>
+							<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeLeft()}>
+								<AntDesign name='dislike2' size={40} color='red' />
+							</TouchableOpacity>
+							<TouchableOpacity style={styles.button} onPress={profile}>
+								<Ionicons name='md-person-outline' size={40} color='black' />
+							</TouchableOpacity>
+							<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeRight()}>
+								<AntDesign name='like2' size={40} color='green' />
+							</TouchableOpacity>
+						</View>
+					</>
+				);
+			} else {
+			return  <EmptyLikedMe />
+		}
 		} else {
 			return (
 				<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -143,17 +158,7 @@ const LikedMeScreen = (props) => {
 		<>
 			<View style={styles.container}>
 				{renderCards()}
-				<View style={styles.actionButton}>
-					<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeLeft()}>
-						<AntDesign name='dislike2' size={40} color='red' />
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.button} onPress={profile}>
-						<Ionicons name='md-person-outline' size={40} color='black' />
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeRight()}>
-						<AntDesign name='like2' size={40} color='green' />
-					</TouchableOpacity>
-				</View>
+ 
 			</View>
 			<Menu search={true} {...props} />
 		</>

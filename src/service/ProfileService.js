@@ -97,7 +97,7 @@ export async function getDescription(id) {
 }
 
 
-export async function changeProfileDetails(alcohol, job, height, weight, orientation, education, religious, children, cigarettes, eyeColor) {
+export async function changeProfileDetails(alcohol, job, height, weight, orientation, education, religious, children, cigarettes, eyeColor, city) {
 	console.log('>>> profile/changeProfileDetails');
 	let profileId = await SecureStore.getItemAsync('profileId');
 	try {
@@ -113,6 +113,7 @@ export async function changeProfileDetails(alcohol, job, height, weight, orienta
 			childrenId: children,
 			cigarettesId: cigarettes,
 			eyeColorId: eyeColor,
+			city: city,
 		});
 		console.log('<<< profile/changeProfileDetails STATUS >>> ' + response.status);
 		return response.status;
@@ -219,7 +220,7 @@ export async function getProfileImage(id) {
 	let profileId = id;
 
 	try {
-		const response = await httpService.axiosInstance.put(API_URL + '/getProfileImages?profile=' + profileId);
+		const response = await httpService.axiosInstance.get(API_URL + '/getProfileImages?profile=' + profileId);
 		console.log('<<< profile/getProfileImages STATUS >>> ' + response.status);
 		return response;
 	} catch (err) {

@@ -10,7 +10,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import Toast from 'react-native-toast-message';
 import { configToast } from '../Components/configToast';
-import BackNavigation from '../Components/BackNavigation';
+import BackNavigation from '../Controls/BackNavigation';
 import { useToast } from 'react-native-toast-notifications';
 
 const ChangePasswordScreen = (props) => {
@@ -37,7 +37,7 @@ const ChangePasswordScreen = (props) => {
 			showToast('error', 'Nie zmieniono hasła', 'Nieudało się zmienić hasła. Sprbuj ponownie później');
 		}
 
-		console.log('first', response);
+		
 	};
 
 	const toast = useToast();

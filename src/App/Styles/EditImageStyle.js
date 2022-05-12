@@ -15,29 +15,31 @@ const styles = StyleSheet.create({
 	},
     imageContainer: {
         
-        width: '30%',
-        maxWidth: '30%',
+        width: '35%',
+        maxWidth: '35%',
         height: '100%',
         minHeight: 180,
         maxHeight: 180,
        // maxHeight: '100%',
-        marginHorizontal: '1.5%',
+        marginHorizontal: '5.5%',
         marginVertical: '3%',
         position: 'relative',
+       
        // paddingVertical: '2%',
     },
     image: {
+        minWidth: '100%',
 		maxWidth: '100%',
         minHeight: '90%',
 		maxHeight: '90%',
 		//width: '100%',
-        aspectRatio: 1/1,
+        //aspectRatio: 1/1,
 		//height:'100%',
 		borderRadius: 1,
 		// borderRadius: CARD.BORDER_RADIUS,
         justifyContent: 'center',
         alignItems: 'center',
-		padding: 0,
+		paddingVertical: '5%',
 		margin: 0,
         resizeMode: 'cover',
         position: 'absolute',
@@ -81,10 +83,13 @@ const styles = StyleSheet.create({
     },
     radioStyles: {
         position: 'absolute',
-        bottom: 0,
+        bottom: 0, 
         padding: 0,
-    },
+        
+        width: '100%',
+        paddingHorizontal: 10
 
+    },
     addImageContainer: {
         width: '30%',
         maxWidth: '30%',
@@ -94,13 +99,14 @@ const styles = StyleSheet.create({
        // maxHeight: '100%',
         marginHorizontal: '1.5%',
         marginVertical: '3%',
-        backgroundColor: 'rgba(255, 255, 55,1)'
+      
+        
     },
     addImageButton: {
         height: '100%',
         flexWrap: 'wrap',
         color: 'white',
-        width: '100%',
+        width: '100%', 
         backgroundColor: 'rgba(13,153,193,1)',
     },
 
