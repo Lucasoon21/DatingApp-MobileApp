@@ -6,65 +6,27 @@ import * as SecureStore from 'expo-secure-store';
 const axiosInstance = axios.create({ baseURL: apiUrl, headers });
 
 axiosInstance.interceptors.request.use((config) => {
-	//console.log('config axios ', config.headers);
 	return config;
 });
-/*
-axiosInstance.interceptors. use(
-	(response) =>
-		new Promise((resolve, reject) => {
-			resolve(response);
-		}),
-	(error) => {
-		if (!error.response) {
-			return new Promise((resolve, reject) => {
-				reject(error);
-			});
-		}
-		if (error.response.status == 403) {
-			localStorage.removeItem('access_token');
-			console.log('WYLOGOWANIE');
-			//TODO
-		} else {
-			return new Promise((resolve, reject) => {
-				reject(error);
-			});
-		}
-	},
-);
-*/
+
 const token = SecureStore.getItemAsync('access_token');
 
 let headers = {headers: {"Authorization" : `Bearer ${token}`} };
 
 function setJwt(jwt) {
-	//console.log("set jwt",jwt)
 	axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
 	axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
 	headers.Authorization = 'Bearer ${jwt}';
 }
-function getJwt() {
-	//console.log("set jwt",jwt)
 
-	return axios.defaults.headers.common['Authorization']
-}
 
-const setAuthHeader = (token) => {
-	if (token) {
-		axios.defaults.headers = { Authorization: 'Bearer ' + token };
-	} else {
-		delete axios.defaults.headers.Authorization;
-	}
-};
 export default {
 	get: axios.get,
 	post: axios.post,
 	put: axios.put,
 	delete: axios.delete,
 	setJwt,
-	setAuthHeader,
 	axiosInstance,
-	getJwt,
 };
 
 /*

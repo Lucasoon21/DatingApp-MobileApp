@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, Image, Linking, Pressable } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
-import axios from 'axios';
-import api from '../../Api/posts';
-import AuthenticationService from '../../service/AuthenticationService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native'; // <-- import useNavigation hook
-import { Paragraph, Dialog, Portal, Provider } from 'react-native-paper';
 import * as SecureStore from 'expo-secure-store';
-import httpService from '../../service/httpService';
+import React, { useState } from 'react';
+import { StyleSheet, Text } from 'react-native';
+import { Button, TextInput } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
-import { configToast } from './configToast';
-import LoaderElements from '../Components/LoaderElements';
 import { useToast } from 'react-native-toast-notifications';
+import AuthenticationService from '../../service/AuthenticationService';
+import httpService from '../../service/httpService';
+import LoaderElements from '../Components/LoaderElements';
+import { configToast } from './configToast';
 
 const LoginPanel = (props) => {
 	const [testApi, setTestApi] = useState('aa');
@@ -51,10 +47,10 @@ const LoginPanel = (props) => {
 			navigation.navigate('AreUnderAgeScreen');
 			console.log('Wiek');
 		} else if (response.isActive == 'ERR') {
-			await SecureStore.setItemAsync('access_token', response.access_token);
-			await SecureStore.setItemAsync('refresh_token', response.refresh_token);
-			await SecureStore.setItemAsync('profileId', response.profile_id);
 			await SecureStore.setItemAsync('userId', response.user_id);
+			await SecureStore.setItemAsync('profileId', response.profile_id);
+			await SecureStore.setItemAsync('refresh_token', response.refresh_token);
+			await SecureStore.setItemAsync('access_token', response.access_token);
 			const token = await SecureStore.getItemAsync('access_token');
 			httpService.setJwt(token);
 			navigation.navigate('ActivateAccountScreen');

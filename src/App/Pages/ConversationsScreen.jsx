@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, Linking, Platform, ScrollView, Touchable
 import Menu from '../Controls/Menu';
 import DetailsProfileScreen from './DetailsProfileScreen';
 import { styles } from '../Styles/ConversationsStyle';
-import MenuTop from '../Unused/MenuTop';
 import ConversationComponent from '../Components/ConversationComponent';
 import { GiftedChat } from 'react-native-gifted-chat';
 import ChatService from '../../service/ChatService';
@@ -22,7 +21,6 @@ const ConversationsScreen = (props) => {
 		async function fetchConversation() {
 			setReturnConversations(false);
 			let result = await ChatService.getListConversation();
-			console.log(result.data);
 			if (result.status === 200) {
 				setConversations(result.data);
 				setReturnConversations(true);

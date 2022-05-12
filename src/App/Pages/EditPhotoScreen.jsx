@@ -15,7 +15,7 @@ import 'react-native-gesture-handler';
 import * as SecureStore from 'expo-secure-store';
 import Toast from 'react-native-toast-message';
 import { configToast } from '../Components/configToast';
-import BackNavigation from '../Components/BackNavigation';
+import BackNavigation from '../Controls/BackNavigation';
 import LoaderElements from '../Components/LoaderElements';
 import { useToast } from 'react-native-toast-notifications';
 
@@ -61,7 +61,6 @@ const EditPhotoScreen = (props) => {
 			setGallery(responseImage.data);
 			let arrayTmp = responseImage.data;
 			let xd = arrayTmp.find((mainPh) => mainPh.isMainPhoto === true);
-			console.log('xd', xd);
 			if (xd != null) {
 				setMainPhoto(xd.idImgur);
 			}
@@ -162,7 +161,7 @@ const EditPhotoScreen = (props) => {
 				<Toast config={configToast} />
 			</View>
 			<ScrollView style={styles.scrollView}>
-			<BackNavigation goBack={goBack} />
+				<BackNavigation goBack={goBack} />
 
 				<RadioGroup initialValue={mainPhoto} onValueChange={(value) => setMainPhoto(value)} style={{ height: '100%' }}>
 					<View style={styles.imagesGroup}>
@@ -187,7 +186,9 @@ const EditPhotoScreen = (props) => {
 												<Image source={{ uri: image.linkImgur }} style={styles.image} />
 												<Badge label={'X'} size={30} onPress={() => deleteImageFromProfile(image)} />
 												<View style={styles.radioStyles}>
-													<RadioButton value={image.idImgur} size={20} borderRadius={0} label='Zdjęcie główne' />
+													
+														<RadioButton value={image.idImgur} size={20} borderRadius={0} label='Zdjęcie główne' />
+													
 												</View>
 											</View>
 										);

@@ -16,9 +16,11 @@ import DictionaryService from '../../service/DictionaryService';
 import ProfileService from '../../service/ProfileService';
 import Toast from 'react-native-toast-message';
 import { configToast } from '../Components/configToast';
-import BackNavigation from '../Components/BackNavigation';
+import BackNavigation from '../Controls/BackNavigation';
 import { useToast } from 'react-native-toast-notifications';
-
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
+import LoaderElements from '../Components/LoaderElements';
 
 const weightArray = new Array(91).fill().map((value, index) => ({ id: index + 40 }));
 
@@ -37,8 +39,11 @@ const EditInfoScreen = (props) => {
 	const [height, setHeight] = useState(140);
 	const [eyeColor, setEyeColor] = useState('');
 	const [job, setJob] = useState('');
+	const [city, setCity] = useState('');
+	const [returnSave, setReturnSave] = useState(false);
 
 	const [characterWorkCount, setCharacterWorkCount] = useState(job.length);
+	const [characterCityCount, setCharacterCityCount] = useState(job.length);
 	const MAX_LENGTH_WORK = 50;
 
 	const [orientationDropdown, setOrientationDropdown] = useState([]);
@@ -49,6 +54,9 @@ const EditInfoScreen = (props) => {
 	const [childrenDropdown, setChildrenDropdown] = useState([]);
 	const [alcoholDropdown, setAlcoholDropdown] = useState([]);
 	const [cigarettesDropdown, setCigarettesDropdown] = useState([]);
+
+	const [tmp, setTmp] = useState('');
+	const [tmp2, setTmp2] = useState('');
 
 	const toast = useToast();
 	const showToast = (type, headerText, subText) => {
@@ -67,19 +75,22 @@ const EditInfoScreen = (props) => {
 	useEffect(() => {
 		getDropdownList();
 		async function fetchDetailsProfile() {
-			let response = await ProfileService.getProfileDetails();
+			let profileId = await SecureStore.getItemAsync('profileId');
+			let response = await ProfileService.getProfileDetails(profileId);
 			if (response.status === 200) {
 				let data = response.data;
-				setAlcohol(data.alcohol.id);
-				setCigarette(data.cigarettes.id);
-				setChildren(data.children.id);
-				setReligion(data.religious.id);
-				setEducation(data.education.id);
-				setOrientation(data.orientation.id);
-				setWeight(data.weight);
-				setHeight(data.height);
-				setEyeColor(data.eyeColor.id);
-				setJob(data.job);
+
+				data.alcohol != null ? setAlcohol(data.alcohol.id) : null;
+				data.cigarettes != null ? setCigarette(data.cigarettes.id) : null;
+				data.children != null ? setChildren(data.children.id) : null;
+				data.religious != null ? setReligion(data.religious.id) : null;
+				data.education != null ? setEducation(data.education.id) : null;
+				data.orientation != null ? setOrientation(data.orientation.id) : null;
+				data.weight != null && data.weight > 40 && data.weight <= 130 ? setWeight(data.weight) : null;
+				data.height != null && data.height > 140 && data.height <= 200 ? setHeight(data.height) : null;
+				data.eyeColor != null ? setEyeColor(data.eyeColor.id) : null;
+				data.job != null ? setJob(data.job) : null;
+				setCity(data.city)
 			} else {
 				console.log('nie ok');
 			}
@@ -90,21 +101,36 @@ const EditInfoScreen = (props) => {
 	const getDropdownList = async () => {
 		let Alcohol = await DictionaryService.getAlcoholDictionary();
 		setAlcoholDropdown(Alcohol);
+		
 		let Children = await DictionaryService.getChildrenDictionary();
 		setChildrenDropdown(Children);
+		
 		let Cigarettes = await DictionaryService.getCigarettesDictionary();
 		setCigarettesDropdown(Cigarettes);
-		console.log(Cigarettes)
+		console.log(Cigarettes[0].id);
+		
 		let Education = await DictionaryService.getEducationDictionary();
 		setEducationDropdown(Education);
+		
 		let EyeColor = await DictionaryService.getEyeColorDictionary();
 		setEyeColorDropdown(EyeColor);
+		
 		let Orientation = await DictionaryService.getOrientationDictionary();
 		setOrientationDropdown(Orientation);
+		
 		let Religious = await DictionaryService.getReligiousDictionary();
 		setReligiousDropdown(Religious);
+		
 		let Zodiac = await DictionaryService.getZodiacDictionary();
 		setZodiacDropdown(Zodiac);
+		
+		setAlcohol(Alcohol[0].id);
+		setChildren(Children[0].id);
+		setCigarette(Cigarettes[0].id);
+		setEducation(Education[0].id);
+		setEyeColor(EyeColor[0].id);
+		setOrientation(Orientation[0].id);
+		setReligion(Religious[0].id);
 	};
 
 	const renderReligiousList = () => {
@@ -149,12 +175,15 @@ const EditInfoScreen = (props) => {
 	};
 
 	const changeProfileDetails = async () => {
-		let response = await ProfileService.changeProfileDetails(alcohol, job, height, weight, orientation, education, religion, children, cigarette, eyeColor);
+		setReturnSave(true);
+		console.log(alcohol, job, height, weight, orientation, education, religion, children, cigarette, eyeColor);
+		let response = await ProfileService.changeProfileDetails(alcohol, job, height, weight, orientation, education, religion, children, cigarette, eyeColor, city);
 		if (response == 200) {
 			showToast('success', 'Dane szczegółowe zmienione!', 'Szczegółowe dane twojego profilu zostały zmienione');
 		} else {
 			showToast('error', 'Nie zmieniono danych profilu', 'Nieudało się zmienić danych profilu. Sprbuj ponownie później');
 		}
+		setReturnSave(false);
 	};
 
 	return (
@@ -167,19 +196,28 @@ const EditInfoScreen = (props) => {
 
 			<ScrollView style={styles.scrollView}>
 				<View style={styles.scrollContainer}>
-					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
-						<Entypo name='drink' size={24} color='black' />
-						<Text style={styles.infoHeader}>Alkohol</Text>
 
-						<Picker
-							style={styles.pickerStyle}
-							selectedValue={alcohol}
-							onValueChange={(itemValue) => {
-								setAlcohol(itemValue);
-							}}>
-							{renderAlcoholList()}
-						</Picker>
+					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
+					<FontAwesome5 name="city" size={24} color="black" />
+						<View style={styles.workTextContainer}>
+							<Text style={styles.infoHeader}>Miasto</Text>
+							<Text style={styles.characterWorkCount}>
+								{characterCityCount}/{MAX_LENGTH_WORK}
+							</Text>
+						</View>
+
+						<TextInput
+							onChangeText={(text) => {
+								setCity(text);
+								setCharacterCityCount(text.length);
+							}}
+							value={city}
+							style={[styles.textInput, styles.textInputWork]}
+							editable
+							maxLength={MAX_LENGTH_WORK}
+						/>
 					</View>
+
 
 					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
 						<MaterialIcons name='work' size={24} color='black' />
@@ -268,6 +306,20 @@ const EditInfoScreen = (props) => {
 					</View>
 
 					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
+						<Entypo name='drink' size={24} color='black' />
+						<Text style={styles.infoHeader}>Alkohol</Text>
+
+						<Picker
+							style={styles.pickerStyle}
+							selectedValue={alcohol}
+							onValueChange={(itemValue) => {
+								setAlcohol(itemValue);
+							}}>
+							{renderAlcoholList()}
+						</Picker>
+					</View>
+
+					<View style={[styles.sectionContainer, styles.sectionContainerFlex]}>
 						<MaterialCommunityIcons name='cigar' size={24} color='black' />
 						<Text style={styles.infoHeader}>Papierosy</Text>
 						<Picker style={styles.pickerStyle} selectedValue={cigarette} onValueChange={(itemValue) => setCigarette(itemValue)}>
@@ -282,10 +334,15 @@ const EditInfoScreen = (props) => {
 							{renderEyeColorList()}
 						</Picker>
 					</View>
-					<Button type='submit' title='submit' onPress={() => changeProfileDetails()} mode='contained' style={{ marginTop: 20, width: '90%' }}>
-						<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
-						<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
-					</Button>
+
+					{returnSave ? (
+						<LoaderElements />
+					) : (
+						<Button type='submit' title='submit' onPress={() => changeProfileDetails()} mode='contained' style={{ marginTop: 20, width: '90%' }}>
+							<Entypo name='save' size={25} color='rgba(250,250,250,1)' />
+							<Text style={{ textAlignVertical: 'center', textAlign: 'center', fontSize: 25 }}>Zapisz</Text>
+						</Button>
+					)}
 				</View>
 			</ScrollView>
 			<Menu profile={true} {...props} />

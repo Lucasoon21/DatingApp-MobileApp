@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, StatusBar, TextInput, ActivityIndicator } from 'react-native';
-import Menu from '../Controls/Menu';
-import { Ionicons } from '@expo/vector-icons';
-import { Button } from 'react-native-paper';
 import { Entypo } from '@expo/vector-icons';
-import { styles } from '../Styles/ProfileStyle';
-import ProfileService from '../../service/ProfileService';
 import * as SecureStore from 'expo-secure-store';
+import { useEffect, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
+import { Button } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
-import { configToast } from '../Components/configToast';
-import BackNavigation from '../Components/BackNavigation';
-import LoaderElements from '../Components/LoaderElements';
 import { useToast } from 'react-native-toast-notifications';
+import ProfileService from '../../service/ProfileService';
+import { configToast } from '../Components/configToast';
+import LoaderElements from '../Components/LoaderElements';
+import BackNavigation from '../Controls/BackNavigation';
+import Menu from '../Controls/Menu';
+import { styles } from '../Styles/ProfileStyle';
 
 const EditDescriptionScreen = (props) => {
 	const goBack = () => props.navigation.goBack();

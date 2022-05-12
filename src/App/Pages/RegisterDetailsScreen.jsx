@@ -41,7 +41,6 @@ const RegisterDetailsScreen = (props) => {
 		const response = await AuthenticationService.registerDetails(props.route.params.email, values.name, genderValue, date, orientationValue);
         //console.log(genderValue)
         if (response.status == 200 || response.status == 202) {
-			console.log(response)
 			navigation.navigate('SwipeScreen') //TODO 
             //props.navigation.navigate("RegisterDetails")
 		//	history.push('/RegisterDetail');

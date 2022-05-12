@@ -207,6 +207,7 @@ const SettingsScreen = (props) => {
 			//	console.log(response.status ?? '---');
 
 			if (response.status == 200) {
+				
 				changeAge(response.data.ageFrom, response.data.ageTo);
 				setReturnAge(true);
 			} else {
@@ -219,6 +220,7 @@ const SettingsScreen = (props) => {
 			let response = await PreferencesService.getHeightPreferences();
 			//console.log(response.status ?? '---');
 			if (response.status == 200) {
+				console.log(response.data)
 				setFromHeight(response.data.heightFrom);
 				setToHeight(response.data.heightTo);
 				setReturnHeight(true);
@@ -440,7 +442,7 @@ const SettingsScreen = (props) => {
 							<>
 								<RangeSlider
 									range={[fromWeight, toWeight]} // set the current slider's value
-									minimumValue={30} // Minimum value
+									minimumValue={40} // Minimum value
 									maximumValue={130} // Maximum value
 									step={1} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
 									crossingAllowed={false} // If true, the user can make one thumb cross over the second thumb
@@ -501,7 +503,7 @@ const SettingsScreen = (props) => {
 						<Text style={styles.headerText}>Znajdź mi osoby które interesują się również...</Text>
 						<View style={styles.hobbyContainer}>
 							{returnHobby && hobby.length > 0 ? (
-								<>
+								<> 
 									{hobby.map((hobby, ind) => {
 										return <HobbyButton text={hobby.name} edit={true} status={hobby.decision} index={ind} key={hobby.hobbyId} changeValue={changeValueHobby} />;
 									})}

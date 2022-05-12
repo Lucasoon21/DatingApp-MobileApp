@@ -1,9 +1,6 @@
-import httpService from './httpService';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { apiUrl } from '../../config';
 import * as SecureStore from 'expo-secure-store';
-import base64 from 'react-native-base64';
+import { apiUrl } from '../../config';
+import httpService from './httpService';
 
 const API_URL = apiUrl + '/decision';
 
@@ -27,3 +24,5 @@ export async function swipeDecision(params) {
 export default {
 	swipeDecision,
 };
+
+

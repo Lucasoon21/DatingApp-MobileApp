@@ -30,11 +30,8 @@ export class Routes extends Component {
 		userIsLogin: false,
 		isLoading: true,
 	};
-
 	async componentDidMount() {
-		this.setState({
-			isLoading: true,
-		});
+		this.setState({ isLoading: true });
 		const token = await SecureStore.getItemAsync('access_token');
 		httpService.setJwt(token);
 		this.setState({
@@ -44,35 +41,25 @@ export class Routes extends Component {
 	}
 	async componentDidUpdate() {
 		const token = await SecureStore.getItemAsync('access_token');
-		this.setState({
-			userIsLogin: token ? true : false,
-		});
+		this.setState({ userIsLogin: token ? true : false });
 	}
 	render() {
 		const { Navigator, Screen, Group } = createNativeStackNavigator();
-		return (
-			<>
-				{this.state.isLoading ? (
-					<StartLoadingScreen />
-				) : (
+		return (<>
+				{this.state.isLoading ? (<StartLoadingScreen />) : (
 					<NavigationContainer>
 						<Navigator screenOptions={{ headerShown: false }} initialRouteName={this.state.userIsLogin ? 'SwipeScreen' : 'AuthScreen'}>
-							{this.state.userIsLogin == false ? (
-								<>
+							{this.state.userIsLogin == false ? (<>
 									<Screen name='AuthScreen' component={AuthenticationScreen}></Screen>
-									<Screen name='RegisterDetailsScreen' component={RegisterDetailsScreen}></Screen>
 									<Screen name='AreUnderAgeScreen' component={AreUnderAgeScreen}></Screen>
 									<Screen name='ActivateAccountScreen' component={ActivateAccountScreen}></Screen>
-								</>
-							) : (
-								<>
+								</>) : ( <>
 									<Screen name='SwipeScreen' component={SwipeScreen}></Screen>
 									<Screen name='ActivateAccountScreen' component={ActivateAccountScreen}></Screen>
 									<Screen name='LikedMeScreen' component={LikedMeScreen}></Screen>
 									<Screen name='ChatScreen' component={ChatScreen}></Screen>
 									<Screen name='ConversationScreen' component={ConversationsScreen}></Screen>
 									<Screen name='DetailsProfileScreen' component={DetailsProfileScreen} initialParams={{ myProfile: false }} />
-									<Screen name='DetailsForeignProfileScreenn' component={DetailsProfileScreen} initialParams={{ myProfile: false }} />
 									<Screen name='EditDescriptionScreen' component={EditDescriptionScreen}></Screen>
 									<Screen name='EditHobbyScreen' component={EditHobbyScreen}></Screen>
 									<Screen name='EditInfoScreen' component={EditInfoScreen}></Screen>
@@ -86,12 +73,10 @@ export class Routes extends Component {
 										initialParams={{ myProfile: false }}
 										screenOptions={{ presentation: 'transparentModal' }}
 									/>
-								</>
-							)}
+								</>)}
 						</Navigator>
 					</NavigationContainer>
 				)}
-			</>
-		);
+			</>);
 	}
 }

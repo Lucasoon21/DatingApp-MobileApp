@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, Linking, Platform, ScrollView, Touchable
 import Menu from '../Controls/Menu';
 import DetailsProfileScreen from '../Pages/DetailsProfileScreen';
 import { contact, styles, singleConversation } from '../Styles/ConversationsStyle';
-import MenuTop from '../Unused/MenuTop';
 import PairComponent from './PairComponent';
 
 const ConversationComponent = (props) => {
@@ -17,7 +16,6 @@ const ConversationComponent = (props) => {
 	useEffect(() => {
 		if (props.conversations != null) {
 			setDataConversation(props.conversations);
-			console.log("dataConversation",dataConversation)
 		}
 	}, []);
 

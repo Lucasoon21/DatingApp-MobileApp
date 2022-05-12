@@ -65,12 +65,11 @@ const RegisterPanel = (props) => {
 	}, []);
 
 	const getDropdownList = async () => {
-		console.log('wczytywanie dropdown');
 		let Orientation = await DictionaryService.getOrientationDictionary();
 		setOrientationDropdown(Orientation);
 		let Gender = await DictionaryService.getGenderDictionary();
 		setGenderDropdown(Gender);
-		console.log(Orientation);
+		
 	};
 
 	const renderGenderList = () => {

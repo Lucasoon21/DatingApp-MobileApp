@@ -10,7 +10,7 @@ import { Entypo } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
 import Toast from 'react-native-toast-message';
 import { configToast } from '../Components/configToast';
-import BackNavigation from '../Components/BackNavigation';
+import BackNavigation from '../Controls/BackNavigation';
 import LoaderElements from '../Components/LoaderElements';
 import { useToast } from 'react-native-toast-notifications';
 

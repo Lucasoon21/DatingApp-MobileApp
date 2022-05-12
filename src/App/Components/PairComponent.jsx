@@ -3,25 +3,27 @@ import { StyleSheet, Text, View, Image, Linking, Platform, ScrollView, Touchable
 import Menu from '../Controls/Menu';
 import DetailsProfileScreen from '../Pages/DetailsProfileScreen';
 import { styles, contact } from '../Styles/ChatStyle';
-import MenuTop from '../Unused/MenuTop';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 const PairComponent = (props) => {
-	const goProfile = () => props.navigation.navigate('DetailsProfileScreen', {
-		myProfile: false,
-		profileUser: profileData,
-	});
-	const goChat = () => props.navigation.navigate('ChatScreen',{
-        profileId: profileData.profileId,
-		name: profileData.name,
-		photo: profileData.image.imageLink
-    })
+	const goProfile = () =>
+		props.navigation.navigate('DetailsProfileScreen', {
+			myProfile: false,
+			profileUser: profileData,
+		});
+	const goChat = () =>
+		props.navigation.navigate('ChatScreen', {
+			profileId: profileData.profileId,
+			name: profileData.name,
+			photo: profileData.image.imageLink,
+		});
 	const [profileData, setProfileData] = useState([]);
 
 	useEffect(() => {
 		if (props.profile != null) {
 			setProfileData(props.profile);
+			console.log(props.profile);
 		}
 	}, []);
 
@@ -34,11 +36,11 @@ const PairComponent = (props) => {
 
 						<View style={contact.textContainer}>
 							<Text style={contact.text} numberOfLines={1}>
-								{profileData.name}, {' '}{profileData.age}
-							</Text>
-							<Text style={contact.text} numberOfLines={1}>
-								22 km stąd
-							</Text>
+								{profileData.name}, {profileData.age}
+							</Text> 
+							{/* <Text style={contact.text} numberOfLines={1}>
+								a
+							</Text> */}
 						</View>
 					</View>
 				</TouchableOpacity>
@@ -46,7 +48,6 @@ const PairComponent = (props) => {
 					<Entypo name='chevron-thin-right' size={40} color='black' />
 				</TouchableOpacity>
 			</View>
-
 		</>
 	);
 };

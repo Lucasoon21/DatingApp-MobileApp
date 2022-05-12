@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Platform, TouchableOpacity, ScrollView, StatusBar, ActivityIndicator } from 'react-native';
-import Menu from '../Controls/Menu';
-import { CARD } from '../../utils/constants';
-import { Ionicons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import HobbyButton from '../Controls/HobbyButton';
-import RelationButton from '../Controls/RelationButton';
-import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import ProfileService from '../../service/ProfileService';
-import { Constants, Spacings, Carousel } from 'react-native-ui-lib';
 import * as SecureStore from 'expo-secure-store';
-import BackNavigation from '../Components/BackNavigation';
+import { useEffect, useState } from 'react';
+import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Carousel } from 'react-native-ui-lib';
+import ProfileService from '../../service/ProfileService';
+import { CARD } from '../../utils/constants';
 import LoaderElements from '../Components/LoaderElements';
+import BackNavigation from '../Controls/BackNavigation';
+import HobbyButton from '../Controls/HobbyButton';
+import Menu from '../Controls/Menu';
+import RelationButton from '../Controls/RelationButton';
 
 const DetailsProfileScreen = (props) => {
 	const goBack = () => props.navigation.goBack();
@@ -37,7 +34,8 @@ const DetailsProfileScreen = (props) => {
 	const [name, setName] = useState('');
 	const [zodiac, setZodiac] = useState('');
 	const [age, setAge] = useState('');
-
+	const [city, setCity] = useState('');
+	
 	const [hobby, setHobby] = useState([]);
 	const [relationship, setRelationship] = useState([]);
 	const [gallery, setGallery] = useState([]);
@@ -68,6 +66,7 @@ const DetailsProfileScreen = (props) => {
 				setName(data.name);
 				setZodiac(data.zodiac);
 				setAge(data.age);
+				setCity(data.city)
 				setReturnDetails(true);
 			} else {
 				console.log('nie ok');
@@ -108,7 +107,6 @@ const DetailsProfileScreen = (props) => {
 		let responseImage = await ProfileService.getProfileImage(profileId);
 		if (responseImage.status == 200) {
 			setGallery(responseImage.data);
-			console.log(responseImage.data);
 			setReturnImages(true);
 		}
 	}
@@ -195,7 +193,10 @@ const DetailsProfileScreen = (props) => {
 										<Text style={styles.infoHeader}>Imię</Text>
 										<Text style={styles.info}>{name}</Text>
 									</View>
-
+									<View style={styles.infoGroup}>
+										<Text style={styles.infoHeader}>Miasto</Text>
+										<Text style={styles.info}>{city}</Text>
+									</View>
 									<View style={styles.infoGroup}>
 										<Text style={styles.infoHeader}>Zawód</Text>
 										<Text style={styles.info}>{job}</Text>
@@ -219,12 +220,12 @@ const DetailsProfileScreen = (props) => {
 									<View style={styles.infoGroup}>
 										<Text style={styles.infoHeader}>Orientacja</Text>
 										<Text style={styles.info}>{orientation}</Text>
-									</View>
+									</View> 
 
-									<View style={styles.infoGroup}>
+									{/* <View style={styles.infoGroup}>
 										<Text style={styles.infoHeader}>Znak zodiaku</Text>
 										<Text style={styles.info}>{zodiac}</Text>
-									</View>
+									</View> */}
 
 									<View style={styles.infoGroup}>
 										<Text style={styles.infoHeader}>Wykszatałcenie</Text>
