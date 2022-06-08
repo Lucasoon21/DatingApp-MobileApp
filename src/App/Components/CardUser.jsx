@@ -12,7 +12,6 @@ function CardUser({ name, profile, images, age,city, isFirst, swipe, tiltSign, .
 
 	useEffect(() => {
 		setGallery(images);
-		console.log(city)
 	}, []);
 
 	return (

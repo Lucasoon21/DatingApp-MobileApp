@@ -80,7 +80,7 @@ const EditHobbyScreen = (props) => {
 							<>
 								<View style={styles.hobbyContainerEdit}>
 									{hobby.map((hobby, ind) => {
-										//console.log(hobby)
+									
 										return <HobbyButton text={hobby.name} edit={true} status={hobby.decision == 0 ? false : true} index={ind} key={hobby.hobbyId} changeValue={changeValueHobby} />;
 									})}
 								</View>

@@ -5,20 +5,41 @@ import * as SecureStore from 'expo-secure-store';
 
 const axiosInstance = axios.create({ baseURL: apiUrl, headers });
 
-axiosInstance.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use(async (config) => {
+	const token = await SecureStore.getItemAsync('access_token');
+	if(token) {
+		setJwt(token)
+		config.headers.Authorization = `Bearer ${token}`
+	}
 	return config;
 });
 
 const token = SecureStore.getItemAsync('access_token');
-
 let headers = {headers: {"Authorization" : `Bearer ${token}`} };
-
 function setJwt(jwt) {
 	axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
 	axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
 	headers.Authorization = 'Bearer ${jwt}';
 }
 
+axiosInstance.interceptors.response.use(
+	res=> {return res},
+	err=>{ 
+		if(err.response.status==403) {
+			logout()
+		} else if(err.response.status==401) {
+			console.log("token wygasł")
+		}
+		return err
+	}
+)
+
+async function logout() {
+	await SecureStore.deleteItemAsync('access_token');
+	await SecureStore.deleteItemAsync('refresh_token');
+	await SecureStore.deleteItemAsync('profileId');
+	await SecureStore.deleteItemAsync('userId');
+}
 
 export default {
 	get: axios.get,
@@ -28,30 +49,3 @@ export default {
 	setJwt,
 	axiosInstance,
 };
-
-/*
-axios.interceptors.response.use(null, (error) => {
-    const expectedError = error.response && error.response.status >=400 && error.response.status <500;
-    if(error.response && error.response.status === 401 && error.response.data==="jwtExpErr") {
-        localStorage.setItem("jwtExpired",true);
-        windows.location = ""
-    }
-    if(!expectedError) {
-        logger.log(error)
-        console.log("wystapil problem")
-    } else {
-        console.log("cos innego")
-    }
-    return Promise.reject(error)
-})
-
-function setJwt(jwt) {
-    axios.defaults.headers.common["x-auth-token"] = jwt;
-}
-export default {
-    get: axios.get,
-    post: axios.post,
-    put: axios.put,
-    delete: axios.delete,
-    setJwt,
-}*/

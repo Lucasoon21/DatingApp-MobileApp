@@ -1,6 +1,6 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import DecisionService from '../../service/DecisionService';
 import SwipeService from '../../service/SwipeService';
@@ -10,6 +10,7 @@ import LoaderElements from '../Components/LoaderElements';
 import Menu from '../Controls/Menu';
 import EmptyFoundProfile from './EmptyFoundProfile';
 import * as SecureStore from 'expo-secure-store';
+import { Button, TextInput } from 'react-native-paper';
 
 const SwipeScreen = (props) => {
 	const [persons, setPersons] = useState([]);
@@ -34,16 +35,17 @@ const SwipeScreen = (props) => {
 	}, [persons.length]);
 
 	async function fetchProfiles() {
+		setUsersInReturned(false);
+		
 		const token = await SecureStore.getItemAsync('profileId');
-		console.log('usr ' + token);
 		let response = await SwipeService.getAllProfile();
 		if (response.status == 200) {
 			setPersons(response.data);
 		}
+		setUsersInReturned(true);
 	}
 
 	const profile = () => {
-		console.log('curr index', currIndex);
 		props.navigation.navigate('DetailsForeignProfileScreen', {
 			myProfile: false,
 			profileUser: persons[currIndex],
@@ -68,49 +70,43 @@ const SwipeScreen = (props) => {
 			selectProfileUserId: userSwiped.profileId,
 		});
 		if (response.status == 200 && response.data != '') {
-			console.log('Match!');
 			props.navigation.navigate('NewMatchScreen', { name: response.data.name, profileId: response.data.profileId, image: response.data.profileImageDTO });
 		}
 	};
 	const renderCards = () => {
 		if (usersIsReturned === true) {
 			if (persons.length > 0) {
-				console.log(persons);
-
 				return (
-					<> 
+					<>
 						<Swiper
 							ref={swipeRef}
 							cards={persons}
 							swipeAnimationDuration={200}
 							backgroundColor='rgba(220,220,220,1)'
-							renderCard={(card) => card? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} city={card.city ?? ''} />: <EmptyFoundProfile />}
+							renderCard={(card) =>
+								card ? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} city={card.city ?? ''} /> : <EmptyFoundProfile />
+							}
 							onSwiped={(cardIndex) => {
-								console.log('CARD INDEX', cardIndex);
 							}}
 							onSwipedAll={() => {
 								setCurrIndex(0);
-								console.log('onSwipedAll');
 								setPersons([]);
 								//fetchProfiles();
 							}}
-							onSwipedLeft={(cardIndex) => {  
+							onSwipedLeft={(cardIndex) => {
 								swipeLeft(cardIndex);
-								console.log('left', cardIndex);
 							}}
 							onSwipedRight={(cardIndex) => {
 								swipeRight(cardIndex);
-								console.log('right', cardIndex);
 							}}
-							//overlayLabelStyle={{padding: 0}}
 							cardVerticalMargin={0}
 							cardHorizontalMargin={30}
 							cardStyle={{ margin: 0 }}
 							cardIndex={0}
 							verticalSwipe={false}
 							animateCardOpacity
-							stackSize={1}
-							overlayLabels={{ 
+							stackSize={3}
+							overlayLabels={{
 								left: {
 									title: 'NOPE',
 									style: {
@@ -128,7 +124,7 @@ const SwipeScreen = (props) => {
 											color: 'green',
 										},
 									},
-								}, 
+								},
 							}}></Swiper>
 						<View style={styles.actionButton}>
 							<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeLeft()}>
@@ -144,7 +140,14 @@ const SwipeScreen = (props) => {
 					</>
 				);
 			} else {
-				return <EmptyFoundProfile />;
+				return (
+					<>
+						<Button onPress={() => fetchProfiles()}>
+							<Text>Odśwież</Text>
+						</Button>
+						<EmptyFoundProfile />
+					</>
+				);
 			}
 		} else {
 			return (

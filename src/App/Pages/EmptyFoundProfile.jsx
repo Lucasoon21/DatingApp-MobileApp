@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, Image, Linking, Platform, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, Linking, Platform, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Button } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 const EmptyFoundProfile = () => {
+
+
   return (
     <View style={styles.container}>
         <Text style={styles.headerText}>Nie znaleziono żadnego profilu</Text>
         <Text style={styles.subText}>Poczekaj na nowe profile lub zmień swoje preferencje co do wyszukiwania użytkowników</Text>
+
     </View>
   )
 }

@@ -12,7 +12,6 @@ const API_URL = apiUrl + '/swipe';
 export async function getAllProfile() {
 	console.log('>>> swipe/getAllProfile');
     let profileId = await SecureStore.getItemAsync('profileId');
-	console.log(profileId)
 	try {
 		const response = await httpService.axiosInstance.get(API_URL+'/getAllProfile?profile='+profileId);
 		console.log("<<< swipe/getAllProfile STATUS >>> "+response.status)
@@ -25,7 +24,6 @@ export async function getAllProfile() {
 export async function getLikesForMyProfile() {
 	console.log('>>> swipe/getLikesForMyProfile');
     let profileId = await SecureStore.getItemAsync('profileId');
-	console.log("Profile id = ",profileId);
 	try {
 		const response = await httpService.axiosInstance.get(API_URL+'/getLikesForMyProfile?profile='+profileId);
 		console.log("<<< swipe/getLikesForMyProfile STATUS >>> "+response.status)

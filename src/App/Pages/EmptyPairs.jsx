@@ -14,7 +14,7 @@ export default EmptyPairs
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FFFFFF',
+        //backgroundColor: '#FFFFFF',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

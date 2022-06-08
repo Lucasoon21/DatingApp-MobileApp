@@ -79,7 +79,6 @@ const EditRelationshipScreen = (props) => {
 							<>
 								<View style={styles.hobbyContainerEdit}>
 									{relationship.map((relationship, ind) => {
-										//console.log(hobby)
 										return (
 											<RelationButton
 												text={relationship.name}

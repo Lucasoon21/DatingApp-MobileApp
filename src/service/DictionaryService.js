@@ -19,19 +19,7 @@ export async function getAlcoholDictionary() {
 	}
 }
 
-export async function getZodiacDictionary() {
-	console.log('>>> dictionary/getAllZodiacDictionary');
 
-	try {
-		const response = await httpService.axiosInstance.get(API_URL + '/getAllZodiacDictionary');
-
-		console.log('<<< dictionary/getAllZodiacDictionary STATUS >>> ' + response.status);
-		return response.data;
-	} catch (err) {
-		console.log('>>> dictionary/getAllZodiacDictionary: ' + err);
-		return err;
-	}
-}
 
 export async function getReligiousDictionary() {
 	console.log('>>> dictionary/getAllReligiousDictionary');
@@ -162,5 +150,5 @@ export default {
 	getOrientationDictionary,
 	getRelationshipDictionary,
 	getReligiousDictionary,
-	getZodiacDictionary,
+
 };

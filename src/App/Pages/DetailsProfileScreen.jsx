@@ -32,10 +32,10 @@ const DetailsProfileScreen = (props) => {
 	const [job, setJob] = useState('');
 	const [gender, setGender] = useState('');
 	const [name, setName] = useState('');
-	const [zodiac, setZodiac] = useState('');
+
 	const [age, setAge] = useState('');
 	const [city, setCity] = useState('');
-	
+
 	const [hobby, setHobby] = useState([]);
 	const [relationship, setRelationship] = useState([]);
 	const [gallery, setGallery] = useState([]);
@@ -64,13 +64,11 @@ const DetailsProfileScreen = (props) => {
 				setJob(data.job);
 				setGender(data.gender);
 				setName(data.name);
-				setZodiac(data.zodiac);
+
 				setAge(data.age);
-				setCity(data.city)
+				setCity(data.city);
 				setReturnDetails(true);
-			} else {
-				console.log('nie ok');
-			}
+			} 
 		}
 		async function fetchProfileHobby(profileId) {
 			setReturnHobby(false);
@@ -113,7 +111,7 @@ const DetailsProfileScreen = (props) => {
 
 	return (
 		<View style={styles.container}>
-			<ScrollView style={styles.scrollView}>
+			<ScrollView style={props.route.params.chat? [styles.scrollView] : [styles.scrollView, {marginBottom: 50}]}>
 				<View style={styles.scrollContainer}>
 					{props.route.params.myProfile ? null : <BackNavigation goBack={goBack} />}
 
@@ -220,12 +218,7 @@ const DetailsProfileScreen = (props) => {
 									<View style={styles.infoGroup}>
 										<Text style={styles.infoHeader}>Orientacja</Text>
 										<Text style={styles.info}>{orientation}</Text>
-									</View> 
-
-									{/* <View style={styles.infoGroup}>
-										<Text style={styles.infoHeader}>Znak zodiaku</Text>
-										<Text style={styles.info}>{zodiac}</Text>
-									</View> */}
+									</View>
 
 									<View style={styles.infoGroup}>
 										<Text style={styles.infoHeader}>Wykszatałcenie</Text>
@@ -294,7 +287,7 @@ const DetailsProfileScreen = (props) => {
 								) : null}
 								<View style={styles.hobbyContainer}>
 									{relationship.map((relationship, ind) => {
-										//console.log(hobby)
+									
 										return <RelationButton text={relationship.name} edit={false} type={relationship.decision} index={ind} key={relationship.relationshipId} />;
 									})}
 								</View>
@@ -305,7 +298,7 @@ const DetailsProfileScreen = (props) => {
 					</View>
 				</View>
 			</ScrollView>
-			<Menu swipe={props.route.params.myProfile ? false : true} profile={props.route.params.myProfile ? true : false} {...props} />
+			{props.route.params.chat ? <></> : <Menu swipe={props.route.params.myProfile ? false : true} profile={props.route.params.myProfile ? true : false} {...props} />}
 		</View>
 	);
 };
@@ -338,7 +331,7 @@ const styles = StyleSheet.create({
 	},
 	scrollView: {
 		width: '100%',
-		marginBottom: 50,
+		//marginBottom: 50,
 	},
 	scrollContainer: {
 		display: 'flex',
