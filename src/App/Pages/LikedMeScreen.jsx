@@ -33,11 +33,14 @@ const LikedMeScreen = (props) => {
 	}, [persons.length]);
 
 	async function fetchProfiles() {
+		setUsersInReturned(false);
+		
 		let response = await SwipeService.getLikesForMyProfile();
 		if (response.status == 200) {
 			setPersons(response.data);
 			setUsersInReturned(true);
 		}
+		setUsersInReturned(true);
 	}
 
 	const profile = () => {
@@ -61,13 +64,13 @@ const LikedMeScreen = (props) => {
 		setCurrIndex(index + 1);
 		if (!persons[index]) return;
 		const userSwiped = persons[index];
-		//console.log('user swiped', userSwiped);
+
 		let response = await DecisionService.swipeDecision({
 			decision: 1,
 			selectProfileUserId: userSwiped.profileId,
 		});
 		if (response.status == 200 && response.data != '') {
-			console.log('Match!', response.data);
+		
 			props.navigation.navigate('NewMatchScreen', { name: response.data.name, profileId: response.data.profileId, image: response.data.profileImageDTO });
 		}
 	};
@@ -85,21 +88,21 @@ const LikedMeScreen = (props) => {
 							backgroundColor='rgba(220,220,220,1)'
 							renderCard={(card) => card? <CardUser profile={card ?? null} name={card.name ?? ''} images={card.image ?? ''} age={card.age ?? ''} city={card.city ?? ''} />: <EmptyLikedMe />}
 							onSwiped={(cardIndex) => {
-								console.log('CARD INDEX', cardIndex);
+								
 							}}
 							onSwipedAll={() => {
 								setCurrIndex(0);
-								console.log('onSwipedAll');
+								
 								setPersons([]);
 								//fetchProfiles();
 							}}
 							onSwipedLeft={(cardIndex) => {  
 								swipeLeft(cardIndex);
-								console.log('left', cardIndex);
+								
 							}}
 							onSwipedRight={(cardIndex) => {
 								swipeRight(cardIndex);
-								console.log('right', cardIndex);
+								
 							}}
 							//overlayLabelStyle={{padding: 0}}
 							cardVerticalMargin={0}
@@ -108,7 +111,7 @@ const LikedMeScreen = (props) => {
 							cardIndex={0}
 							verticalSwipe={false}
 							animateCardOpacity
-							stackSize={1}
+							stackSize={2}
 							overlayLabels={{ 
 								left: {
 									title: 'NOPE',
@@ -131,11 +134,11 @@ const LikedMeScreen = (props) => {
 							}}></Swiper>
 						<View style={styles.actionButton}>
 							<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeLeft()}>
-								<AntDesign name='dislike2' size={40} color='red' />
+								<AntDesign name='dislike2' size={40} color='red ' />
 							</TouchableOpacity>
 							<TouchableOpacity style={styles.button} onPress={profile}>
 								<Ionicons name='md-person-outline' size={40} color='black' />
-							</TouchableOpacity>
+							</TouchableOpacity> 
 							<TouchableOpacity style={styles.button} onPress={() => swipeRef.current.swipeRight()}>
 								<AntDesign name='like2' size={40} color='green' />
 							</TouchableOpacity>

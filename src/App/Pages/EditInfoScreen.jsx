@@ -47,7 +47,7 @@ const EditInfoScreen = (props) => {
 	const MAX_LENGTH_WORK = 50;
 
 	const [orientationDropdown, setOrientationDropdown] = useState([]);
-	const [zodiacDropdown, setZodiacDropdown] = useState([]);
+	
 	const [educationDropdown, setEducationDropdown] = useState([]);
 	const [eyeColorDropdown, setEyeColorDropdown] = useState([]);
 	const [religiousDropdown, setReligiousDropdown] = useState([]);
@@ -91,9 +91,7 @@ const EditInfoScreen = (props) => {
 				data.eyeColor != null ? setEyeColor(data.eyeColor.id) : null;
 				data.job != null ? setJob(data.job) : null;
 				setCity(data.city)
-			} else {
-				console.log('nie ok');
-			}
+			} 
 		}
 		fetchDetailsProfile();
 	}, []);
@@ -107,7 +105,6 @@ const EditInfoScreen = (props) => {
 		
 		let Cigarettes = await DictionaryService.getCigarettesDictionary();
 		setCigarettesDropdown(Cigarettes);
-		console.log(Cigarettes[0].id);
 		
 		let Education = await DictionaryService.getEducationDictionary();
 		setEducationDropdown(Education);
@@ -121,8 +118,7 @@ const EditInfoScreen = (props) => {
 		let Religious = await DictionaryService.getReligiousDictionary();
 		setReligiousDropdown(Religious);
 		
-		let Zodiac = await DictionaryService.getZodiacDictionary();
-		setZodiacDropdown(Zodiac);
+
 		
 		setAlcohol(Alcohol[0].id);
 		setChildren(Children[0].id);
@@ -176,7 +172,6 @@ const EditInfoScreen = (props) => {
 
 	const changeProfileDetails = async () => {
 		setReturnSave(true);
-		console.log(alcohol, job, height, weight, orientation, education, religion, children, cigarette, eyeColor);
 		let response = await ProfileService.changeProfileDetails(alcohol, job, height, weight, orientation, education, religion, children, cigarette, eyeColor, city);
 		if (response == 200) {
 			showToast('success', 'Dane szczegółowe zmienione!', 'Szczegółowe dane twojego profilu zostały zmienione');

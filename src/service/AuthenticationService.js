@@ -14,6 +14,7 @@ export async function login(email, password) {
 			email: email,
 			password: password,
 		});
+		console.log(response.status)
 		if (response.status == 200) {
 			console.log('<<< auth/login STATUS >>> ' + response.status);
 			if (response.data.isError == 'YES') {
@@ -30,7 +31,7 @@ export async function login(email, password) {
 		}
 		return response;
 	} catch (err) {
-		console.log('auth/login: ' + err);
+		console.log('>>> auth/login: ' + err);		
 		return err;
 	}
 

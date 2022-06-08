@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, Linking, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, Linking, TouchableOpacity, StatusBar } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import LoginPanel from '../Components/LoginPanel';
 import RegisterPanel from '../Components/RegisterPanel';
@@ -43,8 +43,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		height: '100%',
 		paddingVertical: 20,
+		
 	},
 	menuTop: {
+		marginTop: StatusBar.currentHeight,
 		display: 'flex',
 		flexDirection: 'row',
 		width: '100%',

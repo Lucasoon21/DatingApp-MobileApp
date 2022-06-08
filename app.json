@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "DatingApp-MobileApp",
+    "name": "DatingApp",
     "slug": "DatingApp-MobileApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -28,6 +28,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

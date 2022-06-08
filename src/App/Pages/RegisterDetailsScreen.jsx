@@ -36,20 +36,16 @@ const RegisterDetailsScreen = (props) => {
 
 
 	const register = async (values) => {
-		//console.log('start detale');
-		//console.log("Dane: "+values.email+" "+values.password)
+
+
 		const response = await AuthenticationService.registerDetails(props.route.params.email, values.name, genderValue, date, orientationValue);
-        //console.log(genderValue)
+  
         if (response.status == 200 || response.status == 202) {
-			navigation.navigate('SwipeScreen') //TODO 
-            //props.navigation.navigate("RegisterDetails")
-		//	history.push('/RegisterDetail');
-		} else {
-			console.log('Nieprawidłowe dane');
-		}
+			navigation.navigate('SwipeScreen') 
+
+		} 
         
-        //console.log(genderValue)
-		// history.push("/Main")
+
 	};
 
 	return (

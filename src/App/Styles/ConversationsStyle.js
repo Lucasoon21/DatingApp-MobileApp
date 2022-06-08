@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     containerContact: {
         // backgroundColor: 'rgba(250,50,250,1)',
         width: '100%',
+        height: '100%',
         marginBottom: 50,
     },
 

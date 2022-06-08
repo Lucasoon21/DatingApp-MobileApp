@@ -38,14 +38,10 @@ const LoginPanel = (props) => {
 
 	const login = async () => {
 		setReturnResponse(false);
-		//console.log('Dane: ' + email + ' ' + password);
 		let response = await AuthenticationService.login(email, password);
-		//console.log('res 1', response.status);
-		//console.log('res 2', response.data);
 		setVisible(true);
 		if (response.isOver18Years == 'ERR') {
 			navigation.navigate('AreUnderAgeScreen');
-			console.log('Wiek');
 		} else if (response.isActive == 'ERR') {
 			await SecureStore.setItemAsync('userId', response.user_id);
 			await SecureStore.setItemAsync('profileId', response.profile_id);
@@ -54,7 +50,6 @@ const LoginPanel = (props) => {
 			const token = await SecureStore.getItemAsync('access_token');
 			httpService.setJwt(token);
 			navigation.navigate('ActivateAccountScreen');
-			console.log('Niekatywne');
 		} else if (response.password == 'ERR' || response.email == 'ERR') {
 			showToast('error','Nieprawidłowe dane', 'Podane dane są nieprawdidłowe! Upewnij się że poprawnie wpisałeś swoje dane')
 		} else if (response == 200) {

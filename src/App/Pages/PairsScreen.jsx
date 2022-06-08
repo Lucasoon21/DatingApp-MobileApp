@@ -5,12 +5,13 @@ import DetailsProfileScreen from './DetailsProfileScreen';
 import { contact, styles } from '../Styles/ChatStyle';
 import PairComponent from '../Components/PairComponent';
 import MatchService from '../../service/MatchService';
-import { Assets, Colors, Typography, View, Drawer, Text, Button, Avatar, Badge } from 'react-native-ui-lib';
+import { Assets, Colors, Typography, View, Drawer, Text, Avatar, Badge } from 'react-native-ui-lib';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { RectButton } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import EmptyPairs from './EmptyPairs';
 import LoaderElements from '../Components/LoaderElements';
+import { Button, TextInput } from 'react-native-paper';
 
 const PairsScreen = (props) => {
 	const goPairs = () => props.navigation.navigate('PairsScreen');
@@ -25,7 +26,7 @@ const PairsScreen = (props) => {
 	const fetchMatches = async () => {
 		setReturnPairs(false);
 		let response = await MatchService.getAllMatch();
-		console.log('koniec');
+
 		if (response.data != null) {
 			setPairs(response.data);
 		}
@@ -35,10 +36,7 @@ const PairsScreen = (props) => {
 		const removePair = async () => {
 			let response = await MatchService.deleteMatch(item.profileId);
 			if (response.status == 200) {
-				console.log('usunięto');
 				fetchMatches();
-			} else {
-				console.log('bład');
 			}
 		};
 		return (
@@ -79,20 +77,25 @@ const PairsScreen = (props) => {
 					<>
 						{pairs.length > 0 ? (
 							<>
-								<ScrollView style={styles.containerContact}>
-									{pairs.map((pair, i) => {
-										return (
-											<View style={styles.pairComponent} key={i}>
-												<Swipeable renderLeftActions={() => renderLeftActions(pair)}>
-													<PairComponent navigation={props.navigation} profile={pair} />
-												</Swipeable>
-											</View>
-										);
-									})}
-								</ScrollView>
+								<TouchableOpacity style={styles.containerContact} onPress={() => fetchMatches()}>
+									<ScrollView style={styles.containerContact}>
+										{pairs.map((pair, i) => {
+											return (
+												<View style={styles.pairComponent} key={i}>
+													<Swipeable renderLeftActions={() => renderLeftActions(pair)}>
+														<PairComponent navigation={props.navigation} profile={pair} />
+													</Swipeable>
+												</View>
+											);
+										})}
+									</ScrollView>
+								</TouchableOpacity>
 							</>
 						) : (
 							<>
+								<Button onPress={() => fetchMatches()}>
+									<Text>Odśwież</Text>
+								</Button>
 								<EmptyPairs />
 							</>
 						)}

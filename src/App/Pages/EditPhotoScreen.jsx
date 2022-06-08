@@ -105,7 +105,6 @@ const EditPhotoScreen = (props) => {
 
 			let res = JSON.parse(xhr.responseText);
 			if (res.status == 200 && res.success === true) {
-				console.log('OK');
 				let data = res.data;
 				let responseUpload = await ProfileService.uploadImage({
 					deletehash: data.deletehash,

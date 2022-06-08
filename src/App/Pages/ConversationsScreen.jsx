@@ -8,6 +8,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import ChatService from '../../service/ChatService';
 import EmptyConversations from './EmptyConversations';
 import LoaderElements from '../Components/LoaderElements';
+import { Button, TextInput } from 'react-native-paper';
 
 const ConversationsScreen = (props) => {
 	const goPairs = () => props.navigation.navigate('PairsScreen');
@@ -18,16 +19,16 @@ const ConversationsScreen = (props) => {
 	const [returnConversations, setReturnConversations] = useState(false);
 
 	useEffect(() => {
-		async function fetchConversation() {
-			setReturnConversations(false);
-			let result = await ChatService.getListConversation();
-			if (result.status === 200) {
-				setConversations(result.data);
-				setReturnConversations(true);
-			}
-		}
 		fetchConversation();
 	}, []);
+	async function fetchConversation() {
+		setReturnConversations(false);
+		let result = await ChatService.getListConversation();
+		if (result.status === 200) {
+			setConversations(result.data);
+			setReturnConversations(true);
+		}
+	}
 
 	return (
 		<View style={styles.container}>
@@ -44,14 +45,23 @@ const ConversationsScreen = (props) => {
 				<>
 					{conversations.length > 0 ? (
 						<>
-							<ScrollView style={styles.containerContact}>
-								{conversations.map((conversation, i) => {
-									return <ConversationComponent navigation={props.navigation} key={i} conversations={conversation} />;
-								})}
-							</ScrollView>
+							{/* 
+							<Button onPress={() => fetchConversation()}>
+								<Text>Odśwież</Text>
+							</Button> */}
+							<TouchableOpacity style={styles.containerContact} onPress={() => fetchConversation()}>
+								<ScrollView style={styles.containerContact} onPress={() => fetchConversation()}>
+									{conversations.map((conversation, i) => {
+										return <ConversationComponent navigation={props.navigation} key={i} conversations={conversation} />;
+									})}
+								</ScrollView>
+							</TouchableOpacity>
 						</>
 					) : (
 						<>
+							<Button onPress={() => fetchConversation()}>
+								<Text>Odśwież</Text>
+							</Button>
 							<EmptyConversations />
 						</>
 					)}

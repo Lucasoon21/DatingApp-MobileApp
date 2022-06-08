@@ -16,17 +16,18 @@ const PairComponent = (props) => {
 		props.navigation.navigate('ChatScreen', {
 			profileId: profileData.profileId,
 			name: profileData.name,
-			photo: profileData.image.imageLink,
+			photo: image.imageLink ?? "",
 		});
 	const [profileData, setProfileData] = useState([]);
-
+		const [image, setImage] = useState();
 	useEffect(() => {
+		console.log(props.profile.image)
 		if (props.profile != null) {
 			setProfileData(props.profile);
-			console.log(props.profile);
+			setImage(props.profile.image??"")
 		}
 	}, []);
-
+ 
 	return (
 		<>
 			<View style={contact.container}>

@@ -26,6 +26,7 @@ const ChatScreen = (props) => {
 			profileUser: {
 				profileId: props.route.params.profileId,
 			},
+			chat: true,
 		});
 
 	const [messages, setMessages] = useState([]);
@@ -33,6 +34,7 @@ const ChatScreen = (props) => {
 	const [otherProfile, setOtherProfile] = useState(props.route.params.profileId);
 
 	useEffect(() => {
+		console.log(props.route.params)
 		async function fetchMessages() {
 			setReturnMessage(false);
 			let result = await ChatService.getConversation(props.route.params.profileId);
@@ -43,8 +45,7 @@ const ChatScreen = (props) => {
 				connectToChat(profile);
 				setReturnMessage(true);
 			}
-			console.log('CHAT Z UZYTKOWNIKIEM: ' + props.route.params.profileId);
-			console.log('JESTEM UZYTKOWNIKIEM: ' + profile);
+
 		}
 		fetchMessages();
 	}, []);
@@ -66,9 +67,7 @@ const ChatScreen = (props) => {
 		if (result.status === 200) {
 			let profile = await SecureStore.getItemAsync('profileId');
 			sendMsg(profile, message.text);
-		} else {
-			console.log('nie wysłano');
-		}
+		} 
 	};
 
 	function renderSend(props) {
@@ -148,7 +147,7 @@ const ChatScreen = (props) => {
 
 				<View style={chat.profileTop}>
 					<TouchableOpacity onPress={goProfile} style={chat.profileTopTouch}>
-						{props.route.params.photo ? (
+						{props.route.params.photo!="" ? (
 							<Image source={{ uri: props.route.params.photo }} style={chat.avatarTop} />
 						) : (
 							<Image source={require('../../Images/default.jpg')} style={chat.avatarTop} />
@@ -160,10 +159,10 @@ const ChatScreen = (props) => {
 				</View>
 				<View></View>
 			</View>
-			<View style={{ flex: 1, marginBottom: 50 }}>
+			<View style={{ flex: 1}}>
 				{returnMessage ? (
 					<>
-						<GiftedChat
+					 <GiftedChat
 							messages={messages}
 							showAvatarForEveryMessage
 							onSend={(messages) => onSend(messages)}
@@ -195,7 +194,7 @@ const ChatScreen = (props) => {
 					</>
 				)}
 			</View>
-			<Menu chat={true} {...props} />
+			{/* <Menu chat={true} {...props} /> */}
 		</>
 	);
 };
